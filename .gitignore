@@ -1,0 +1,18 @@
+# バイナリファイルを無視
+*.exe
+*.dll
+*.txt
+*.Identifier
+# ログファイルを無視
+*.log
+*.cgi
+*.htaccess
+# OSやIDEの一時ファイルを無視
+.DS_Store
+Thumbs.db
+.vscode/
+portfolio/
+# ビルドディレクトリを無視
+/build/
+/venv/
+__pycache__/
