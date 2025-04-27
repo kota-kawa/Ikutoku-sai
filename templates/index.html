@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>神奈川工科大学 第49回幾徳祭公式HP</title>
+
+    <!-- ============ External Libraries ============ -->
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet">
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
+      rel="stylesheet">
+    <!-- Animate On Scroll (AOS) -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      rel="stylesheet" />
+
+    <style>
+    /* ============ Base ============ */
+    :root {
+      --kait-green: #32CD32;
+      --kait-purple: #8A2BE2;
+      --dark-overlay: rgba(0,0,0,0.6);
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: linear-gradient(120deg, #f8f9fa 0%, #eef2f7 50%, #e3e8f0 100%);
+      color: #343a40;
+      overflow-x: hidden;
+    }
+
+    /* ============ Navbar ============ */
+    .navbar {
+      backdrop-filter: blur(16px) saturate(180%);
+      background-color: var(--dark-overlay) !important;
+      transition: background 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: rgba(0,0,0,0.85) !important;
+    }
+
+    /* ============ Hero Section ============ */
+    .hero {
+      position: relative;
+      height: 75vh;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('./static/sunset.jpg') center/cover no-repeat fixed;
+      filter: brightness(0.55);
+      z-index: 0;
+      transform: scale(1);
+      transition: transform 10s ease-in-out;
+    }
+    /* Slow zoom effect */
+    .hero:hover .hero-bg {
+      transform: scale(1.05);
+    }
+
+    /* Floating birds */
+    .bird {
+      position: absolute;
+      top: 50%;
+      width: 18%;
+      transform: translateY(-50%);
+      z-index: 1;
+      animation: float 6s ease-in-out infinite;
+    }
+    .bird-left { left: 4%; }
+    .bird-right { right: 4%; animation-direction: reverse; }
+    @keyframes float {
+      0%, 100% { transform: translateY(-50%) translateX(0); }
+      50% { transform: translateY(-55%) translateX(10px); }
+    }
+
+    /* Hero text */
+    .hero .inner {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Card hover lift */
+    .card {
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
+      border: none;
+      border-radius: 1rem;
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    /* Scrollable notice */
+    .scrollable-container {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    /* Footer */
+    footer {
+      background: #212529;
+      color: #adb5bd;
+      padding: 1rem 0;
+    }
+  </style>
+  </head>
+  <body>
+    <!-- ============ Navbar ============ -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">幾徳祭</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+          data-bs-target="#navMenu">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#about">概要</a></li>
+            <li class="nav-item"><a class="nav-link" href="#info">ご案内</a></li>
+            <li class="nav-item"><a class="nav-link"
+                href="#events">企画一覧</a></li>
+            <li class="nav-item"><a class="nav-link"
+                href="company.html">協賛</a></li>
+            <li class="nav-item"><a class="nav-link"
+                href="map2.5.html">MAP</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ============ Hero ============ -->
+    <section class="hero" id="about">
+      <div class="hero-bg"></div>
+      <img src="./static/kait1.png" alt="Kait Bird 1" class="bird bird-left">
+      <img src="./static/kait2.png" alt="Kait Bird 2" class="bird bird-right">
+      <div class="inner" data-aos="zoom-in" data-aos-duration="1000">
+        <h1 class="display-3 fw-bold">第 49 回幾徳祭</h1>
+        <p class="fs-2 my-3">11/2 – 11/3</p>
+        <p class="fs-1 mb-4">テーマ：蝶</p>
+        <p class="lead">各日 10：00～17：00</p>
+        <a href="#info" class="btn btn-lg btn-light px-5 mt-3 shadow">詳しく見る</a>
+      </div>
+    </section>
+
+    <!-- ============ Main ============ -->
+    <main class="mt-5 pt-4">
+      <div class="container text-center">
+        <!-- ============ Info Section ============ -->
+        <section id="info" class="mb-5" data-aos="fade-up">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="card h-100 text-start p-3">
+                <h3 class="card-title">新着情報・お知らせ</h3>
+                <div class="scrollable-container">
+                  <p>10/14 ビンゴ大会と協賛企業様を追加しました。</p>
+                  <p>10/9 駐車場の案内追加しました。</p>
+                  <p>10/2 模擬店の「団体名」と「屋台名」修正しました。</p>
+                  <p>9/17 トークショー情報公開。</p>
+                  <p>8/30 一部修正しました。</p>
+                  <p>7/25 参加団体一部更新しました。</p>
+                  <p>7/12 参加団体一部更新しました。</p>
+                  <p>7/8 HP公開しました。</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" alt="festival poster"
+                  class="img-fluid rounded-start rounded-end h-100 object-fit-cover">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ Events Section ============ -->
+        <section id="events" class="mb-5" data-aos="fade-up"
+          data-aos-delay="100">
+          <h2 class="mb-4">イベント一覧</h2>
+          <div class="row g-4">
+            <!-- Example event card -->
+            <div class="col-md-4">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" class="card-img-top" alt="ステージイベント">
+                <div class="card-body d-flex flex-column">
+                  <h4 class="card-title">ステージイベント</h4>
+                  <p class="card-text">トークショー、ライブ演奏、合気道演武など行います！</p>
+                  <a href="event.html#sute-ziibento"
+                    class="btn btn-gradient mt-auto">詳しく見る</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" class="card-img-top" alt="ステージイベント">
+                <div class="card-body d-flex flex-column">
+                  <h4 class="card-title">ステージイベント</h4>
+                  <p class="card-text">トークショー、ライブ演奏、合気道演武など行います！</p>
+                  <a href="event.html#sute-ziibento"
+                    class="btn btn-gradient mt-auto">詳しく見る</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" class="card-img-top" alt="ステージイベント">
+                <div class="card-body d-flex flex-column">
+                  <h4 class="card-title">ステージイベント</h4>
+                  <p class="card-text">トークショー、ライブ演奏、合気道演武など行います！</p>
+                  <a href="event.html#sute-ziibento"
+                    class="btn btn-gradient mt-auto">詳しく見る</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" class="card-img-top" alt="ステージイベント">
+                <div class="card-body d-flex flex-column">
+                  <h4 class="card-title">ステージイベント</h4>
+                  <p class="card-text">トークショー、ライブ演奏、合気道演武など行います！</p>
+                  <a href="event.html#sute-ziibento"
+                    class="btn btn-gradient mt-auto">詳しく見る</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" class="card-img-top" alt="ステージイベント">
+                <div class="card-body d-flex flex-column">
+                  <h4 class="card-title">ステージイベント</h4>
+                  <p class="card-text">トークショー、ライブ演奏、合気道演武など行います！</p>
+                  <a href="event.html#sute-ziibento"
+                    class="btn btn-gradient mt-auto">詳しく見る</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100">
+                <img src="./static/sunset.jpg" class="card-img-top" alt="ステージイベント">
+                <div class="card-body d-flex flex-column">
+                  <h4 class="card-title">ステージイベント</h4>
+                  <p class="card-text">トークショー、ライブ演奏、合気道演武など行います！</p>
+                  <a href="event.html#sute-ziibento"
+                    class="btn btn-gradient mt-auto">詳しく見る</a>
+                </div>
+              </div>
+            </div>
+            <!-- Duplicate above card for other events as needed -->
+          </div>
+        </section>
+
+        <!-- ============ Contact & SNS ============ -->
+        <section class="mb-5" data-aos="fade-up" data-aos-delay="200">
+          <div class="row g-4">
+            <div class="col-lg-6">
+              <div class="card h-100 text-start p-3">
+                <h3 class="card-title">お問い合わせ</h3>
+                <p>神奈川県厚木市下荻野1030 〒243-0292 | 046-242-8484</p>
+                <p>幾徳会館(売店のある館)2階・学園祭実行委員会室</p>
+                <p>詳しくは <a
+                    href="https://docs.google.com/forms/d/e/1FAIpQLScFBaeekKO5YE9RgBOf_C471BdEJozLqztXuCTLq4hGX5nXXw/viewform?usp=sf_link"
+                    target="_blank">こちらのフォーム</a> まで。</p>
+                <iframe class="w-100 rounded" height="800" style="border:0;"
+                  loading="lazy" allowfullscreen
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.735162808246!2d139.33997817582735!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e0!3m2!1sja!2sjp!4v1745132850729!5m2!1sja!2sjp"></iframe>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="card h-100 p-3 d-flex flex-column">
+                <h3 class="card-title">幾徳祭公式SNS</h3>
+                <div class="mb-3">
+                  <a href="https://twitter.com/kait_jikkou"
+                    class="badge bg-info text-dark">X (旧Twitter)</a>
+                  <a
+                    href="https://www.youtube.com/channel/UCldcNEGEQND-EA0KEzRcpow"
+                    class="badge bg-danger">YouTube</a>
+                </div>
+                <!-- X (Twitter) timeline embed -->
+                <blockquote class="twitter-tweet" data-lang="ja"><p lang="ja"
+                    dir="ltr">🌸こんにちは🌸<br>神奈川工科大学
+                    学友会イベント局です✨<br>日々☀学園祭（幾徳祭）🎉に向けて活動中です(^^♪<br>現在、局員大募集中❣<br>気になる方はDM、マシュマロ等で質問お待ちしております💯<br>気軽にお声がけください💖<a
+                      href="https://twitter.com/hashtag/%E6%98%A5%E3%81%8B%E3%82%89KAIT?src=hash&amp;ref_src=twsrc%5Etfw">#春からKAIT</a><a
+                      href="https://twitter.com/hashtag/%E6%98%A5%E3%81%8B%E3%82%89%E7%A5%9E%E5%A5%88%E5%B7%9D%E5%B7%A5%E7%A7%91%E5%A4%A7%E5%AD%A6?src=hash&amp;ref_src=twsrc%5Etfw">#春から神奈川工科大学</a>
+                    <a
+                      href="https://twitter.com/hashtag/%E6%98%A5%E3%81%8B%E3%82%89%E7%A5%9E%E5%A5%88%E5%B7%A5?src=hash&amp;ref_src=twsrc%5Etfw">#春から神奈工</a>
+                    <a
+                      href="https://t.co/MlLTtlzLT9">pic.twitter.com/MlLTtlzLT9</a></p>&mdash;
+                  神奈川工科大学 学友会イベント局 (@kait_jikkou) <a
+                    href="https://twitter.com/kait_jikkou/status/1904436232786206724?ref_src=twsrc%5Etfw">2025年3月25日</a></blockquote>
+                <script async src="https://platform.twitter.com/widgets.js"
+                  charset="utf-8"></script>
+
+                <span class="text-muted small mt-2">タイムラインが読み込まれない場合は <a
+                    href="https://twitter.com/kait_jikkou"
+                    target="_blank">こちら</a> から直接ご覧ください。</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ============ Footer ============ -->
+    <footer class="text-center">
+      <div class="container">
+        <small>© 2024 神奈川工科大学学友会イベント局</small>
+      </div>
+    </footer>
+
+    <!-- ============ Scripts ============ -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+    // Navbar background change on scroll
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Init AOS animations
+    AOS.init({ once: true, offset: 120, duration: 700 });
+  </script>
+  </body>
+</html>

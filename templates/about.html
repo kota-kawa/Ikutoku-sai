@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>幾徳祭 | 概要・ごあいさつ</title>
+
+  <!-- ===== External Libraries ===== -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+  <!-- ===== Custom Style ===== -->
+  <style>
+    :root {
+      --kait-green: #32CD32;
+      --kait-purple: #8A2BE2;
+      --overlay-dark: rgba(0, 0, 0, .6);
+      --section-gap: 80px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: linear-gradient(120deg, #f8f9fa 0%, #eef2f7 60%, #e3e8f0 100%);
+      color: #343a40;
+      overflow-x: hidden;
+    }
+    .navbar {
+      backdrop-filter: blur(16px) saturate(180%);
+      background-color: var(--overlay-dark) !important;
+      transition: background .3s;
+    }
+    .navbar.scrolled {
+      background-color: rgba(0,0,0,.85) !important;
+    }
+    .hero {
+      position: relative;
+      height: 50vh;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('./static/sunset.jpg') center/cover no-repeat fixed;
+      filter: brightness(.5);
+      z-index: 0;
+    }
+    .hero .inner {
+      position: relative;
+      z-index: 2;
+    }
+    .hero .btn {
+      margin-top: 1rem;
+      padding: .75rem 1.5rem;
+      font-size: 1.1rem;
+    }
+    h2.section-title {
+      position: relative;
+      padding-bottom: .5rem;
+    }
+    h2.section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 3rem;
+      height: 4px;
+      background: var(--kait-purple);
+    }
+    .card {
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
+      border: none;
+      border-radius: 1rem;
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0,0,0,.15);
+    }
+    .section-light { background: #fff; }
+    .section-dark { background: #f1f3f5; }
+    footer {
+      background: #212529;
+      color: #adb5bd;
+      padding: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== Navbar ===== -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">幾徳祭</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">トップ</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">概要</a></li>
+          <li class="nav-item"><a class="nav-link" href="announce.html">ご案内</a></li>
+          <li class="nav-item"><a class="nav-link" href="event.html">企画紹介</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="inner text-center" data-aos="fade-down">
+      <h1 class="display-4 fw-bold">幾徳祭とは</h1>
+      <p class="lead mb-3">神奈川工科大学が誇る学園祭</p>
+      <a href="#overview" class="btn btn-lg btn-outline-light">開催概要を見る</a>
+    </div>
+  </section>
+
+  <!-- ===== Main ===== -->
+  <main class="container my-5 pt-5">
+    <!-- 開催概要 -->
+    <section id="overview" class="mb-5 section-light py-5" data-aos="fade-up">
+      <h2 class="section-title mb-4">開催概要</h2>
+      <div class="row g-4">
+        <div class="col-md-6" data-aos="fade-right">
+          <ul class="list-group list-group-flush fs-5">
+            <li class="list-group-item"><i class="bi bi-award-fill text-success me-2"></i>第49回 幾徳祭</li>
+            <li class="list-group-item"><i class="bi bi-calendar3 text-success me-2"></i>日程：11/2(土) – 11/3(日) 10:00–17:00</li>
+            <li class="list-group-item"><i class="bi bi-palette-fill text-success me-2"></i>テーマ：蝶</li>
+            <li class="list-group-item"><i class="bi bi-people-fill text-success me-2"></i>主催：神奈川工科大学 学友会イベント局</li>
+          </ul>
+        </div>
+        <div class="col-md-6" data-aos="fade-left">
+          <div class="card p-4 bg-white">
+            <p class="mb-0">
+              幾徳祭とは、神奈川工科大学で行われる学園祭の名称です。学内では模擬店・研究発表・展示・体験型イベントなど多彩な企画が実施され、地域住民や学生、受験生との交流の場となっています。思い出に残る2日間をぜひお楽しみください。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 見どころハイライト -->
+    <section class="mb-5 section-dark py-5" data-aos="fade-up" data-aos-delay="100">
+      <h2 class="section-title mb-4">見どころ</h2>
+      <div class="row g-4">
+        <div class="col-md-4" data-aos="zoom-in">
+          <div class="card h-100 text-center p-3">
+            <i class="bi bi-shop-window display-4 text-purple mb-3"></i>
+            <h5 class="card-title">模擬店エリア</h5>
+            <p class="card-text small">
+              定番のたこ焼きやクレープから、学生オリジナルの創作メニューまで、多彩な味覚をお楽しみいただけます。
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="50">
+          <div class="card h-100 text-center p-3">
+            <i class="bi bi-music-note-beamed display-4 text-purple mb-3"></i>
+            <h5 class="card-title">ステージイベント</h5>
+            <p class="card-text small">
+              ダンスパフォーマンスやバンド演奏など、学生たちのエネルギッシュなステージを見逃せません。
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+          <div class="card h-100 text-center p-3">
+            <i class="bi bi-flower1 display-4 text-purple mb-3"></i>
+            <h5 class="card-title">体験型コーナー</h5>
+            <p class="card-text small">
+              ロボット操作体験やデジタルアート制作など、最先端技術に触れるワークショップを多数ご用意。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ごあいさつ -->
+    <section class="mb-5 section-light py-5" data-aos="fade-up">
+      <h2 class="section-title mb-4">ごあいさつ</h2>
+      <div class="row g-4">
+        <!-- 学長 ごあいさつ -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-right">
+          <div class="card h-100 p-3">
+            <h5 class="card-title">学長</h5>
+            <p class="card-text small">
+              幾徳祭にお越しいただき誠にありがとうございます。本学の研究・教育成果をぜひご覧いただき、学生の活気を感じていただければ幸いです。
+            </p>
+          </div>
+        </div>
+        <!-- 学生部長 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-right" data-aos-delay="50">
+          <div class="card h-100 p-3">
+            <h5 class="card-title">学生部長</h5>
+            <p class="card-text small">
+              学生たちの自由な発想と情熱が結集した幾徳祭をどうぞお楽しみください。皆さまのご支援を心より感謝申し上げます。
+            </p>
+          </div>
+        </div>
+        <!-- 執行部会長 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-left" data-aos-delay="100">
+          <div class="card h-100 p-3">
+            <h5 class="card-title">執行部会長</h5>
+            <p class="card-text small">
+              準備段階から多くの方々にご協力いただきました。当日は安全かつ快適にお過ごしいただけるよう努めます。
+            </p>
+          </div>
+        </div>
+        <!-- イベント局局長 -->
+        <div class="col-md-6 col-lg-3" data-aos="fade-left" data-aos-delay="150">
+          <div class="card h-100 p-3">
+            <h5 class="card-title">イベント局局長</h5>
+            <p class="card-text small">
+              今年のテーマ「蝶」には、学生一人ひとりが羽ばたく姿を重ねています。多彩な企画で皆さまをお迎えします。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- アクセス情報 -->
+    <section class="mb-5 section-dark py-5" data-aos="fade-up" data-aos-delay="100">
+      <h2 class="section-title mb-4">アクセス情報</h2>
+      <div class="ratio ratio-16x9 mb-4">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3291.0364019073113!2d139.33997817582733!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e1!3m2!1sja!2sjp!4v1745659754762!5m2!1sja!2sjp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+      </div>
+      <ul class="list-unstyled fs-6">
+        <li><i class="bi bi-train-front-fill text-success me-2"></i>最寄り駅：●●駅 徒歩10分</li>
+        <li><i class="bi bi-bus-front-fill text-success me-2"></i>バス停：●●大学前 下車すぐ</li>
+        <li><i class="bi bi-car-front-fill text-success me-2"></i>駐車場：無料駐車場200台完備</li>
+      </ul>
+    </section>
+
+    <!-- お問い合わせ & SNS -->
+    <section class="mb-5 section-light py-5 text-center" data-aos="fade-up">
+      <h2 class="section-title mb-4">お問い合わせ &amp; SNS</h2>
+      <p class="mb-3">ご質問・ご要望はお気軽に以下までご連絡ください。</p>
+      <p><i class="bi bi-envelope-fill me-2"></i><a href="mailto:info@kait-festival.jp">info@kait-festival.jp</a></p>
+      <div class="mt-3">
+        <a href="https://twitter.com/kait_jikkou" class="btn btn-outline-primary btn-lg me-2">
+          <i class="bi bi-twitter"></i> X
+        </a>
+        <a href="https://www.instagram.com/kait_festival" class="btn btn-outline-danger btn-lg me-2">
+          <i class="bi bi-instagram"></i> Instagram
+        </a>
+        <a href="https://www.youtube.com/channel/UCldcNEGEQND-EA0KEzRcpow" class="btn btn-outline-danger btn-lg">
+          <i class="bi bi-youtube"></i> YouTube
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="text-center">
+    <div class="container">
+      <small>© 2024 神奈川工科大学 学友会イベント局</small>
+    </div>
+  </footer>
+
+  <!-- ===== Scripts ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    // Navbar 背景切り替え
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      window.scrollY > 60
+        ? navbar.classList.add('scrolled')
+        : navbar.classList.remove('scrolled');
+    });
+    // AOS 初期化
+    AOS.init({ once: true, offset: 120, duration: 700 });
+  </script>
+</body>
+</html>

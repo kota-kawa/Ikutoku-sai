@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>統合マップ</title>
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+    <!-- Bootstrap Icons CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet">
+
+    <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Leaflet のタイル画像全体にフィルターをかける */
+.leaflet-tile-pane img {
+  /* 彩度（saturate）を 1.5 倍、コントラスト（contrast）を 1.2 倍、明度（brightness）を 1.1 倍に */
+  filter: saturate(1.8) contrast(1.2) brightness(1.0);
+}
+
+
+
+    .menu-bar {
+      position: fixed;
+      width: 50%;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+    }
+
+    .menu-bar button {
+      flex-grow: 1;
+    }
+
+    .custom-icon {
+  position: relative;
+  /* ここで stacking context を作っておく */
+  z-index: 1;
+  width: 50px;
+  height: 50px;
+  background: rgb(14, 83, 12);
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-icon::after {
+  content: '';
+  position: absolute;
+  bottom: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid rgb(14, 83, 12);
+  /* ここで丸の下に回り込ませる */
+  z-index: -1;
+}
+
+
+    .icon-image {
+      width: 90%;
+      height: 90%;
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%;
+      border: 1px solid #aaa;
+    }
+
+    .details-panel {
+      position: fixed;
+      top: 0;
+      left: -400px;
+      width: 400px;
+      height: 100%;
+      overflow-y: auto;
+      transition: left 0.3s ease;
+      z-index: 1001;
+    }
+
+    .details-panel.active {
+      left: 0;
+    }
+  </style>
+  </head>
+
+  <body>
+    <div id="map"></div>
+
+    <!-- 詳細パネル -->
+    <div id="details-panel" class="details-panel bg-white shadow p-3">
+      <button class="btn-close float-end" onclick="hideDetails()"></button>
+    </div>
+
+    <!-- メニューバー -->
+    <div
+      class="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">
+      <button class="btn btn-light">🏠 すべて</button>
+      <button class="btn btn-light">🔍 検索</button>
+      <button class="btn btn-light">🍴 グルメ</button>
+      <button class="btn btn-light">🛍️ ショッピング</button>
+      <button class="btn btn-light">📄 詳細情報</button>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Bootstrap JS Bundle -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    const map = L.map('map').setView([35.486417749642015, 139.3428098153942], 30);
+
+    // OSM タイル（標準地図）
+ //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+   //attribution: '&copy; OpenStreetMap contributors'
+ ///}).addTo(map);
+     // 航空写真タイル追加（Esri World Imagery）
+ L.tileLayer(
+   'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+     attribution:
+       '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community',
+     maxZoom: 18
+   }
+ ).addTo(map);
+
+    // カスタムアイコン作成
+    const createCustomIcon = (imageUrl) => {
+      return L.divIcon({
+        className: '',
+        html: `
+          <div class="custom-icon">
+            <div class="icon-image" style="background-image: url('${imageUrl}');"></div>
+          </div>
+        `,
+        iconSize: [50, 60],
+        iconAnchor: [25, 60]
+      });
+    };
+
+    // ダミーピン追加
+    const markers = [
+      { location: [35.48604116703019, 139.34128951057255], image: './static/sunset.jpg', name: 'K1号館' },
+      { location: [35.48650866834297, 139.34112683577234], image: './static/sunset.jpg', name: 'K2号館' },
+      { location: [35.48565158052546, 139.34141709865116], image: './static/sunset.jpg', name: 'K3号館' },
+      { location: [35.485683613095844, 139.3419922129912], image: './static/sunset.jpg', name: 'K4号館' },
+      { location: [35.485597402140684, 139.34321173217694], image: './static/sunset.jpg', name: 'KAITアリーナ' },
+      { location: [35.4860692562503, 139.34187073632998], image: './static/sunset.jpg', name: '先進研' },
+      { location: [35.48714378031437, 139.34102852276388], image: './static/sunset.jpg', name: 'バイオ' },
+      { location: [35.4876058212225, 139.34111663074825], image: './static/sunset.jpg', name: '自動車' },
+      { location: [35.48768007599212, 139.34208759034047], image: './static/sunset.jpg', name: 'ロボット' },
+      { location: [35.48638279161658, 139.34182473387625], image: './static/sunset.jpg', name: '広場' },
+      { location: [35.487920311541316, 139.3430478210974], image: './static/sunset.jpg', name: '自動車' },
+      { location: [35.4867846462545, 139.34246309957499], image: './static/sunset.jpg', name: '工房' },
+      { location: [35.486649238937936, 139.34321411804413], image: './static/sunset.jpg', name: '広場' },
+
+    ];
+
+    markers.forEach(markerData => {
+      const marker = L.marker(markerData.location, {
+        icon: createCustomIcon(markerData.image)
+      }).addTo(map);
+
+      marker.on('click', () => {
+        showDetails({
+          image: markerData.image,
+          name: markerData.name,
+          description: 'ここに、スポットの説明が表示されます。Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          address: '東京都品川区東八潮1',
+          phone: '00-1234-5678'
+        });
+      });
+    });
+
+    // 詳細パネル表示
+    function showDetails(content) {
+      const detailsPanel = document.getElementById('details-panel');
+      detailsPanel.innerHTML = `
+        <button class="btn-close float-end" onclick="hideDetails()"></button>
+        <img src="${content.image}" alt="${content.name}" class="img-fluid rounded mb-3">
+        <h2 class="fs-4">${content.name}</h2>
+        <div class="d-flex gap-2 mb-3">
+          <button class="btn btn-outline-secondary">❤️ 4</button>
+          <button class="btn btn-outline-secondary">📥 保存</button>
+          <button class="btn btn-outline-secondary">📤 シェア</button>
+        </div>
+        <p class="text-muted mb-3">${content.description}</p>
+        <div class="border-top pt-3">
+          <div><strong>住所:</strong> ${content.address}</div>
+          <div><strong>電話番号:</strong> ${content.phone}</div>
+        </div>
+      `;
+      detailsPanel.classList.add('active');
+    }
+
+    // 詳細パネル非表示
+    function hideDetails() {
+      document.getElementById('details-panel')
+        .classList.remove('active');
+    }
+
+    // 地図クリック時に詳細パネルを閉じる
+    map.on('click', hideDetails);
+
+    // ユーザーの現在位置マーカーと向き管理
+    let userMarker = null;
+    let currentHeading = 0;
+
+    function createUserMarkerHTML(heading) {
+      return `
+        <div class="user-marker" style="position: relative; width: 40px; height: 40px;">
+          <div class="direction-wedge" style="
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.4) 0%, rgba(0, 122, 255, 0) 80%);
+            clip-path: polygon(50% 50%, 25% 0%, 75% 0%);
+            transform: rotate(${heading}deg);
+            transform-origin: 40px 40px;
+            z-index: 1;
+          "></div>
+          <div style="
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(0, 122, 255, 0.2);
+            border: 2px solid rgba(0, 122, 255, 0.3);
+            z-index: 2;
+          "></div>
+          <div style="
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            width: 24px;
+            height: 24px;
+            background: #007AFF;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            z-index: 3;
+          "></div>
+        </div>
+      `;
+    }
+
+    function updateUserMarker(lat, lng, heading) {
+      if (!userMarker) {
+        const userIcon = L.divIcon({
+          html: createUserMarkerHTML(heading),
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
+          className: ''
+        });
+        userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+      } else {
+        userMarker.setLatLng([lat, lng]);
+        const markerEl = userMarker.getElement();
+        if (markerEl) {
+          const wedge = markerEl.querySelector('.direction-wedge');
+          if (wedge) {
+            wedge.style.transform = `rotate(${heading}deg)`;
+          }
+        }
+      }
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          let heading = position.coords.heading;
+          if (heading === null || isNaN(heading)) {
+            heading = currentHeading;
+          }
+          updateUserMarker(lat, lng, heading);
+        },
+        (error) => {
+          console.error("Geolocation error code:", error.code, "message:", error.message);
+        },
+        { enableHighAccuracy: true, maximumAge: 30000, timeout: 27000 }
+      );
+    } else {
+      alert("このブラウザは Geolocation API に対応していません。");
+    }
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener(
+        "deviceorientation",
+        (event) => {
+          if (event.alpha !== null) {
+            currentHeading = event.alpha;
+          }
+        },
+        true
+      );
+    }
+  </script>
+  </body>
+
+</html>
