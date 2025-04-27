@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>統合マップ</title>
+
+          <!-- favicon の指定を追加 -->
+          <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
+          <link rel="icon" type="image/png" href="./static/favicon.png">
+          <link rel="shortcut icon" href="./static/favicon.ico">
+          
     <!-- Leaflet CSS -->
     <link
       rel="stylesheet"
@@ -106,6 +112,16 @@
     }
   </style>
   </head>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4TPL68169Q');
+</script>
 
   <body>
     <div id="map"></div>
