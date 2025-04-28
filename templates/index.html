@@ -1,6 +1,66 @@
 <!-- templates/index.html -->
 {% extends "layout.html" %}
-{% block title %}第50回 幾徳祭トップ{% endblock %}
+{% block title %}第50回 幾徳祭 | 神奈川工科大学 学園祭 公式サイト{% endblock %}
+
+
+{% block head_extra %}
+  <!-- 基本メタ -->
+  <meta name="description" content="神奈川工科大学の学園祭・第50回幾徳祭の公式サイト。2025年11月2日～3日に厚木市で開催。ステージイベントや模擬店情報、アクセスなどを掲載。">
+  <meta name="keywords" content="神奈川工科大学,幾徳祭,学園祭,2025,厚木市,イベント">
+
+  <!-- 正規化URL -->
+  <link rel="canonical" href="{{ url_for('index', _external=True) }}">
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="第50回 幾徳祭">
+  <meta property="og:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
+  <meta property="og:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月2日～3日に開催。ステージイベントや模擬店など、多彩なプログラムをお楽しみください。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ url_for('index', _external=True) }}">
+  <meta property="og:image" content="{{ url_for('static', filename='sunset.webp', _external=True) }}">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@kait_jikkou">
+  <meta name="twitter:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
+  <meta name="twitter:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月2日～3日に開催。ステージイベントや模擬店情報をチェック！">
+  <meta name="twitter:image" content="{{ url_for('static', filename='sunset.webp', _external=True) }}">
+
+  <!-- JSON-LD構造化データ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "第50回 幾徳祭",
+    "startDate": "2025-11-02T10:00+09:00",
+    "endDate": "2025-11-03T17:00+09:00",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": "神奈川工科大学 幾徳会館",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "下荻野1030",
+        "addressLocality": "厚木市",
+        "addressRegion": "神奈川県",
+        "postalCode": "243-0292",
+        "addressCountry": "JP"
+      }
+    },
+    "image": [
+      "{{ url_for('static', filename='sunset.webp', _external=True) }}"
+    ],
+    "description": "神奈川工科大学の学園祭・第50回幾徳祭。ステージイベントや模擬店など多彩なプログラムを開催。",
+    "organizer": {
+      "@type": "Organization",
+      "name": "神奈川工科大学",
+      "url": "https://www.kait.jp"
+    }
+  }
+  </script>
+{% endblock %}
+
 
 {% block content %}
 <style>
