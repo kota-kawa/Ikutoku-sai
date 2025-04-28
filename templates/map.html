@@ -167,10 +167,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // 地図初期化
-    const map = L.map('map').setView([35.486417749642015, 139.3428098153942], 30);
-
-    // 航空写真タイル追加 (Esri World Imagery)
+    // --- 地図初期化 ---
+    const map = L.map('map').setView([35.486417749642015, 139.3428098153942], 18);
     L.tileLayer(
       'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution:
@@ -178,8 +176,8 @@
         maxZoom: 18
       }
     ).addTo(map);
-
-    // カスタムアイコン作成関数
+  
+    // --- カスタムアイコン作成関数 ---
     const createCustomIcon = (imageUrl) => {
       return L.divIcon({
         className: '',
@@ -192,8 +190,8 @@
         iconAnchor: [25, 60]
       });
     };
-
-    // ダミーピンデータ
+  
+    // --- ダミーピンデータ ---
     const markers = [
       { location: [35.48604116703019, 139.34128951057255], image: './static/sunset.webp', name: 'K1号館' },
       { location: [35.48650866834297, 139.34112683577234], image: './static/sunset.webp', name: 'K2号館' },
@@ -209,13 +207,13 @@
       { location: [35.4867846462545, 139.34246309957499], image: './static/sunset.webp', name: '工房' },
       { location: [35.486649238937936, 139.34321411804413], image: './static/sunset.webp', name: '広場' },
     ];
-
-    // マーカーを地図に追加
+  
+    // --- マーカーを地図に追加 ---
     markers.forEach(markerData => {
       const marker = L.marker(markerData.location, {
         icon: createCustomIcon(markerData.image)
       }).addTo(map);
-
+  
       marker.on('click', () => {
         showDetails({
           image: markerData.image,
@@ -226,8 +224,8 @@
         });
       });
     });
-
-    // 詳細パネルを開く
+  
+    // --- 詳細パネルの制御 ---
     function showDetails(content) {
       const detailsPanel = document.getElementById('details-panel');
       detailsPanel.innerHTML = `
@@ -247,51 +245,39 @@
       `;
       detailsPanel.classList.add('active');
     }
-
-    // 詳細パネルを閉じる
     function hideDetails() {
       document.getElementById('details-panel').classList.remove('active');
     }
-
-    // 地図クリックで詳細パネルを閉じる
     map.on('click', hideDetails);
-
-    // ユーザー現在地マーカーと向き
+  
+    // --- ユーザーマーカー & 向き情報 ---
     let userMarker = null;
     let currentHeading = 0;
-
+    let lastPosition = null;
+  
     function createUserMarkerHTML(heading) {
       return `
         <div class="user-marker" style="position: relative; width: 40px; height: 40px;">
           <div class="direction-wedge" style="
-            position: absolute;
-            top: -20px;
-            left: -20px;
-            width: 80px;
-            height: 80px;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 122, 255, 0.4) 0%, rgba(0, 122, 255, 0) 80%);
+            position: absolute; top: -20px; left: -20px;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle at 50% 50%, rgba(0,122,255,0.4) 0%, rgba(0,122,255,0) 80%);
             clip-path: polygon(50% 50%, 25% 0%, 75% 0%);
             transform: rotate(${heading}deg);
             transform-origin: 40px 40px;
             z-index: 1;
           "></div>
           <div style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 40px;
-            height: 40px;
+            position: absolute; top: 0; left: 0;
+            width: 40px; height: 40px;
             border-radius: 50%;
-            background: rgba(0, 122, 255, 0.2);
-            border: 2px solid rgba(0, 122, 255, 0.3);
+            background: rgba(0,122,255,0.2);
+            border: 2px solid rgba(0,122,255,0.3);
             z-index: 2;
           "></div>
           <div style="
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 24px;
-            height: 24px;
+            position: absolute; top: 8px; left: 8px;
+            width: 24px; height: 24px;
             background: #007AFF;
             border: 2px solid #fff;
             border-radius: 50%;
@@ -300,8 +286,9 @@
         </div>
       `;
     }
-
+  
     function updateUserMarker(lat, lng, heading) {
+      lastPosition = [lat, lng];
       if (!userMarker) {
         const userIcon = L.divIcon({
           html: createUserMarkerHTML(heading),
@@ -310,43 +297,70 @@
           className: ''
         });
         userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map);
+        map.setView([lat, lng]);
       } else {
         userMarker.setLatLng([lat, lng]);
         const markerEl = userMarker.getElement();
-        if (markerEl) {
-          const wedge = markerEl.querySelector('.direction-wedge');
-          if (wedge) wedge.style.transform = `rotate(${heading}deg)`;
+        const wedge = markerEl && markerEl.querySelector('.direction-wedge');
+        if (wedge) wedge.style.transform = `rotate(${heading}deg)`;
+      }
+    }
+  
+    function handleOrientation(event) {
+      let heading = null;
+      if (event.webkitCompassHeading !== undefined) {
+        // iOS
+        heading = event.webkitCompassHeading;
+      } else if (event.absolute === true && typeof event.alpha === 'number') {
+        // Android Chrome など
+        heading = event.alpha;
+      }
+      if (heading !== null) {
+        currentHeading = heading;
+        if (userMarker && lastPosition) {
+          updateUserMarker(lastPosition[0], lastPosition[1], currentHeading);
         }
       }
     }
-
-    if (navigator.geolocation) {
+  
+    function initOrientation() {
+      if (typeof DeviceOrientationEvent !== 'undefined'
+          && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS13+ はユーザー操作をトリガーに requestPermission を呼ぶ
+        DeviceOrientationEvent.requestPermission()
+          .then(response => {
+            if (response === 'granted') {
+              window.addEventListener('deviceorientation', handleOrientation, true);
+            } else {
+              console.warn('DeviceOrientation: permission denied');
+            }
+          })
+          .catch(console.error);
+      } else {
+        window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+        window.addEventListener('deviceorientation', handleOrientation, true);
+      }
+    }
+  
+    function initGeolocation() {
+      if (!navigator.geolocation) {
+        alert("Geolocation API に対応していません。");
+        return;
+      }
       navigator.geolocation.watchPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          let heading = position.coords.heading;
-          if (heading === null || isNaN(heading)) heading = currentHeading;
-          updateUserMarker(lat, lng, heading);
+        pos => {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          updateUserMarker(lat, lng, currentHeading);
         },
-        (error) => {
-          console.error("Geolocation error code:", error.code, "message:", error.message);
-        },
+        err => console.error("Geolocation error:", err),
         { enableHighAccuracy: true, maximumAge: 30000, timeout: 27000 }
       );
-    } else {
-      alert("このブラウザは Geolocation API に対応していません。");
     }
-
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener(
-        "deviceorientation",
-        (event) => {
-          if (event.alpha !== null) currentHeading = event.alpha;
-        },
-        true
-      );
-    }
+  
+    // --- 初期化 ---
+    initOrientation();
+    initGeolocation();
   </script>
+  
 </body>
 </html>
