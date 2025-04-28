@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>統合マップ</title>
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>統合マップ</title>
+  <!-- favicon -->
+  <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" href="./static/favicon.png">
+  <link rel="shortcut icon" href="./static/favicon.ico">
 
-          <!-- favicon の指定を追加 -->
-          <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
-          <link rel="icon" type="image/png" href="./static/favicon.png">
-          <link rel="shortcut icon" href="./static/favicon.ico">
-          
-    <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <!-- Bootstrap CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet">
-    <!-- Bootstrap Icons CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-      rel="stylesheet">
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+  <!-- Bootstrap Icons CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    rel="stylesheet">
 
-    <style>
-    body {
+  <style>
+    :root { --brand-green: rgb(14,83,12); }
+
+    html, body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;            /* モバイルで余計なスクロールを防止 */
     }
 
     #map {
@@ -35,134 +38,148 @@
       height: 100vh;
     }
 
-    /* Leaflet のタイル画像全体にフィルターをかける */
-.leaflet-tile-pane img {
-  /* 彩度（saturate）を 1.5 倍、コントラスト（contrast）を 1.2 倍、明度（brightness）を 1.1 倍に */
-  filter: saturate(1.8) contrast(1.2) brightness(1.0);
-}
+    /* 地図タイルの色調補正 */
+    .leaflet-tile-pane img {
+      filter: saturate(1.8) contrast(1.2) brightness(1.0);
+    }
 
-
-
+    /* メニューバー */
     .menu-bar {
       position: fixed;
-      width: 50%;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
+      width: clamp(260px, 90%, 640px);
       z-index: 1000;
+      display: flex;
+      gap: .5rem;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;       /* Firefox */
     }
+    .menu-bar::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
 
     .menu-bar button {
-      flex-grow: 1;
+      flex: 1 0 auto;
+      white-space: nowrap;
     }
 
+    /* カスタムピン */
     .custom-icon {
-  position: relative;
-  /* ここで stacking context を作っておく */
-  z-index: 1;
-  width: 50px;
-  height: 50px;
-  background: rgb(14, 83, 12);
-  border: 2px solid #ccc;
-  border-radius: 50%;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.custom-icon::after {
-  content: '';
-  position: absolute;
-  bottom: -11px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 15px solid rgb(14, 83, 12);
-  /* ここで丸の下に回り込ませる */
-  z-index: -1;
-}
-
-
+      position: relative;
+      z-index: 1;
+      width: 50px; height: 50px;
+      background: var(--brand-green);
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .custom-icon::after {
+      content: '';
+      position: absolute;
+      left: 50%; bottom: -11px;
+      transform: translateX(-50%);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 15px solid var(--brand-green);
+      z-index: -1;
+    }
     .icon-image {
-      width: 90%;
-      height: 90%;
+      width: 90%; height: 90%;
       background-size: cover;
       background-position: center;
       border-radius: 50%;
       border: 1px solid #aaa;
     }
 
+    /* 詳細パネル */
     .details-panel {
       position: fixed;
-      top: 0;
-      left: -400px;
-      width: 400px;
+      top: 0; left: -400px;
+      width: 400px; max-width: 90%;
       height: 100%;
       overflow-y: auto;
-      transition: left 0.3s ease;
+      transition: left .3s ease;
       z-index: 1001;
     }
-
     .details-panel.active {
       left: 0;
     }
+
+    /* モバイル用調整 (≤768px) */
+    @media (max-width: 768px) {
+      .custom-icon {
+        width: 40px; height: 40px;
+      }
+      .custom-icon::after {
+        bottom: -9px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 12px solid var(--brand-green);
+      }
+      .details-panel {
+        width: 100%;
+        left: 100%;
+      }
+      .details-panel.active {
+        left: 0;
+      }
+      .menu-bar {
+        bottom: 10px;
+        gap: .4rem;
+      }
+    }
   </style>
-  </head>
 
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4TPL68169Q');
+  </script>
+</head>
 
-  gtag('config', 'G-4TPL68169Q');
-</script>
+<body>
+  <div id="map"></div>
 
-  <body>
-    <div id="map"></div>
+  <!-- 詳細パネル -->
+  <div id="details-panel" class="details-panel bg-white shadow p-3">
+    <button class="btn-close float-end" onclick="hideDetails()"></button>
+  </div>
 
-    <!-- 詳細パネル -->
-    <div id="details-panel" class="details-panel bg-white shadow p-3">
-      <button class="btn-close float-end" onclick="hideDetails()"></button>
-    </div>
+  <!-- メニューバー -->
+  <div class="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">
+    <button class="btn btn-light">🏠 すべて</button>
+    <button class="btn btn-light">🔍 検索</button>
+    <button class="btn btn-light">🍴 グルメ</button>
+    <button class="btn btn-light">🛍️ ショッピング</button>
+    <button class="btn btn-light">📄 詳細情報</button>
+  </div>
 
-    <!-- メニューバー -->
-    <div
-      class="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">
-      <button class="btn btn-light">🏠 すべて</button>
-      <button class="btn btn-light">🔍 検索</button>
-      <button class="btn btn-light">🍴 グルメ</button>
-      <button class="btn btn-light">🛍️ ショッピング</button>
-      <button class="btn btn-light">📄 詳細情報</button>
-    </div>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Bootstrap JS Bundle -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
+  <script>
+    // 地図初期化
     const map = L.map('map').setView([35.486417749642015, 139.3428098153942], 30);
 
-    // OSM タイル（標準地図）
- //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-   //attribution: '&copy; OpenStreetMap contributors'
- ///}).addTo(map);
-     // 航空写真タイル追加（Esri World Imagery）
- L.tileLayer(
-   'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-     attribution:
-       '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community',
-     maxZoom: 18
-   }
- ).addTo(map);
+    // 航空写真タイル追加 (Esri World Imagery)
+    L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution:
+          '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community',
+        maxZoom: 18
+      }
+    ).addTo(map);
 
-    // カスタムアイコン作成
+    // カスタムアイコン作成関数
     const createCustomIcon = (imageUrl) => {
       return L.divIcon({
         className: '',
@@ -176,24 +193,24 @@
       });
     };
 
-    // ダミーピン追加
+    // ダミーピンデータ
     const markers = [
-      { location: [35.48604116703019, 139.34128951057255], image: './static/sunset.jpg', name: 'K1号館' },
-      { location: [35.48650866834297, 139.34112683577234], image: './static/sunset.jpg', name: 'K2号館' },
-      { location: [35.48565158052546, 139.34141709865116], image: './static/sunset.jpg', name: 'K3号館' },
-      { location: [35.485683613095844, 139.3419922129912], image: './static/sunset.jpg', name: 'K4号館' },
-      { location: [35.485597402140684, 139.34321173217694], image: './static/sunset.jpg', name: 'KAITアリーナ' },
-      { location: [35.4860692562503, 139.34187073632998], image: './static/sunset.jpg', name: '先進研' },
-      { location: [35.48714378031437, 139.34102852276388], image: './static/sunset.jpg', name: 'バイオ' },
-      { location: [35.4876058212225, 139.34111663074825], image: './static/sunset.jpg', name: '自動車' },
-      { location: [35.48768007599212, 139.34208759034047], image: './static/sunset.jpg', name: 'ロボット' },
-      { location: [35.48638279161658, 139.34182473387625], image: './static/sunset.jpg', name: '広場' },
-      { location: [35.487920311541316, 139.3430478210974], image: './static/sunset.jpg', name: '自動車' },
-      { location: [35.4867846462545, 139.34246309957499], image: './static/sunset.jpg', name: '工房' },
-      { location: [35.486649238937936, 139.34321411804413], image: './static/sunset.jpg', name: '広場' },
-
+      { location: [35.48604116703019, 139.34128951057255], image: './static/sunset.webp', name: 'K1号館' },
+      { location: [35.48650866834297, 139.34112683577234], image: './static/sunset.webp', name: 'K2号館' },
+      { location: [35.48565158052546, 139.34141709865116], image: './static/sunset.webp', name: 'K3号館' },
+      { location: [35.485683613095844, 139.3419922129912], image: './static/sunset.webp', name: 'K4号館' },
+      { location: [35.485597402140684, 139.34321173217694], image: './static/sunset.webp', name: 'KAITアリーナ' },
+      { location: [35.4860692562503, 139.34187073632998], image: './static/sunset.webp', name: '先進研' },
+      { location: [35.48714378031437, 139.34102852276388], image: './static/sunset.webp', name: 'バイオ' },
+      { location: [35.4876058212225, 139.34111663074825], image: './static/sunset.webp', name: '自動車' },
+      { location: [35.48768007599212, 139.34208759034047], image: './static/sunset.webp', name: 'ロボット' },
+      { location: [35.48638279161658, 139.34182473387625], image: './static/sunset.webp', name: '広場' },
+      { location: [35.487920311541316, 139.3430478210974], image: './static/sunset.webp', name: '自動車' },
+      { location: [35.4867846462545, 139.34246309957499], image: './static/sunset.webp', name: '工房' },
+      { location: [35.486649238937936, 139.34321411804413], image: './static/sunset.webp', name: '広場' },
     ];
 
+    // マーカーを地図に追加
     markers.forEach(markerData => {
       const marker = L.marker(markerData.location, {
         icon: createCustomIcon(markerData.image)
@@ -210,7 +227,7 @@
       });
     });
 
-    // 詳細パネル表示
+    // 詳細パネルを開く
     function showDetails(content) {
       const detailsPanel = document.getElementById('details-panel');
       detailsPanel.innerHTML = `
@@ -231,16 +248,15 @@
       detailsPanel.classList.add('active');
     }
 
-    // 詳細パネル非表示
+    // 詳細パネルを閉じる
     function hideDetails() {
-      document.getElementById('details-panel')
-        .classList.remove('active');
+      document.getElementById('details-panel').classList.remove('active');
     }
 
-    // 地図クリック時に詳細パネルを閉じる
+    // 地図クリックで詳細パネルを閉じる
     map.on('click', hideDetails);
 
-    // ユーザーの現在位置マーカーと向き管理
+    // ユーザー現在地マーカーと向き
     let userMarker = null;
     let currentHeading = 0;
 
@@ -299,9 +315,7 @@
         const markerEl = userMarker.getElement();
         if (markerEl) {
           const wedge = markerEl.querySelector('.direction-wedge');
-          if (wedge) {
-            wedge.style.transform = `rotate(${heading}deg)`;
-          }
+          if (wedge) wedge.style.transform = `rotate(${heading}deg)`;
         }
       }
     }
@@ -312,9 +326,7 @@
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
           let heading = position.coords.heading;
-          if (heading === null || isNaN(heading)) {
-            heading = currentHeading;
-          }
+          if (heading === null || isNaN(heading)) heading = currentHeading;
           updateUserMarker(lat, lng, heading);
         },
         (error) => {
@@ -330,14 +342,11 @@
       window.addEventListener(
         "deviceorientation",
         (event) => {
-          if (event.alpha !== null) {
-            currentHeading = event.alpha;
-          }
+          if (event.alpha !== null) currentHeading = event.alpha;
         },
         true
       );
     }
   </script>
-  </body>
-
+</body>
 </html>

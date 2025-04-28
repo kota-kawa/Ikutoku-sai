@@ -1,76 +1,61 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>幾徳祭 | ご案内・アクセス</title>
+<!-- templates/announce.html -->
+{% extends "layout.html" %}
 
-      <!-- favicon の指定を追加 -->
-      <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
-      <link rel="icon" type="image/png" href="./static/favicon.png">
-      <link rel="shortcut icon" href="./static/favicon.ico">
-      
-  <!-- ===== External Libraries (index と同一) ===== -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-  
-  <!-- ===== Inline Style（index.html の style をそのまま貼付） ===== -->
+{% block title %}幾徳祭 | ご案内・アクセス{% endblock %}
+
+{% block head_extra %}
+  <!-- Inline Styles from Announce Page -->
   <style>
-    :root{--kait-green:#32CD32;--kait-purple:#8A2BE2;--dark-overlay:rgba(0,0,0,.6);}
-    html{scroll-behavior:smooth}
-    body{font-family:'Noto Sans JP',sans-serif;background:linear-gradient(120deg,#f8f9fa 0%,#eef2f7 50%,#e3e8f0 100%);color:#343a40;overflow-x:hidden}
-    .navbar{backdrop-filter:blur(16px) saturate(180%);background-color:var(--dark-overlay)!important;transition:background .3s}
-    .navbar.scrolled{background-color:rgba(0,0,0,.85)!important}
-    .hero{position:relative;height:45vh;text-align:center;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .hero-bg{position:absolute;inset:0;background:url('./static/sunset.jpg') center/cover no-repeat fixed;filter:brightness(.55);z-index:0}
-    .hero .inner{position:relative;z-index:2}
-    .card{transition:transform .35s cubic-bezier(.25,.46,.45,.94),box-shadow .35s;border:none;border-radius:1rem}
-    .card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 15px 30px rgba(0,0,0,.15)}
-    footer{background:#212529;color:#adb5bd;padding:1rem 0}
+    .hero {
+      position: relative;
+      height: 45vh;
+      text-align: center;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: url('{{ url_for("static", filename="sunset.webp") }}') center/cover no-repeat fixed;
+      filter: brightness(.55);
+      z-index: 0;
+    }
+    .hero .inner { position: relative; z-index: 2; }
+    .card {
+      transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
+      border: none;
+      border-radius: 1rem;
+    }
+    .card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 15px 30px rgba(0,0,0,.15);
+    }
   </style>
-  
-  </head>
 
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4TPL68169Q');
+  </script>
+{% endblock %}
 
-  gtag('config', 'G-4TPL68169Q');
-</script>
-
-
-<body>
-  <!-- ===== Navbar ===== -->
-  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="/">幾徳祭</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="/about">概要</a></li>
-          <li class="nav-item"><a class="nav-link" href="/announce">ご案内</a></li>
-          <li class="nav-item"><a class="nav-link" href="/event">企画紹介</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!-- ===== Hero ===== -->
+{% block content %}
+  <!-- Hero -->
   <section class="hero">
     <div class="hero-bg"></div>
-    <div class="inner" data-aos="fade-down">
+    <div class="inner text-center" data-aos="fade-down">
       <h1 class="display-4 fw-bold">ご案内 & アクセス</h1>
       <p class="lead mb-0">安心・安全にお楽しみいただくために</p>
     </div>
   </section>
 
-  <!-- ===== Main ===== -->
+  <!-- Main -->
   <main class="container my-5 pt-4">
     <!-- ご来場の方へ -->
     <section class="mb-5" data-aos="fade-up">
@@ -93,7 +78,8 @@
       <div class="row g-4">
         <div class="col-lg-6">
           <iframe class="w-100 rounded" height="380" style="border:0;" loading="lazy" allowfullscreen
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.735162808246!2d139.33997817582735!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e0!3m2!1sja!2sjp!4v1745132850729!5m2!1sja!2sjp"></iframe>
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.735162808246!2d139.33997817582735!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e0!3m2!1sja!2sjp!4v1745132850729!5m2!1sja!2sjp">
+          </iframe>
         </div>
         <div class="col-lg-6">
           <div class="card h-100 p-3">
@@ -105,22 +91,5 @@
       </div>
     </section>
   </main>
+{% endblock %}
 
-   <!-- ===== Footer ===== -->
-   <footer class="text-center">
-    <div class="container">
-      <small>© 2024 神奈川工科大学学友会イベント局</small>
-    </div>
-  </footer>
-
-  <!-- ===== Scripts ===== -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <script>
-    const navbar=document.querySelector('.navbar');
-    window.addEventListener('scroll',()=>{window.scrollY>60?navbar.classList.add('scrolled'):navbar.classList.remove('scrolled');});
-    AOS.init({once:true,offset:120,duration:700});
-  </script>
-
-</body>
-</html>
