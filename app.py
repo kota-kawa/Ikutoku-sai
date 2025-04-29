@@ -23,6 +23,7 @@ def about():
 def map():
     return render_template('map.html')
 
+
 #アプリの実行する
 if __name__ == '__main__':
     app.run(debug=True)
