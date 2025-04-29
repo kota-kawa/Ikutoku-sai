@@ -23,7 +23,9 @@ def about():
 def map():
     return render_template('map.html')
 
-
+@app.route('/jibun')
+def jibun():
+    return render_template('jibun.html')
 #アプリの実行する
 if __name__ == '__main__':
     app.run(debug=True)
