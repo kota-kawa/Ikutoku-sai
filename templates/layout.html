@@ -64,7 +64,19 @@
     </style>
 
     {% block head_extra %}{% endblock %}
+
+    <!-- Google Analytics -->
+    <script async
+      src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-4TPL68169Q');
+    </script>
+
   </head>
+
   <body>
     <!-- ============ Navbar ============ -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
