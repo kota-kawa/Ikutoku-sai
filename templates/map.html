@@ -184,254 +184,280 @@
       <button class="btn btn-light">📄 詳細情報</button>
     </div>
 
+
+    <!-- ページのどこかに追加（body の最後あたり） -->
+<div class="modal fade" id="compassModal" tabindex="-1" aria-labelledby="compassModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="compassModalLabel">コンパスの使用許可</h5>
+      </div>
+      <div class="modal-body">
+        地図上に向きを表示するにはコンパスの使用を許可してください。
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="denyCompass" class="btn btn-secondary" data-bs-dismiss="modal">許可しない</button>
+        <button type="button" id="allowCompass" class="btn btn-primary">許可する</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <!-- Bootstrap JS Bundle -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-    /* ========== 地図初期化 ========== */
-    const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
-    const map = L.map('map').setView(INITIAL_CENTER, 18);
-    L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      {
-        attribution:
-          '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
-        maxZoom: 18,
-      }
-    ).addTo(map);
-
-    /* ========== ユーティリティ ========== */
-    const toRad = (d) => (d * Math.PI) / 180;
-    const toDeg = (r) => (r * 180) / Math.PI;
-    const EARTH_R = 6371000;
-    function getScreenAngle() {
-      return (
-        (screen.orientation && screen.orientation.angle) ||
-        window.orientation ||
-        0
-      );
-    }
-    function calcBearing(lat1, lon1, lat2, lon2) {
-      const φ1 = toRad(lat1),
-        φ2 = toRad(lat2),
-        λ1 = toRad(lon1),
-        λ2 = toRad(lon2);
-      const y = Math.sin(λ2 - λ1) * Math.cos(φ2);
-      const x =
-        Math.cos(φ1) * Math.sin(φ2) -
-        Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
-      return (toDeg(Math.atan2(y, x)) + 360) % 360;
-    }
-
-    /* ========== スポットマーカー ========== */
-    function createCustomIcon(url) {
-      return L.divIcon({
-        className: "",
-        html: `<div class="custom-icon"><div class="icon-image" style="background-image:url('${url}')"></div></div>`,
-        iconSize: [50, 60],
-        iconAnchor: [25, 60],
-      });
-    }
-    const spots = [
-      { location: [35.48604116703019, 139.34128951057255], image: "./static/sunset.webp", name: "K1号館" },
-      { location: [35.48650866834297, 139.34112683577234], image: "./static/sunset.webp", name: "K2号館" },
-      { location: [35.48565158052546, 139.34141709865116], image: "./static/sunset.webp", name: "K3号館" },
-      { location: [35.485683613095844, 139.3419922129912], image: "./static/sunset.webp", name: "K4号館" },
-      { location: [35.485597402140684, 139.34321173217694], image: "./static/sunset.webp", name: "KAITアリーナ" },
-      { location: [35.4860692562503, 139.34187073632998], image: "./static/sunset.webp", name: "先進研" },
-      { location: [35.48714378031437, 139.34102852276388], image: "./static/sunset.webp", name: "バイオ" },
-      { location: [35.4876058212225, 139.34111663074825], image: "./static/sunset.webp", name: "自動車" },
-      { location: [35.48768007599212, 139.34208759034047], image: "./static/sunset.webp", name: "ロボット" },
-      { location: [35.48638279161658, 139.34182473387625], image: "./static/sunset.webp", name: "広場" },
-      { location: [35.487920311541316, 139.3430478210974], image: "./static/sunset.webp", name: "自動車" },
-      { location: [35.4867846462545, 139.34246309957499], image: "./static/sunset.webp", name: "工房" },
-      { location: [35.486649238937936, 139.34321411804413], image: "./static/sunset.webp", name: "広場" },
-    ];
-    spots.forEach((s) =>
-      L.marker(s.location, { icon: createCustomIcon(s.image) })
-        .addTo(map)
-        .on("click", () =>
-          showDetails({
-            image: s.image,
-            name: s.name,
-            description:
-              "ここにスポットの説明が表示されます。Lorem ipsum dolor sit amet…",
-            address: "東京都品川区東八潮1",
-            phone: "00-1234-5678",
-          })
-        )
-    );
-
-    /* ========== 詳細パネル (元コードそのまま) ========== */
-    function showDetails(c) {
-      const p = document.getElementById("details-panel");
-      p.innerHTML = `
-        <button class="btn-close float-end" onclick="hideDetails()"></button>
-        <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
-        <h2 class="fs-4">${c.name}</h2>
-        <p class="text-muted mb-3">${c.description}</p>
-        <div class="border-top pt-3">
-          <div><strong>住所:</strong> ${c.address}</div>
-          <div><strong>電話番号:</strong> ${c.phone}</div>
-        </div>`;
-      p.classList.add("active");
-    }
-    function hideDetails() {
-      document.getElementById("details-panel").classList.remove("active");
-    }
-    map.on("click", hideDetails);
-
-    /* ========== ユーザーマーカー ========== */
-    let userMarker = null;
-    let lastPos = null;
-    let currentHeading = 0;
-    function userHTML(heading) {
-      return `
-        <div style="position:relative;width:40px;height:40px">
-          <div class="direction-wedge" style="
-            position:absolute;top:-20px;left:-20px;width:80px;height:80px;
-            background:radial-gradient(circle at 50% 50%,rgba(0,122,255,.4) 0%,rgba(0,122,255,0) 80%);
-            clip-path:polygon(50% 50%,25% 0%,75% 0%);
-            transform:rotate(${heading}deg);transform-origin:40px 40px;"></div>
-          <div style="position:absolute;top:0;left:0;width:40px;height:40px;border-radius:50%;
-            background:rgba(0,122,255,.2);border:2px solid rgba(0,122,255,.3);"></div>
-          <div style="position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;
-            background:#007AFF;border:2px solid #fff;"></div>
-        </div>`;
-    }
-    function renderUser(lat, lon, heading) {
-      lastPos = [lat, lon];
-      if (!userMarker) {
-        userMarker = L.marker([lat, lon], {
-          icon: L.divIcon({
-            html: userHTML(heading),
+      <script>
+        // 定数と地図初期化
+        const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
+        const map = L.map('map').setView(INITIAL_CENTER, 18);
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            attribution:
+              '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
+            maxZoom: 18,
+          }
+        ).addTo(map);
+        
+        // ユーティリティ関数
+        const toRad = d => (d * Math.PI) / 180;
+        const toDeg = r => (r * 180) / Math.PI;
+        const EARTH_R = 6371000;
+        function getScreenAngle() {
+          return (
+            (screen.orientation && screen.orientation.angle) ||
+            window.orientation ||
+            0
+          );
+        }
+        function calcBearing(lat1, lon1, lat2, lon2) {
+          const φ1 = toRad(lat1),
+                φ2 = toRad(lat2),
+                λ1 = toRad(lon1),
+                λ2 = toRad(lon2);
+          const y = Math.sin(λ2 - λ1) * Math.cos(φ2);
+          const x =
+            Math.cos(φ1) * Math.sin(φ2) -
+            Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
+          return (toDeg(Math.atan2(y, x)) + 360) % 360;
+        }
+        
+        // スポットマーカー
+        function createCustomIcon(url) {
+          return L.divIcon({
             className: "",
-            iconSize: [40, 40],
-            iconAnchor: [20, 20],
-          }),
-        }).addTo(map);
-      } else {
-        /* HTML を丸ごと再生成 → 向きが確実に更新 */
-        userMarker.setLatLng([lat, lon]);
-        userMarker.setIcon(
-          L.divIcon({
-            html: userHTML(heading),
-            className: "",
-            iconSize: [40, 40],
-            iconAnchor: [20, 20],
-          })
-        );
-      }
-    }
-
-    /* ========== 方位の適用 ========= */
-    function applyHeading(raw) {
-      if (raw == null) return;
-      const deg = (raw + getScreenAngle()) % 360;
-      currentHeading = deg;
-      console.log("Heading:", deg.toFixed(1));
-      if (lastPos) renderUser(lastPos[0], lastPos[1], deg);
-    }
-
-    /* ========== 1) AbsoluteOrientationSensor ========= */
-    (function () {
-      try {
-        if ("AbsoluteOrientationSensor" in window) {
-          const sen = new AbsoluteOrientationSensor({ frequency: 30 });
-          sen.addEventListener("reading", () => {
-            const [x, y, z, w] = sen.quaternion;
-            const yaw =
-              (Math.atan2(
-                2 * (w * z + x * y),
-                1 - 2 * (y * y + z * z)
-              ) *
-                180) /
-              Math.PI;
-            applyHeading((yaw + 360) % 360);
+            html: `<div class="custom-icon"><div class="icon-image" style="background-image:url('${url}')"></div></div>`,
+            iconSize: [50, 60],
+            iconAnchor: [25, 60],
           });
-          sen.start();
-          return; // 機能すれば他は不要
         }
-      } catch (e) {
-        console.warn("AbsoluteOrientationSensor error", e);
-      }
-    })();
-
-    /* ========== 2) DeviceOrientationEvent (webkit / alpha) ========= */
-    (function () {
-      function handler(ev) {
-        if (ev.webkitCompassHeading != null)
-          return applyHeading(ev.webkitCompassHeading);
-        if (ev.alpha != null) return applyHeading((360 - ev.alpha) % 360);
-      }
-      if (typeof DeviceOrientationEvent !== "undefined") {
-        if (DeviceOrientationEvent.requestPermission) {
-          DeviceOrientationEvent.requestPermission()
-            .then((r) =>
-              r === "granted"
-                ? addEventListener("deviceorientation", handler, true)
-                : console.warn("DeviceOrientation permission denied")
+        const spots = [
+          { location: [35.48604116703019, 139.34128951057255], image: "./static/sunset.webp", name: "K1号館" },
+          { location: [35.48650866834297, 139.34112683577234], image: "./static/sunset.webp", name: "K2号館" },
+          { location: [35.48565158052546, 139.34141709865116], image: "./static/sunset.webp", name: "K3号館" },
+          { location: [35.485683613095844, 139.3419922129912], image: "./static/sunset.webp", name: "K4号館" },
+          { location: [35.485597402140684, 139.34321173217694], image: "./static/sunset.webp", name: "KAITアリーナ" },
+          { location: [35.4860692562503, 139.34187073632998], image: "./static/sunset.webp", name: "先進研" },
+          { location: [35.48714378031437, 139.34102852276388], image: "./static/sunset.webp", name: "バイオ" },
+          { location: [35.4876058212225, 139.34111663074825], image: "./static/sunset.webp", name: "自動車" },
+          { location: [35.48768007599212, 139.34208759034047], image: "./static/sunset.webp", name: "ロボット" },
+          { location: [35.48638279161658, 139.34182473387625], image: "./static/sunset.webp", name: "広場" },
+          { location: [35.487920311541316, 139.3430478210974], image: "./static/sunset.webp", name: "自動車" },
+          { location: [35.4867846462545, 139.34246309957499], image: "./static/sunset.webp", name: "工房" },
+          { location: [35.486649238937936, 139.34321411804413], image: "./static/sunset.webp", name: "広場" },
+        ];
+        spots.forEach(s =>
+          L.marker(s.location, { icon: createCustomIcon(s.image) })
+            .addTo(map)
+            .on("click", () =>
+              showDetails({
+                image: s.image,
+                name: s.name,
+                description: "ここにスポットの説明が表示されます。",
+                address: "東京都品川区東八潮1",
+                phone: "00-1234-5678",
+              })
             )
-            .catch(console.error);
-        } else {
-          addEventListener("deviceorientationabsolute", handler, true);
-          addEventListener("deviceorientation", handler, true);
-        }
-      }
-    })();
-
-    /* ========== 3) DeviceOrientationEvent.absolute プロパティ ========= */
-    (function () {
-      function handler(ev) {
-        if (ev.absolute && ev.alpha != null)
-          applyHeading((360 - ev.alpha) % 360);
-      }
-      addEventListener("deviceorientation", handler, true);
-    })();
-
-    /* ========== 4) GPS 移動ベクトル補完 ========= */
-    let lastBearingPos = null;
-    function gpsBearing(lat, lon) {
-      if (!lastBearingPos) {
-        lastBearingPos = [lat, lon];
-        return null;
-      }
-      const [pl, pn] = lastBearingPos;
-      const d =
-        EARTH_R *
-        2 *
-        Math.asin(
-          Math.sqrt(
-            Math.sin(toRad((lat - pl) / 2)) ** 2 +
-              Math.cos(toRad(pl)) *
-                Math.cos(toRad(lat)) *
-                Math.sin(toRad((lon - pn) / 2)) ** 2
-          )
         );
-      if (d < 2) return null; // 2 m 未満 → ノイズ
-      lastBearingPos = [lat, lon];
-      return calcBearing(pl, pn, lat, lon);
-    }
-
-    /* ========== Geolocation ========= */
-    if ("geolocation" in navigator) {
-      navigator.geolocation.watchPosition(
-        ({ coords: { latitude, longitude } }) => {
-          const fallback = gpsBearing(latitude, longitude);
-          if (fallback != null && currentHeading === 0) currentHeading = fallback;
-          renderUser(latitude, longitude, currentHeading);
-        },
-        (e) => console.error("Geolocation error", e),
-        { enableHighAccuracy: true, maximumAge: 1500, timeout: 7000 }
-      );
-    } else alert("Geolocation API に対応していません。");
-
-    /* ========== 初期化終了 ========== */
-    hideDetails();
-  </script>
+        
+        // 詳細パネル
+        function showDetails(c) {
+          const p = document.getElementById("details-panel");
+          p.innerHTML = `
+            <button class="btn-close float-end" onclick="hideDetails()"></button>
+            <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
+            <h2 class="fs-4">${c.name}</h2>
+            <p class="text-muted mb-3">${c.description}</p>
+            <div class="border-top pt-3">
+              <div><strong>住所:</strong> ${c.address}</div>
+              <div><strong>電話番号:</strong> ${c.phone}</div>
+            </div>`;
+          p.classList.add("active");
+        }
+        function hideDetails() {
+          document.getElementById("details-panel").classList.remove("active");
+        }
+        map.on("click", hideDetails);
+        
+        // ユーザーマーカーと向き
+        let userMarker = null;
+        let lastPos = null;
+        let currentHeading = 0;
+        function userHTML(heading) {
+          return `
+            <div style="position:relative;width:40px;height:40px">
+              <div class="direction-wedge" style="
+                position:absolute;top:-20px;left:-20px;width:80px;height:80px;
+                background:radial-gradient(circle at 50% 50%,rgba(0,122,255,.4) 0%,rgba(0,122,255,0) 80%);
+                clip-path:polygon(50% 50%,25% 0%,75% 0%);
+                transform:rotate(${heading}deg);transform-origin:40px 40px;"></div>
+              <div style="position:absolute;top:0;left:0;width:40px;height:40px;border-radius:50%;
+                background:rgba(0,122,255,.2);border:2px solid rgba(0,122,255,.3);"></div>
+              <div style="position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;
+                background:#007AFF;border:2px solid #fff;"></div>
+            </div>`;
+        }
+        function renderUser(lat, lon, heading) {
+          lastPos = [lat, lon];
+          if (!userMarker) {
+            userMarker = L.marker([lat, lon], {
+              icon: L.divIcon({
+                html: userHTML(heading),
+                className: "",
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+              }),
+            }).addTo(map);
+          } else {
+            userMarker.setLatLng([lat, lon]);
+            userMarker.setIcon(
+              L.divIcon({
+                html: userHTML(heading),
+                className: "",
+                iconSize: [40, 40],
+                iconAnchor: [20, 20],
+              })
+            );
+          }
+        }
+        function applyHeading(raw) {
+          if (raw == null) return;
+          const deg = (raw + getScreenAngle()) % 360;
+          currentHeading = deg;
+          if (lastPos) renderUser(lastPos[0], lastPos[1], deg);
+        }
+        
+        // コンパス許可モーダル
+        document.addEventListener('DOMContentLoaded', () => {
+          const compassModal = new bootstrap.Modal(document.getElementById('compassModal'), {
+            backdrop: 'static',
+            keyboard: false
+          });
+          compassModal.show();
+        
+          document.getElementById('allowCompass').addEventListener('click', () => {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+              DeviceOrientationEvent.requestPermission()
+                .then(resp => {
+                  if (resp === 'granted') initCompass();
+                  else console.warn('DeviceOrientation permission denied');
+                })
+                .catch(err => console.error('Compass request error', err))
+                .finally(() => compassModal.hide());
+            } else {
+              initCompass();
+              compassModal.hide();
+            }
+          });
+        
+          document.getElementById('denyCompass').addEventListener('click', () => {
+            console.warn('Compass use denied by user');
+            compassModal.hide();
+          });
+        });
+        
+        // 方位取得初期化
+        function initCompass() {
+          // 1) AbsoluteOrientationSensor
+          try {
+            if ('AbsoluteOrientationSensor' in window) {
+              const sensor = new AbsoluteOrientationSensor({ frequency: 30 });
+              sensor.addEventListener('reading', () => {
+                const [x, y, z, w] = sensor.quaternion;
+                const yaw = (Math.atan2(2*(w*z + x*y), 1 - 2*(y*y + z*z)) * 180) / Math.PI;
+                applyHeading((yaw + 360) % 360);
+              });
+              sensor.start();
+              return;
+            }
+          } catch (e) {
+            console.warn('AbsoluteOrientationSensor error:', e);
+          }
+        
+          // 2) DeviceOrientationEvent
+          const handler = ev => {
+            if (ev.webkitCompassHeading != null) {
+              applyHeading(ev.webkitCompassHeading);
+            } else if (ev.alpha != null) {
+              applyHeading((360 - ev.alpha) % 360);
+            }
+          };
+          if (typeof DeviceOrientationEvent !== 'undefined') {
+            if (DeviceOrientationEvent.requestPermission) {
+              DeviceOrientationEvent.requestPermission()
+                .then(r => {
+                  if (r === 'granted') window.addEventListener('deviceorientation', handler, true);
+                })
+                .catch(console.error);
+            } else {
+              window.addEventListener('deviceorientationabsolute', handler, true);
+              window.addEventListener('deviceorientation', handler, true);
+            }
+          }
+        }
+        
+        // GPSベクトルによる向き補完
+        let lastBearingPos = null;
+        function gpsBearing(lat, lon) {
+          if (!lastBearingPos) {
+            lastBearingPos = [lat, lon];
+            return null;
+          }
+          const [pl, pn] = lastBearingPos;
+          const d = EARTH_R * 2 * Math.asin(
+            Math.sqrt(
+              Math.sin(toRad((lat - pl) / 2))**2 +
+              Math.cos(toRad(pl)) * Math.cos(toRad(lat)) * Math.sin(toRad((lon - pn) / 2))**2
+            )
+          );
+          if (d < 2) return null;
+          lastBearingPos = [lat, lon];
+          return calcBearing(pl, pn, lat, lon);
+        }
+        
+        // 位置情報取得
+        if ('geolocation' in navigator) {
+          navigator.geolocation.watchPosition(
+            ({ coords: { latitude, longitude } }) => {
+              const fallback = gpsBearing(latitude, longitude);
+              if (fallback != null && currentHeading === 0) currentHeading = fallback;
+              renderUser(latitude, longitude, currentHeading);
+            },
+            e => console.error('Geolocation error', e),
+            { enableHighAccuracy: true, maximumAge: 1500, timeout: 7000 }
+          );
+        } else {
+          alert('Geolocation API に対応していません。');
+        }
+        
+        // 初期詳細パネル非表示
+        hideDetails();
+        </script>
+        
 
   </body>
 </html>
