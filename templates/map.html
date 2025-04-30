@@ -256,19 +256,27 @@
           });
         }
         const spots = [
-          { location: [35.48604116703019, 139.34128951057255], image: "./static/sunset.webp", name: "K1号館" },
-          { location: [35.48650866834297, 139.34112683577234], image: "./static/sunset.webp", name: "K2号館" },
-          { location: [35.48565158052546, 139.34141709865116], image: "./static/sunset.webp", name: "K3号館" },
-          { location: [35.485683613095844, 139.3419922129912], image: "./static/sunset.webp", name: "K4号館" },
-          { location: [35.485597402140684, 139.34321173217694], image: "./static/sunset.webp", name: "KAITアリーナ" },
-          { location: [35.4860692562503, 139.34187073632998], image: "./static/sunset.webp", name: "先進研" },
-          { location: [35.48714378031437, 139.34102852276388], image: "./static/sunset.webp", name: "バイオ" },
-          { location: [35.4876058212225, 139.34111663074825], image: "./static/sunset.webp", name: "自動車" },
-          { location: [35.48768007599212, 139.34208759034047], image: "./static/sunset.webp", name: "ロボット" },
-          { location: [35.48638279161658, 139.34182473387625], image: "./static/sunset.webp", name: "広場" },
-          { location: [35.487920311541316, 139.3430478210974], image: "./static/sunset.webp", name: "自動車" },
-          { location: [35.4867846462545, 139.34246309957499], image: "./static/sunset.webp", name: "工房" },
-          { location: [35.486649238937936, 139.34321411804413], image: "./static/sunset.webp", name: "広場" },
+          { location: [35.48604116703019, 139.34128951057255], image: "./static/map/K1号館.jpg", name: "K1号館" },
+          { location: [35.48650866834297, 139.34112683577234], image: "./static/map/K2号館.jpg", name: "K2号館" },
+          { location: [35.48565158052546, 139.34141709865116], image: "./static/map/K3号館.jpg", name: "K3号館" },
+          { location: [35.485683613095844, 139.3419922129912], image: "./static/map/K4号館.jpg", name: "K4号館" },
+          { location: [35.485597402140684, 139.34321173217694], image: "./static/map/KAITアリーナ.jpg", name: "KAITアリーナ" },
+          { location: [35.4860692562503, 139.34187073632998], image: "./static/map/先進研.jpg", name: "先進研" },
+          { location: [35.48714378031437, 139.34102852276388], image: "./static/map/バイオ棟.jpg", name: "バイオ棟" },
+          { location: [35.4876058212225, 139.34111663074825], image: "./static/map/自動車棟.jpg", name: "自動車棟" },
+          { location: [35.48768007599212, 139.34208759034047], image: "./static/map/ロボット.jpg", name: "ロボット" },
+          { location: [35.48638279161658, 139.34182473387625], image: "./static/map/広場.jpg", name: "広場" },
+          { location: [35.487920311541316, 139.3430478210974], image: "./static/map/自動車工房.jpg", name: "自動車工房" },
+          { location: [35.4867846462545, 139.34246309957499], image: "./static/map/KAIT工房.jpg", name: "KAIT工房" },
+          { location: [35.486649238937936, 139.34321411804413], image: "./static/map/KAIT広場.jpg", name: "KAIT広場" },
+          
+          { location: [35.44134206079602, 139.3663787109304], image: "./static/sunset.webp", name: "厚木バスセンター" },
+          { location: [35.44012426180783, 139.36467281666947], image: "./static/map/本厚木駅前バス停.jpg", name: "本厚木駅前バス停" },
+          
+          { location: [35.48543014113195, 139.34095161222936], image: "./static/map/神奈川工科大学前バス停.jpg", name: "神奈川工科大学前バス停" },
+          { location: [35.48549264919395, 139.3410855002179], image: "./static/sunset.webp", name: "本厚木駅直行バス停" },
+        
+        
         ];
         spots.forEach(s =>
           L.marker(s.location, { icon: createCustomIcon(s.image) })
