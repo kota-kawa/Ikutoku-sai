@@ -307,20 +307,52 @@
         let userMarker = null;
         let lastPos = null;
         let currentHeading = 0;
-        function userHTML(heading) {
-          return `
-            <div style="position:relative;width:40px;height:40px">
-              <div class="direction-wedge" style="
-                position:absolute;top:-20px;left:-20px;width:80px;height:80px;
-                background:radial-gradient(circle at 50% 50%,rgba(0,122,255,.4) 0%,rgba(0,122,255,0) 80%);
-                clip-path:polygon(50% 50%,25% 0%,75% 0%);
-                transform:rotate(${heading}deg);transform-origin:40px 40px;"></div>
-              <div style="position:absolute;top:0;left:0;width:40px;height:40px;border-radius:50%;
-                background:rgba(0,122,255,.2);border:2px solid rgba(0,122,255,.3);"></div>
-              <div style="position:absolute;top:8px;left:8px;width:24px;height:24px;border-radius:50%;
-                background:#007AFF;border:2px solid #fff;"></div>
-            </div>`;
-        }
+
+// ユーザーマーカーと向き（色を濃く強調）
+function userHTML(heading) {
+  return `
+    <div style="position:relative;width:40px;height:40px">
+      <!-- 方向ウェッジ -->
+      <div class="direction-wedge" style="
+        position:absolute;
+        top:-20px; left:-20px;
+        width:80px; height:80px;
+        /* 内側の青を不透明度0.6にして濃く */
+        background: radial-gradient(
+          circle at 50% 50%,
+          rgba(0,122,255,30) 0%,
+          rgba(0,122,255,0) 80%
+        );
+        clip-path: polygon(50% 50%,25% 0%,75% 0%);
+        transform: rotate(${heading}deg);
+        transform-origin: 40px 40px;
+      "></div>
+
+      <!-- 外側サークル -->
+      <div style="
+        position:absolute;
+        top:0; left:0;
+        width:40px; height:40px;
+        border-radius:50%;
+        /* 背景を不透明度0.4に、境界線も濃く */
+        background: rgba(0,122,255,0.4);
+        border: 2px solid rgba(0,122,255,0.6);
+      "></div>
+
+      <!-- 中央ドット -->
+      <div style="
+        position:absolute;
+        top:8px; left:8px;
+        width:24px; height:24px;
+        border-radius:50%;
+        /* 中央の青も少し濃い目に */
+        background: #005FCC;
+        border: 2px solid #fff;
+      "></div>
+    </div>`;
+}
+
+
         function renderUser(lat, lon, heading) {
           lastPos = [lat, lon];
           if (!userMarker) {
