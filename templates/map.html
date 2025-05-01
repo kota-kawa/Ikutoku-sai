@@ -47,9 +47,15 @@
   </noscript>
 
 
+  <link
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  rel="stylesheet"
+/>
+
 
     <style>
     :root { --brand-green: rgb(14,83,12); }
+   
 
     html, body {
       margin: 0;
@@ -120,6 +126,40 @@
       border: 1px solid #aaa;
     }
 
+
+/* グルメ（青） */
+.event-icon-gourmet {
+  background: #005FCC;
+}
+.event-icon-gourmet::after {
+  border-top: 15px solid #005FCC;
+}
+
+/* 研究室（オレンジ） */
+.event-icon-lab {
+  background: #FF5733;
+}
+.event-icon-lab::after {
+  border-top: 15px solid #FF5733;
+}
+
+/* サークル（緑） */
+.event-icon-circle {
+  background: #28A745;
+}
+.event-icon-circle::after {
+  border-top: 15px solid #28A745;
+}
+
+/* 演奏・劇（紫） */
+.event-icon-performance {
+  background: #8E44AD;
+}
+.event-icon-performance::after {
+  border-top: 15px solid #8E44AD;
+}
+
+
     /* 詳細パネル */
     .details-panel {
       position: fixed;
@@ -159,26 +199,18 @@
     }
 
 
-  /* 戻るボタンがマップ上に重なるように */
-  #back-btn {
-    position: fixed;
-    top: 20px;
-    left: 70px;
-    z-index: 999;
+/* 戻るボタンのホバー効果 */
+#back-btn {
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0.75rem 0.75rem;  /* ボタンの内側スペース */
+  font-size: 0.875rem;        /* 少し小さめの文字 */
+}
+#back-btn:hover {
+  background-color: #e2e6ea;  /* ホバー時の背景色 */
+  color: #005FCC;             /* ホバー時の文字色 */
+}
 
-    /* サイズアップ */
-    padding: 0.6rem 1.0rem;   /* 縦横ともに広めに */
-    font-size: 1.0rem;        /* 少し大きめの文字 */
 
-    /* 見た目 */
-    background-color: #3fe1f7;
-    color: #000000;
-    border: none;
-  }
-  #back-btn .bi-arrow-left {
-    font-size: 1.0rem;
-    vertical-align: middle;
-  }
 
 
   </style>
@@ -187,9 +219,12 @@
 
   <body>
     <!-- ← ここから追加：戻るボタン -->
-    <a id="back-btn" href="/" class="btn btn-light btn-lg">
-      <i class="bi bi-arrow-left"></i> 戻る
-    </a>
+    <a id="back-btn" href="/"
+    class="btn btn-light btn-lg shadow rounded-pill position-fixed"
+    style="top:20px; left:60px; z-index:1000;">
+   <i class="bi bi-arrow-left me-2"></i>戻る
+ </a>
+ 
   
 
     <div id="map"></div>
@@ -202,11 +237,11 @@
     <!-- メニューバー -->
     <div
       class="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">
-      <button class="btn btn-light">🏠 すべて</button>
-      <button class="btn btn-light">🔍 検索</button>
+      <button class="btn btn-light">🏠 全体</button>
+      <button class="btn btn-light">🔍 研究室</button>
       <button class="btn btn-light">🍴 グルメ</button>
-      <button class="btn btn-light">🛍️ ショッピング</button>
-      <button class="btn btn-light">📄 詳細情報</button>
+      <button class="btn btn-light">🛍️ サークル</button>
+      <button class="btn btn-light">📄 演奏・劇</button>
     </div>
 
 
@@ -239,6 +274,10 @@
         // 定数と地図初期化
         const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
         const map = L.map('map').setView(INITIAL_CENTER, 18);
+
+          // 建物ピンをまとめるレイヤー
+          const buildingLayer = L.layerGroup().addTo(map);
+  
         L.tileLayer(
           "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
           {
@@ -295,27 +334,26 @@
           { location: [35.4867846462545, 139.34246309957499], image: "./static/map/KAIT工房.webp", name: "KAIT工房" },
           { location: [35.486649238937936, 139.34321411804413], image: "./static/map/KAIT広場.webp", name: "KAIT広場" },
           
-          { location: [35.44134206079602, 139.3663787109304], image: "./static/sunset.webp", name: "厚木バスセンター" },
+          { location: [35.44134206079602, 139.3663787109304], image: "./static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
           { location: [35.44012426180783, 139.36467281666947], image: "./static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
           
           { location: [35.48543014113195, 139.34095161222936], image: "./static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },
-          { location: [35.48549264919395, 139.3410855002179], image: "./static/sunset.webp", name: "本厚木駅直行バス停" },
+          { location: [35.48549264919395, 139.3410855002179], image: "./static/map/本厚木駅直行バス停.webp", name: "本厚木駅直行バス停" },
         
         
         ];
-        spots.forEach(s =>
-          L.marker(s.location, { icon: createCustomIcon(s.image) })
-            .addTo(map)
-            .on("click", () =>
-              showDetails({
-                image: s.image,
-                name: s.name,
-                description: "ここにスポットの説明が表示されます。",
-                address: "東京都品川区東八潮1",
-                phone: "00-1234-5678",
-              })
-            )
-        );
+        spots.forEach(s => {
+    const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
+      .on('click', () => showDetails({
+        image: s.image,
+        name: s.name,
+        description: "ここにスポットの説明",
+        address: "住所",
+        phone: "電話番号"
+      }));
+    buildingLayer.addLayer(m);
+    s.marker = m;  // 後で参照できるよう保持しておく
+  });
         
         // 詳細パネル
         function showDetails(c) {
@@ -521,11 +559,15 @@ function userHTML(heading) {
         
         // 初期詳細パネル非表示
         hideDetails();
+
         </script>
         
   <!-- スクリプトを defer で遅延実行 -->
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
- 
+ <!-- map.html の末尾、既存の Leaflet/Bootstrap スクリプトタグのあとに追加 -->
+ <script src="./static/js/eventsData.js" defer></script>
+ <script src="./static/js/events.js" defer></script>
+
   </body>
 </html>
