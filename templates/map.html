@@ -273,17 +273,27 @@
       <script>
         // 定数と地図初期化
         const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
-        const map = L.map('map').setView(INITIAL_CENTER, 18);
+         // 地図初期化（ズーム許容範囲を拡大）
+        const map = L.map('map', {
+           center: INITIAL_CENTER,
+           zoom: 20,               // 初期ズームを 20 に
+           minZoom: 5,             // 最小ズーム
+           maxZoom: 19,            // 最大ズーム
+           zoomControl: true,
+           scrollWheelZoom: true,  // ホイール／ピンチでの拡大縮小を有効化
+           touchZoom: true
+         });
 
           // 建物ピンをまとめるレイヤー
           const buildingLayer = L.layerGroup().addTo(map);
   
         L.tileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          //"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
           {
-            attribution:
-              '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
-            maxZoom: 18,
+            attribution: '…',
+            maxNativeZoom: 18,  // 実際に用意されている最大タイルズーム
+            maxZoom: 19,        // Leaflet 側での拡大限界（タイルはアップサンプリングされます）
           }
         ).addTo(map);
         
@@ -342,25 +352,33 @@
         
         
         ];
-        spots.forEach(s => {
-    const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
-      .on('click', () => showDetails({
-        image: s.image,
-        name: s.name,
-        description: "ここにスポットの説明",
-        address: "住所",
-        phone: "電話番号"
-      }));
-    buildingLayer.addLayer(m);
-    s.marker = m;  // 後で参照できるよう保持しておく
-  });
+
+         // 段階的にスポットマーカーをロード（150ms 間隔）
+          function loadMarkersSequentially(interval = 150) {
+            spots.forEach((s, idx) => {
+              setTimeout(() => {
+                const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
+                  .on('click', () => showDetails({
+                    image: s.image,
+                    name: s.name,
+                    description: "ここにスポットの説明",
+                    address: "住所",
+                    phone: "電話番号"
+                  }));
+                buildingLayer.addLayer(m);
+                s.marker = m;
+              }, interval * idx);
+            });
+          }
+          // ページ読み込み後に実行
+          window.addEventListener('load', () => loadMarkersSequentially());
         
         // 詳細パネル
         function showDetails(c) {
           const p = document.getElementById("details-panel");
           p.innerHTML = `
             <button class="btn-close float-end" onclick="hideDetails()"></button>
-            <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
+            <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3" loading="lazy">
             <h2 class="fs-4">${c.name}</h2>
             <p class="text-muted mb-3">${c.description}</p>
             <div class="border-top pt-3">
@@ -544,15 +562,25 @@ function userHTML(heading) {
         
         // 位置情報取得
         if ('geolocation' in navigator) {
-          navigator.geolocation.watchPosition(
-            ({ coords: { latitude, longitude } }) => {
-              const fallback = gpsBearing(latitude, longitude);
-              if (fallback != null && currentHeading === 0) currentHeading = fallback;
-              renderUser(latitude, longitude, currentHeading);
-            },
-            e => console.error('Geolocation error', e),
-            { enableHighAccuracy: true, maximumAge: 1500, timeout: 7000 }
-          );
+          +    navigator.geolocation.watchPosition(
+      ({ coords: { latitude, longitude } }) => {
+        const fallback = gpsBearing(latitude, longitude);
+        if (fallback != null && currentHeading === 0) currentHeading = fallback;
+        renderUser(latitude, longitude, currentHeading);
+      },
+      e => {
+        if (e.code === e.TIMEOUT) {
+          console.warn('位置情報の取得がタイムアウトしました。再試行します…');
+        } else {
+         console.error('Geolocation error', e);
+       }
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,     // キャッシュ利用を5秒まで許可
+        timeout: 20000        // タイムアウトを20秒に延長
+      }
+    );
         } else {
           alert('Geolocation API に対応していません。');
         }
