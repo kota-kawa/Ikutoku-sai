@@ -284,6 +284,7 @@
            touchZoom: true
          });
 
+
           // 建物ピンをまとめるレイヤー
           const buildingLayer = L.layerGroup().addTo(map);
   
@@ -358,13 +359,16 @@
             spots.forEach((s, idx) => {
               setTimeout(() => {
                 const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
-                  .on('click', () => showDetails({
-                    image: s.image,
-                    name: s.name,
-                    description: "ここにスポットの説明",
-                    address: "住所",
-                    phone: "電話番号"
-                  }));
+                  .on('click', (ev) => {
+                    L.DomEvent.stopPropagation(ev);           // ← 追加
+                    showDetails({
+                      image: s.image,
+                      name:  s.name,
+                      description: "ここにスポットの説明",
+                      address: "住所",
+                      phone: "電話番号"
+                    });
+                  });
                 buildingLayer.addLayer(m);
                 s.marker = m;
               }, interval * idx);
@@ -373,26 +377,46 @@
           // ページ読み込み後に実行
           window.addEventListener('load', () => loadMarkersSequentially());
         
-        // 詳細パネル
-        function showDetails(c) {
-          const p = document.getElementById("details-panel");
-          p.innerHTML = `
-            <button class="btn-close float-end" onclick="hideDetails()"></button>
-            <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3" loading="lazy">
-            <h2 class="fs-4">${c.name}</h2>
-            <p class="text-muted mb-3">${c.description}</p>
-            <div class="border-top pt-3">
-              <div><strong>住所:</strong> ${c.address}</div>
-              <div><strong>電話番号:</strong> ${c.phone}</div>
-            </div>`;
-          p.classList.add("active");
-        }
-        function hideDetails() {
-          document.getElementById("details-panel").classList.remove("active");
-        }
-        map.on("click", hideDetails);
+        // 新：透明オーバーレイを生成してクリックを捕捉
+function showDetails(c) {
+  const p = document.getElementById("details-panel");
+  p.innerHTML = `
+    <button class="btn-close float-end" onclick="hideDetails()"></button>
+    <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3" loading="lazy">
+    <h2 class="fs-4">${c.name}</h2>
+    <p class="text-muted mb-3">${c.description}</p>
+    <div class="border-top pt-3">
+      <div><strong>住所:</strong> ${c.address}</div>
+      <div><strong>電話番号:</strong> ${c.phone}</div>
+    </div>`;
+  p.classList.add("active");
+
+  // ① オーバーレイ未生成なら作成
+  if (!detailsOverlay) {
+    detailsOverlay = document.createElement("div");
+    detailsOverlay.style.cssText = `
+      position:fixed; inset:0;
+      z-index:1000;                    /* map と同じ層 */
+      background:transparent;
+      cursor:pointer;
+    `;
+    detailsOverlay.addEventListener("click", hideDetails);
+  }
+  // ② body に付与してクリックを捕捉
+  if (!detailsOverlay.isConnected) document.body.appendChild(detailsOverlay);
+}
+
+function hideDetails() {
+  document.getElementById("details-panel").classList.remove("active");
+  // ③ オーバーレイを取り除く
+  if (detailsOverlay && detailsOverlay.isConnected) {
+    detailsOverlay.remove();
+  }
+}
+     
         
         // ユーザーマーカーと向き
+        let detailsOverlay = null; 
         let userMarker = null;
         let lastPos = null;
         let currentHeading = 0;
@@ -588,14 +612,12 @@ function userHTML(heading) {
         // 初期詳細パネル非表示
         hideDetails();
 
+        map.on("click", hideDetails);
         </script>
         
-  <!-- スクリプトを defer で遅延実行 -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
- <!-- map.html の末尾、既存の Leaflet/Bootstrap スクリプトタグのあとに追加 -->
- <script src="./static/js/eventsData.js" defer></script>
- <script src="./static/js/events.js" defer></script>
-
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+        <script src="./static/js/eventsData.js" defer></script>
+        <script src="./static/js/events.js" defer></script>
   </body>
 </html>
