@@ -6,41 +6,122 @@
 {% block head_extra %}
   <!-- Inline Styles from Event Page -->
   <style>
-    .hero {
-      position: relative;
-      height: 45vh;
-      text-align: center;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background: url('{{ url_for("static", filename="sunset.webp") }}') center/cover no-repeat fixed;
-      filter: brightness(.55);
-      z-index: 0;
-    }
-    .hero .inner { position: relative; z-index: 2; }
-    .card {
-      transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
-      border: none;
-      border-radius: 1rem;
-    }
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(0,0,0,.15);
-    }
-    #map iframe {
-      width: 90%;
-      max-width: 1400px;
-      height: 600px;
-      border: none;
-      display: block;
-      margin: 0 auto;
-    }
+      /*---------------------------
+        Hero セクション
+      ---------------------------*/
+      .hero {
+        position: relative;
+        height: 45vh;
+        text-align: center;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        background: url('{{ url_for("static", filename="sunset.webp") }}') center/cover no-repeat fixed;
+        filter: brightness(.55);
+        z-index: 0;
+      }
+      .hero .inner {
+        position: relative;
+        z-index: 2;
+      }
+
+      /*---------------------------
+        既存カードスタイル
+      ---------------------------*/
+      .card {
+        transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
+        border: none;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+      .card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(0,0,0,.15);
+      }
+
+      /*---------------------------
+        会場マップ iframe
+      ---------------------------*/
+      #map iframe {
+        width: 90%;
+        max-width: 1400px;
+        height: 600px;
+        border: none;
+        display: block;
+        margin: 0 auto;
+      }
+
+      /*---------------------------
+        企画一覧 共通スタイル
+      ---------------------------*/
+      /* ナビバー（アンカー） */
+      .nav-pills .nav-link {
+        border-radius: 2rem;
+        padding: 0.6rem 1.2rem;
+        margin: 0 0.3rem;
+        background-color: #f1f1f1;
+        color: #343a40;
+        transition: background-color .3s, color .3s;
+      }
+      .nav-pills .nav-link:hover {
+        background-color: #e0e0e0;
+      }
+      .nav-pills .nav-link.active,
+      .nav-pills .nav-link:focus {
+        background-color: #343a40;
+        color: #fff;
+      }
+
+
+      /*---------------------------
+        カテゴリ毎のセクション装飾
+      ---------------------------*/
+      .category-section {
+        padding: 2rem 1rem;
+        border-radius: 1rem;
+        margin-bottom: 2.5rem;
+      }
+      .category-section:nth-of-type(odd) {
+        background-color: #f8f9fa;
+      }
+      .category-title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      .category-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background-color: #343a40;
+        margin: 0.5rem auto 0;
+        border-radius: 2px;
+      }
+
+
+      /* タブパネルを全て展開 */
+      .tab-content .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        margin-bottom: 2rem;
+      }
+
+      /* カード内画像調整 */
+      .card-img-top {
+        object-fit: cover;
+        height: 180px;
+      }
+
   </style>
 {% endblock %}
 
@@ -62,6 +143,29 @@
       <iframe src="/map" frameborder="0" allowfullscreen title="幾徳祭 会場マップ"></iframe>
     </section>
 
+
+    <section id="facilities" class="container mb-5">
+      <h2 class="mb-4">施設一覧</h2>
+      <div class="facility-menu d-flex flex-wrap gap-2 justify-content-center">
+        <button class="btn btn-outline-secondary" data-facility="K1号館">① K1号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K2号館">② K2号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K3号館">③ K3号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K4号館">④ K4号館</button>
+        <button class="btn btn-outline-secondary" data-facility="C2号館">⑤ C2号館</button>
+        <button class="btn btn-outline-secondary" data-facility="C5号館">⑥ C5号館</button>
+        <button class="btn btn-outline-secondary" data-facility="C6号館">⑦ C6号館</button>
+        <button class="btn btn-outline-secondary" data-facility="E1号館">⑧ E1号館</button>
+        <button class="btn btn-outline-secondary" data-facility="E2号館">⑨ E2号館</button>
+        <button class="btn btn-outline-secondary" data-facility="E6号館">⑩ E6号館</button>
+        <button class="btn btn-outline-secondary" data-facility="KAIT広場">⑪ KAIT広場</button>
+        <button class="btn btn-outline-secondary" data-facility="KAIT TOWN">⑫ KAIT TOWN</button>
+        <button class="btn btn-outline-secondary" data-facility="KAIT工房">⑬ KAIT工房</button>
+        <button class="btn btn-outline-secondary" data-facility="先進技術研究所">⑭ 先進技術研究所</button>
+        <button class="btn btn-outline-secondary" data-facility="中央緑地">⑮ 中央緑地</button>
+        <button class="btn btn-outline-secondary" data-facility="KAITアリーナ">⑯ KAITアリーナ</button>
+      </div>
+    </section>
+
     <!-- タイムテーブル -->
     <section id="timetable" class="mb-5" data-aos="fade-up" data-aos-delay="100">
       <h2 class="mb-4">タイムテーブル</h2>
@@ -81,24 +185,246 @@
       </div>
     </section>
 
-    <!-- 企画一覧 -->
-    <section id="list" data-aos="fade-up" data-aos-delay="200">
-      <h2 class="mb-4">企画一覧</h2>
-      <div class="row g-4">
-        <!-- Example Card -->
-        <div class="col-md-4">
-          <div class="card h-100">
-            <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="クレープ屋">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">とろけるクレープ</h5>
-              <p class="text-muted small mb-1">#模擬店 #スイーツ</p>
-              <p class="card-text small flex-grow-1">甘さひかえめ生クリームの絶品クレープを焼き立てで提供します！</p>
-              <p class="small mt-auto mb-0"><i class="bi bi-people-fill"></i> KAIT Foodies</p>
+
+    <section id="list" class="container mb-5" data-aos="fade-up" data-aos-delay="200">
+      <h2 class="mb-4 text-center">企画一覧</h2>
+    
+      <!-- ナビバー（アンカーリンク） -->
+      <ul class="nav nav-pills justify-content-center mb-5">
+        <li class="nav-item"><a class="nav-link" href="#panel-bingo">ビンゴ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#panel-stage">ステージ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#panel-festival">縁日</a></li>
+        <li class="nav-item"><a class="nav-link" href="#panel-food">模擬店</a></li>
+        <li class="nav-item"><a class="nav-link" href="#panel-lab">研究室公開</a></li>
+        <li class="nav-item"><a class="nav-link" href="#panel-exhibit">講義室展示</a></li>
+      </ul>
+    
+      <!-- ビンゴ -->
+      <div id="panel-bingo" class="category-section">
+        <h3 class="category-title">ビンゴ</h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="ビンゴ大会">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">ビンゴ大会</h5>
+                <p class="text-muted small mb-1">#ビンゴ #ゲーム</p>
+                <p class="card-text small flex-grow-1">
+                  11月2日(土), 11月3日(日) 15:00開始。<br>
+                  豪華景品が当たる！<br>
+                  ※参加にはビンゴカード（総合受付配布）が必要。
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> KAITアリーナ</p>
+              </div>
             </div>
           </div>
         </div>
-        <!-- 他のカードも同様に追加 -->
+      </div>
+    
+      <!-- ステージ -->
+      <div id="panel-stage" class="category-section">
+        <h3 class="category-title">ステージイベント</h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="梶裕貴トークショー">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">梶裕貴トークショー</h5>
+                <p class="text-muted small mb-1">#トークショー #声優</p>
+                <p class="card-text small flex-grow-1">
+                  人気声優・梶裕貴さんによるトークショー。<br>
+                  ※有料／11月2日(土)のみ開催。
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> KAITアリーナ</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="Rock in KAIT">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">Rock in KAIT</h5>
+                <p class="text-muted small mb-1">#ライブ #バンド</p>
+                <p class="card-text small flex-grow-1">
+                  文化祭Live バンド演奏。<br>
+                  11月3日(日)のみ／入退場自由！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> K3号館1階 3102教室</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- 縁日 -->
+      <div id="panel-festival" class="category-section">
+        <h3 class="category-title">縁日</h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="コルク射的">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">コルク射的</h5>
+                <p class="text-muted small mb-1">#縁日 #射的</p>
+                <p class="card-text small flex-grow-1">
+                  コルクを打ち出して的を倒そう！景品あり。
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 中央緑地</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="輪投げチャレンジ">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">輪投げチャレンジ</h5>
+                <p class="text-muted small mb-1">#縁日 #輪投げ</p>
+                <p class="card-text small flex-grow-1">
+                  輪を棒に多く入れよう。投げ方次第で高得点！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 中央緑地</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="ヨーヨー釣り">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">ヨーヨー釣り</h5>
+                <p class="text-muted small mb-1">#縁日 #ヨーヨー</p>
+                <p class="card-text small flex-grow-1">
+                  おもちゃの釣り竿でヨーヨーをゲットしよう！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 中央緑地</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="くるくるガチャ">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">くるくるガチャ</h5>
+                <p class="text-muted small mb-1">#縁日 #ガチャ</p>
+                <p class="card-text small flex-grow-1">
+                  １人１回回せるよ。何が出るかお楽しみに！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 中央緑地</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- 模擬店 -->
+      <div id="panel-food" class="category-section">
+        <h3 class="category-title">模擬店</h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="とろけるわたあめ">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">とろけるわたあめ</h5>
+                <p class="text-muted small mb-1">#模擬店 #スイーツ</p>
+                <p class="card-text small flex-grow-1">
+                  木村研究室提供。ふわふわ甘いわたあめ、2サイズあり！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 中央緑地</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="揚げパン">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">揚げパン</h5>
+                <p class="text-muted small mb-1">#模擬店 #スイーツ</p>
+                <p class="card-text small flex-grow-1">
+                  Pia’s bakery。懐かしの揚げパンを香ばしく揚げたてで！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 中央緑地</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- 研究室公開 -->
+      <div id="panel-lab" class="category-section">
+        <h3 class="category-title">研究室公開</h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-8 col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="田中哲雄研究室">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">田中哲雄研究室</h5>
+                <p class="text-muted small mb-1">#研究室公開 #クイズ</p>
+                <p class="card-text small flex-grow-1">
+                  C2号館2階全体でQRクイズラリー開催中！ぜひ挑戦を。
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> C2号館2階</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <!-- 講義室展示 -->
+      <div id="panel-exhibit" class="category-section">
+        <h3 class="category-title">講義室展示</h3>
+        <div class="row g-4 justify-content-center">
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="KAIT VR体験">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">KAIT VR体験</h5>
+                <p class="text-muted small mb-1">#講義室展示 #VR</p>
+                <p class="card-text small flex-grow-1">
+                  VRゴーグルで驚きの没入体験を！老若男女楽しめます。
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> K3号館3階 3306教室</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="自作プラネタリウム">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">自作プラネタリウム</h5>
+                <p class="text-muted small mb-1">#講義室展示 #プラネタリウム</p>
+                <p class="card-text small flex-grow-1">
+                  天文部による自作プラネタリウム。夜空を再現します！
+                </p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> K3号館3階 3307教室</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
-  </main>
+    
+    
+{% endblock %}
+
+{% block scripts_extra %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const iframe = document.querySelector('#map iframe');
+    iframe.addEventListener('load', function() {
+      const win = iframe.contentWindow;
+      document.querySelectorAll('#facilities [data-facility]').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const name = this.dataset.facility;
+          // map.html 側で定義された spots 配列から該当スポットを探し…
+          const spot = win.spots.find(s => s.name === name);
+          if (spot && spot.marker) {
+            // マップをその位置に移動して
+            win.map.panTo(spot.location);
+            // ピンをクリックしたのと同じ挙動を呼び出し
+            spot.marker.fire('click');
+          }
+        });
+      });
+    });
+  });
+</script>
 {% endblock %}

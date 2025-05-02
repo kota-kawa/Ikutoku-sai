@@ -5,51 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>統合マップ</title>
 
-  <!-- favicon -->
-  <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="./static/favicon.png" type="image/png">
-  <link rel="shortcut icon" href="./static/favicon.ico">
+    <!-- favicon -->
+    <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./static/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="./static/favicon.ico">
 
-  <!-- タイルサーバーへの事前接続 -->
-  <link rel="preconnect" href="https://server.arcgisonline.com">
-  <link rel="dns-prefetch" href="https://server.arcgisonline.com">
+    <!-- タイルサーバーへの事前接続 -->
+    <link rel="preconnect" href="https://server.arcgisonline.com">
+    <link rel="dns-prefetch" href="https://server.arcgisonline.com">
 
-  <!-- よく使うマーカー画像のプリロード -->
-  <link rel="preload" as="image" href="./static/map/K1号館.webp">
-  <link rel="preload" as="image" href="./static/map/K2号館.webp">
+    <!-- よく使うマーカー画像のプリロード -->
+    <link rel="preload" as="image" href="./static/map/K1号館.webp">
+    <link rel="preload" as="image" href="./static/map/K2号館.webp">
 
-  <!-- Leaflet CSS (遅延読み込み) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    media="print"
-    onload="this.media='all'"
-  />
-  <noscript>
+    <!-- Leaflet CSS (遅延読み込み) -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    />
-  </noscript>
+      media="print"
+      onload="this.media='all'" />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    </noscript>
 
-  <!-- Bootstrap CSS (遅延読み込み) -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    media="print"
-    onload="this.media='all'"
-  />
-  <noscript>
+    <!-- Bootstrap CSS (遅延読み込み) -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    />
-  </noscript>
+      media="print"
+      onload="this.media='all'" />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    </noscript>
 
-
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet" />
 
     <style>
     :root { --brand-green: rgb(14,83,12); }
+   
 
     html, body {
       margin: 0;
@@ -120,6 +119,40 @@
       border: 1px solid #aaa;
     }
 
+
+/* グルメ（青） */
+.event-icon-gourmet {
+  background: #005FCC;
+}
+.event-icon-gourmet::after {
+  border-top: 15px solid #005FCC;
+}
+
+/* 研究室（オレンジ） */
+.event-icon-lab {
+  background: #FF5733;
+}
+.event-icon-lab::after {
+  border-top: 15px solid #FF5733;
+}
+
+/* サークル（緑） */
+.event-icon-circle {
+  background: #28A745;
+}
+.event-icon-circle::after {
+  border-top: 15px solid #28A745;
+}
+
+/* 演奏・劇（紫） */
+.event-icon-performance {
+  background: #8E44AD;
+}
+.event-icon-performance::after {
+  border-top: 15px solid #8E44AD;
+}
+
+
     /* 詳細パネル */
     .details-panel {
       position: fixed;
@@ -159,26 +192,54 @@
     }
 
 
-  /* 戻るボタンがマップ上に重なるように */
-  #back-btn {
-    position: fixed;
-    top: 20px;
-    left: 70px;
-    z-index: 999;
+    /* Leaflet が生成するアイコンの外枠（透明矩形）はクリックを透過させる */
+.leaflet-marker-icon{
+  pointer-events:none;           /* 透過領域はイベント無効 */
+}
 
-    /* サイズアップ */
-    padding: 0.6rem 1.0rem;   /* 縦横ともに広めに */
-    font-size: 1.0rem;        /* 少し大きめの文字 */
+/* 実際の円形ピンとその子要素だけクリックを受け付ける */
+.leaflet-marker-icon .custom-icon,
+.leaflet-marker-icon .custom-icon *{
+  pointer-events:auto;           /* 円内部を有効化 */
+}
 
-    /* 見た目 */
-    background-color: #3fe1f7;
-    color: #000000;
-    border: none;
-  }
-  #back-btn .bi-arrow-left {
-    font-size: 1.0rem;
-    vertical-align: middle;
-  }
+
+/* カスタムマーカーにイベント制御を追加 */
+.leaflet-marker-icon.custom-marker {
+  pointer-events: none !important;
+}
+.leaflet-marker-icon.custom-marker .custom-icon {
+  pointer-events: auto !important;
+}
+
+    /* スポットマーカーのフォーカス時 */
+    .custom-icon.focused {
+      width: 60px;
+      height: 60px;
+      border-color: #FFD700;           /* 金色の枠で強調 */
+    }
+    .custom-icon.focused::after {
+      bottom: -15px;                    /* 矢印の位置を少し下へ */
+      border-top-width: 18px;           /* 矢印を少し大きく */
+      border-top-color: #FFD700;        /* 矢印の色も金色に */
+    }
+    .custom-icon.focused .icon-image {
+      width: 90%;
+      height: 90%;
+    }
+
+/* 戻るボタンのホバー効果 */
+#back-btn {
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0.75rem 0.75rem;  /* ボタンの内側スペース */
+  font-size: 0.875rem;        /* 少し小さめの文字 */
+}
+#back-btn:hover {
+  background-color: #e2e6ea;  /* ホバー時の背景色 */
+  color: #005FCC;             /* ホバー時の文字色 */
+}
+
+
 
 
   </style>
@@ -187,10 +248,11 @@
 
   <body>
     <!-- ← ここから追加：戻るボタン -->
-    <a id="back-btn" href="/" class="btn btn-light btn-lg">
-      <i class="bi bi-arrow-left"></i> 戻る
+    <a id="back-btn" href="/"
+      class="btn btn-light btn-lg shadow rounded-pill position-fixed"
+      style="top:20px; left:60px; z-index:1000;">
+      <i class="bi bi-arrow-left me-2"></i>戻る
     </a>
-  
 
     <div id="map"></div>
 
@@ -202,32 +264,33 @@
     <!-- メニューバー -->
     <div
       class="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">
-      <button class="btn btn-light">🏠 すべて</button>
-      <button class="btn btn-light">🔍 検索</button>
+      <button class="btn btn-light">🏠 全体</button>
+      <button class="btn btn-light">🔍 研究室</button>
       <button class="btn btn-light">🍴 グルメ</button>
-      <button class="btn btn-light">🛍️ ショッピング</button>
-      <button class="btn btn-light">📄 詳細情報</button>
+      <button class="btn btn-light">🛍️ サークル</button>
+      <button class="btn btn-light">📄 演奏・劇</button>
     </div>
-
 
     <!-- ページのどこかに追加（body の最後あたり） -->
-<div class="modal fade" id="compassModal" tabindex="-1" aria-labelledby="compassModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="compassModalLabel">コンパスの使用許可</h5>
-      </div>
-      <div class="modal-body">
-        地図上に向きを表示するにはコンパスの使用を許可してください。
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="denyCompass" class="btn btn-secondary" data-bs-dismiss="modal">許可しない</button>
-        <button type="button" id="allowCompass" class="btn btn-primary">許可する</button>
+    <div class="modal fade" id="compassModal" tabindex="-1"
+      aria-labelledby="compassModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="compassModalLabel">コンパスの使用許可</h5>
+          </div>
+          <div class="modal-body">
+            地図上に向きを表示するにはコンパスの使用を許可してください。
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="denyCompass" class="btn btn-secondary"
+              data-bs-dismiss="modal">許可しない</button>
+            <button type="button" id="allowCompass"
+              class="btn btn-primary">許可する</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -235,16 +298,33 @@
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-      <script>
+    <script>
         // 定数と地図初期化
         const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
-        const map = L.map('map').setView(INITIAL_CENTER, 18);
+         // 地図初期化（ズーム許容範囲を拡大）
+        const map = L.map('map', {
+           center: INITIAL_CENTER,
+           zoom: 18,               // 初期ズームを 18 に
+           minZoom: 5,             // 最小ズーム
+           maxZoom: 19,            // 最大ズーム
+           zoomControl: true,
+           scrollWheelZoom: true,  // ホイール／ピンチでの拡大縮小を有効化
+           touchZoom: true
+         });
+
+
+          // 建物ピンをまとめるレイヤー
+          const buildingLayer = L.layerGroup().addTo(map);
+  
+          let cancelNextMarkerClick = false;
+
         L.tileLayer(
-          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          //"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
           {
-            attribution:
-              '&copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics',
-            maxZoom: 18,
+            attribution: '…',
+            maxNativeZoom: 18,  // 実際に用意されている最大タイルズーム
+            maxZoom: 19,        // Leaflet 側での拡大限界（タイルはアップサンプリングされます）
           }
         ).addTo(map);
         
@@ -274,7 +354,7 @@
         // スポットマーカー
         function createCustomIcon(url) {
           return L.divIcon({
-            className: "",
+            className: "custom-marker", // クラス名を追加
             html: `<div class="custom-icon"><div class="icon-image" style="background-image:url('${url}')"></div></div>`,
             iconSize: [50, 60],
             iconAnchor: [25, 60],
@@ -303,40 +383,127 @@
         
         
         ];
-        spots.forEach(s =>
-          L.marker(s.location, { icon: createCustomIcon(s.image) })
-            .addTo(map)
-            .on("click", () =>
-              showDetails({
-                image: s.image,
-                name: s.name,
-                description: "ここにスポットの説明が表示されます。",
-                address: "東京都品川区東八潮1",
-                phone: "00-1234-5678",
-              })
-            )
-        );
-        
-        // 詳細パネル
-        function showDetails(c) {
-          const p = document.getElementById("details-panel");
-          p.innerHTML = `
-            <button class="btn-close float-end" onclick="hideDetails()"></button>
-            <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
-            <h2 class="fs-4">${c.name}</h2>
-            <p class="text-muted mb-3">${c.description}</p>
-            <div class="border-top pt-3">
-              <div><strong>住所:</strong> ${c.address}</div>
-              <div><strong>電話番号:</strong> ${c.phone}</div>
-            </div>`;
-          p.classList.add("active");
+
+        let focusedMarker = null;
+
+        function focusMarker(marker){
+          const el = marker.getElement()?.querySelector('.custom-icon');
+          if(el) el.classList.add('focused');
         }
-        function hideDetails() {
-          document.getElementById("details-panel").classList.remove("active");
+        function unfocusMarker(marker){
+          const el = marker.getElement()?.querySelector('.custom-icon');
+          if(el) el.classList.remove('focused');
         }
-        map.on("click", hideDetails);
+
+         // 段階的にスポットマーカーをロード（150ms 間隔）
+          function loadMarkersSequentially(interval = 150) {
+            spots.forEach((s, idx) => {
+              setTimeout(() => {
+                const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
+
+                 .on('click', function(ev) {
+                 // ── 空白クリック直後の「誤タップ」を防止 ──
+                 if (cancelNextMarkerClick) {
+                   cancelNextMarkerClick = false;
+                   return;    // フォーカスも詳細も出さずに抜ける
+                 }
+                // 以降は既存のクリック処理
+                if (ev.originalEvent) {
+                  ev.originalEvent.preventDefault();
+                  ev.originalEvent.stopPropagation();
+                }
+                L.DomEvent.stopPropagation(ev);
+
+                showDetails({
+                  image:       s.image,
+                  name:        s.name,
+                  description: "ここにスポットの説明",
+                  address:     "住所",
+                  phone:       "電話番号"
+                });
+
+                // フォーカス切替
+                if (focusedMarker && focusedMarker !== m) {
+                  unfocusMarker(focusedMarker);
+                }
+                focusMarker(m);
+                focusedMarker = m;
+              });
+                buildingLayer.addLayer(m);
+                s.marker = m;
+              }, interval * idx);
+            });
+          }
+
+          function focusMarker(marker){
+            const el = marker.getElement()?.querySelector('.custom-icon');
+            if(el) el.classList.add('focused');
+          }
+          function unfocusMarker(marker){
+            const el = marker.getElement()?.querySelector('.custom-icon');
+            if(el) el.classList.remove('focused');
+          }
+
+
+
+          // ページ読み込み後に実行
+          document.addEventListener('DOMContentLoaded', () => loadMarkersSequentially());
+      
+
+        // 新：透明オーバーレイを生成してクリックを捕捉
+function showDetails(c) {
+  const p = document.getElementById("details-panel");
+  p.innerHTML = `
+    <button class="btn-close float-end" onclick="hideDetails()"></button>
+    <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
+    <h2 class="fs-4">${c.name}</h2>
+    <p class="text-muted mb-3">${c.description}</p>
+    <div class="border-top pt-3">
+      <div><strong>住所:</strong> ${c.address}</div>
+      <div><strong>電話番号:</strong> ${c.phone}</div>
+    </div>`;
+  p.classList.add("active");
+
+  // オーバーレイ未生成なら作成
+  if (!detailsOverlay) {
+  detailsOverlay = document.createElement("div");
+  detailsOverlay.style.cssText = `
+    position:fixed; inset:0;
+    z-index:1000;
+    background:transparent;
+    cursor:pointer;
+  `;
+  
+      // Leaflet の伝播停止＋ネイティブ伝播停止
+      L.DomEvent.disableClickPropagation(detailsOverlay);
+    L.DomEvent.disableScrollPropagation(detailsOverlay);
+    detailsOverlay.addEventListener("click", function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      hideDetails();
+
+     // ← キャンセルフラグをクリア
+    cancelNextMarkerClick = false;
+
+
+    });
+}
+  // body に付与してクリックを捕捉
+  if (!detailsOverlay.isConnected) document.body.appendChild(detailsOverlay);
+}
+
+function hideDetails() {
+  const p = document.getElementById("details-panel");
+  p.classList.remove("active");
+  if (detailsOverlay && detailsOverlay.isConnected) {
+    detailsOverlay.remove();
+  }
+  // ※フォーカス解除はここではしない
+}
+     
         
         // ユーザーマーカーと向き
+        let detailsOverlay = null; 
         let userMarker = null;
         let lastPos = null;
         let currentHeading = 0;
@@ -506,26 +673,106 @@ function userHTML(heading) {
         
         // 位置情報取得
         if ('geolocation' in navigator) {
-          navigator.geolocation.watchPosition(
-            ({ coords: { latitude, longitude } }) => {
-              const fallback = gpsBearing(latitude, longitude);
-              if (fallback != null && currentHeading === 0) currentHeading = fallback;
-              renderUser(latitude, longitude, currentHeading);
-            },
-            e => console.error('Geolocation error', e),
-            { enableHighAccuracy: true, maximumAge: 1500, timeout: 7000 }
-          );
+          +    navigator.geolocation.watchPosition(
+      ({ coords: { latitude, longitude } }) => {
+        const fallback = gpsBearing(latitude, longitude);
+        if (fallback != null && currentHeading === 0) currentHeading = fallback;
+        renderUser(latitude, longitude, currentHeading);
+      },
+      e => {
+        if (e.code === e.TIMEOUT) {
+          console.warn('位置情報の取得がタイムアウトしました。再試行します…');
+        } else {
+         console.error('Geolocation error', e);
+       }
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,     // キャッシュ利用を5秒まで許可
+        timeout: 20000        // タイムアウトを20秒に延長
+      }
+    );
         } else {
           alert('Geolocation API に対応していません。');
         }
         
         // 初期詳細パネル非表示
         hideDetails();
+
+
+
+          /**
+           * クリック位置が「実際にピンを押した」と判定できる距離内かどうかを調べる。
+           *   マーカーの中心とクリック位置のスクリーン座標間の距離を測定し、
+           *   しきい値（今回は 15px）より近ければ true を返す。
+           */
+          function isNearAnyMarker(clickLatLng, thresholdPx = 15) {
+            const clickPt = map.latLngToContainerPoint(clickLatLng);
+            let hit = false;
+
+            buildingLayer.eachLayer(m => {
+              if (hit) return;                      // すでに判定済みならスキップ
+              const mPt = map.latLngToContainerPoint(m.getLatLng());
+              const dist = clickPt.distanceTo(mPt);
+              if (dist < thresholdPx) hit = true;
+            });
+            return hit;
+          }
+
+
+          /*  マップ側 ― 空白クリックを捕捉 */
+          map.on('mousedown', function (ev) {
+            /* ピン（.custom-icon）上でなければ「空白クリック」とみなす */
+            if (!ev.originalEvent.target.closest('.custom-icon')) {
+              cancelNextMarkerClick = true;     // ← 次のピンクリックを無視
+            }
+          });
+
+
+          map.on("click", function (ev) {
+          if (!isNearAnyMarker(ev.latlng)) {
+            // 詳細パネルを閉じる（既に閉じていれば何もしない）
+            hideDetails();
+            // ← キャンセルフラグをクリア
+            cancelNextMarkerClick = false;
+            // ここで初めてフォーカス解除
+            if (focusedMarker) {
+              unfocusMarker(focusedMarker);
+              focusedMarker = null;
+            }
+          }
+        });
+
+        map.on("click", function(ev) {
+          if (!isNearAnyMarker(ev.latlng)) {
+            // 空白クリックなら詳細パネルを閉じ
+            hideDetails();
+
+            // ここでピンのフォーカスを解除
+            if (focusedMarker) {
+              unfocusMarker(focusedMarker);
+              focusedMarker = null;
+            }
+
+            // キャンセルフラグもリセット
+            cancelNextMarkerClick = false;
+          }
+        });
+
+
+
+
+
+        window.spots = spots;  // 親側で iframe.contentWindow.spots として参照可能に
+        window.map   = map;    // 同様に map インスタンスもエクスポート
         </script>
-        
-  <!-- スクリプトを defer で遅延実行 -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
- 
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      defer></script>
+    <script src="./static/js/eventsData.js" defer></script>
+    <script src="./static/js/events.js" defer></script>
   </body>
 </html>

@@ -192,6 +192,42 @@
     }
 
 
+    /* Leaflet が生成するアイコンの外枠（透明矩形）はクリックを透過させる */
+.leaflet-marker-icon{
+  pointer-events:none;           /* 透過領域はイベント無効 */
+}
+
+/* 実際の円形ピンとその子要素だけクリックを受け付ける */
+.leaflet-marker-icon .custom-icon,
+.leaflet-marker-icon .custom-icon *{
+  pointer-events:auto;           /* 円内部を有効化 */
+}
+
+
+/* カスタムマーカーにイベント制御を追加 */
+.leaflet-marker-icon.custom-marker {
+  pointer-events: none !important;
+}
+.leaflet-marker-icon.custom-marker .custom-icon {
+  pointer-events: auto !important;
+}
+
+    /* スポットマーカーのフォーカス時 */
+    .custom-icon.focused {
+      width: 60px;
+      height: 60px;
+      border-color: #FFD700;           /* 金色の枠で強調 */
+    }
+    .custom-icon.focused::after {
+      bottom: -15px;                    /* 矢印の位置を少し下へ */
+      border-top-width: 18px;           /* 矢印を少し大きく */
+      border-top-color: #FFD700;        /* 矢印の色も金色に */
+    }
+    .custom-icon.focused .icon-image {
+      width: 90%;
+      height: 90%;
+    }
+
 /* 戻るボタンのホバー効果 */
 #back-btn {
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -280,6 +316,8 @@
           // 建物ピンをまとめるレイヤー
           const buildingLayer = L.layerGroup().addTo(map);
   
+          let cancelNextMarkerClick = false;
+
         L.tileLayer(
           //"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
           "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
@@ -316,7 +354,7 @@
         // スポットマーカー
         function createCustomIcon(url) {
           return L.divIcon({
-            className: "",
+            className: "custom-marker", // クラス名を追加
             html: `<div class="custom-icon"><div class="icon-image" style="background-image:url('${url}')"></div></div>`,
             iconSize: [50, 60],
             iconAnchor: [25, 60],
@@ -346,29 +384,72 @@
         
         ];
 
+        let focusedMarker = null;
+
+        function focusMarker(marker){
+          const el = marker.getElement()?.querySelector('.custom-icon');
+          if(el) el.classList.add('focused');
+        }
+        function unfocusMarker(marker){
+          const el = marker.getElement()?.querySelector('.custom-icon');
+          if(el) el.classList.remove('focused');
+        }
+
          // 段階的にスポットマーカーをロード（150ms 間隔）
           function loadMarkersSequentially(interval = 150) {
             spots.forEach((s, idx) => {
               setTimeout(() => {
                 const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
-                  .on('click', (ev) => {
-                    L.DomEvent.stopPropagation(ev);           // ← 追加
-                    showDetails({
-                      image: s.image,
-                      name:  s.name,
-                      description: "ここにスポットの説明",
-                      address: "住所",
-                      phone: "電話番号"
-                    });
-                  });
+
+                 .on('click', function(ev) {
+                 // ── 空白クリック直後の「誤タップ」を防止 ──
+                 if (cancelNextMarkerClick) {
+                   cancelNextMarkerClick = false;
+                   return;    // フォーカスも詳細も出さずに抜ける
+                 }
+                // 以降は既存のクリック処理
+                if (ev.originalEvent) {
+                  ev.originalEvent.preventDefault();
+                  ev.originalEvent.stopPropagation();
+                }
+                L.DomEvent.stopPropagation(ev);
+
+                showDetails({
+                  image:       s.image,
+                  name:        s.name,
+                  description: "ここにスポットの説明",
+                  address:     "住所",
+                  phone:       "電話番号"
+                });
+
+                // フォーカス切替
+                if (focusedMarker && focusedMarker !== m) {
+                  unfocusMarker(focusedMarker);
+                }
+                focusMarker(m);
+                focusedMarker = m;
+              });
                 buildingLayer.addLayer(m);
                 s.marker = m;
               }, interval * idx);
             });
           }
+
+          function focusMarker(marker){
+            const el = marker.getElement()?.querySelector('.custom-icon');
+            if(el) el.classList.add('focused');
+          }
+          function unfocusMarker(marker){
+            const el = marker.getElement()?.querySelector('.custom-icon');
+            if(el) el.classList.remove('focused');
+          }
+
+
+
           // ページ読み込み後に実行
           document.addEventListener('DOMContentLoaded', () => loadMarkersSequentially());
-        
+      
+
         // 新：透明オーバーレイを生成してクリックを捕捉
 function showDetails(c) {
   const p = document.getElementById("details-panel");
@@ -383,27 +464,42 @@ function showDetails(c) {
     </div>`;
   p.classList.add("active");
 
-  // ① オーバーレイ未生成なら作成
+  // オーバーレイ未生成なら作成
   if (!detailsOverlay) {
-    detailsOverlay = document.createElement("div");
-    detailsOverlay.style.cssText = `
-      position:fixed; inset:0;
-      z-index:1000;                    /* map と同じ層 */
-      background:transparent;
-      cursor:pointer;
-    `;
-    detailsOverlay.addEventListener("click", hideDetails);
-  }
-  // ② body に付与してクリックを捕捉
+  detailsOverlay = document.createElement("div");
+  detailsOverlay.style.cssText = `
+    position:fixed; inset:0;
+    z-index:1000;
+    background:transparent;
+    cursor:pointer;
+  `;
+  
+      // Leaflet の伝播停止＋ネイティブ伝播停止
+      L.DomEvent.disableClickPropagation(detailsOverlay);
+    L.DomEvent.disableScrollPropagation(detailsOverlay);
+    detailsOverlay.addEventListener("click", function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+        // パネルを閉じ
+      hideDetails();
+
+   // 誤タップキャンセルフラグをクリア
+   cancelNextMarkerClick = false;
+
+
+    });
+}
+  // body に付与してクリックを捕捉
   if (!detailsOverlay.isConnected) document.body.appendChild(detailsOverlay);
 }
 
 function hideDetails() {
-  document.getElementById("details-panel").classList.remove("active");
-  // ③ オーバーレイを取り除く
+  const p = document.getElementById("details-panel");
+  p.classList.remove("active");
   if (detailsOverlay && detailsOverlay.isConnected) {
     detailsOverlay.remove();
   }
+  // ※フォーカス解除はここではしない
 }
      
         
@@ -604,7 +700,62 @@ function userHTML(heading) {
         // 初期詳細パネル非表示
         hideDetails();
 
-        map.on("click", hideDetails);
+
+
+          /**
+           * クリック位置が「実際にピンを押した」と判定できる距離内かどうかを調べる。
+           *   マーカーの中心とクリック位置のスクリーン座標間の距離を測定し、
+           *   しきい値（今回は 15px）より近ければ true を返す。
+           */
+          function isNearAnyMarker(clickLatLng, thresholdPx = 15) {
+            const clickPt = map.latLngToContainerPoint(clickLatLng);
+            let hit = false;
+
+            buildingLayer.eachLayer(m => {
+              if (hit) return;                      // すでに判定済みならスキップ
+              const mPt = map.latLngToContainerPoint(m.getLatLng());
+              const dist = clickPt.distanceTo(mPt);
+              if (dist < thresholdPx) hit = true;
+            });
+            return hit;
+          }
+
+
+
+
+
+
+          // ─── マップの空白クリックでフォーカス解除 ───
+ map.on('mousedown', function (ev) {
+   // ピン上クリック以外なら「誤タップキャンセル」を ON
+   if (!ev.originalEvent.target.closest('.custom-icon')) {
+     cancelNextMarkerClick = true;
+   }
+ });
+
+// ── マップの何もない部分をクリックしたとき ──
+map.on("click", function(ev) {
+  // 近傍にピンがなければ「空白クリック」
+  if (!isNearAnyMarker(ev.latlng)) {
+    // 詳細パネルを閉じ（すでに閉じていてもOK）
+    hideDetails();
+    // 誤タップキャンセルフラグをクリア
+    cancelNextMarkerClick = false;
+    // ここで初めてフォーカス解除
+    if (focusedMarker) {
+      unfocusMarker(focusedMarker);
+      focusedMarker = null;
+    }
+  }
+});
+
+
+
+
+
+
+        window.spots = spots;  // 親側で iframe.contentWindow.spots として参照可能に
+        window.map   = map;    // 同様に map インスタンスもエクスポート
         </script>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
