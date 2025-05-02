@@ -5,53 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>統合マップ</title>
 
-  <!-- favicon -->
-  <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
-  <link rel="icon" href="./static/favicon.png" type="image/png">
-  <link rel="shortcut icon" href="./static/favicon.ico">
+    <!-- favicon -->
+    <link rel="icon" href="./static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./static/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="./static/favicon.ico">
 
-  <!-- タイルサーバーへの事前接続 -->
-  <link rel="preconnect" href="https://server.arcgisonline.com">
-  <link rel="dns-prefetch" href="https://server.arcgisonline.com">
+    <!-- タイルサーバーへの事前接続 -->
+    <link rel="preconnect" href="https://server.arcgisonline.com">
+    <link rel="dns-prefetch" href="https://server.arcgisonline.com">
 
-  <!-- よく使うマーカー画像のプリロード -->
-  <link rel="preload" as="image" href="./static/map/K1号館.webp">
-  <link rel="preload" as="image" href="./static/map/K2号館.webp">
+    <!-- よく使うマーカー画像のプリロード -->
+    <link rel="preload" as="image" href="./static/map/K1号館.webp">
+    <link rel="preload" as="image" href="./static/map/K2号館.webp">
 
-  <!-- Leaflet CSS (遅延読み込み) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    media="print"
-    onload="this.media='all'"
-  />
-  <noscript>
+    <!-- Leaflet CSS (遅延読み込み) -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-    />
-  </noscript>
+      media="print"
+      onload="this.media='all'" />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    </noscript>
 
-  <!-- Bootstrap CSS (遅延読み込み) -->
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    media="print"
-    onload="this.media='all'"
-  />
-  <noscript>
+    <!-- Bootstrap CSS (遅延読み込み) -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-    />
-  </noscript>
+      media="print"
+      onload="this.media='all'" />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    </noscript>
 
-
-  <link
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-  rel="stylesheet"
-/>
-
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet" />
 
     <style>
     :root { --brand-green: rgb(14,83,12); }
@@ -220,12 +213,10 @@
   <body>
     <!-- ← ここから追加：戻るボタン -->
     <a id="back-btn" href="/"
-    class="btn btn-light btn-lg shadow rounded-pill position-fixed"
-    style="top:20px; left:60px; z-index:1000;">
-   <i class="bi bi-arrow-left me-2"></i>戻る
- </a>
- 
-  
+      class="btn btn-light btn-lg shadow rounded-pill position-fixed"
+      style="top:20px; left:60px; z-index:1000;">
+      <i class="bi bi-arrow-left me-2"></i>戻る
+    </a>
 
     <div id="map"></div>
 
@@ -244,25 +235,26 @@
       <button class="btn btn-light">📄 演奏・劇</button>
     </div>
 
-
     <!-- ページのどこかに追加（body の最後あたり） -->
-<div class="modal fade" id="compassModal" tabindex="-1" aria-labelledby="compassModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="compassModalLabel">コンパスの使用許可</h5>
-      </div>
-      <div class="modal-body">
-        地図上に向きを表示するにはコンパスの使用を許可してください。
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="denyCompass" class="btn btn-secondary" data-bs-dismiss="modal">許可しない</button>
-        <button type="button" id="allowCompass" class="btn btn-primary">許可する</button>
+    <div class="modal fade" id="compassModal" tabindex="-1"
+      aria-labelledby="compassModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="compassModalLabel">コンパスの使用許可</h5>
+          </div>
+          <div class="modal-body">
+            地図上に向きを表示するにはコンパスの使用を許可してください。
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="denyCompass" class="btn btn-secondary"
+              data-bs-dismiss="modal">許可しない</button>
+            <button type="button" id="allowCompass"
+              class="btn btn-primary">許可する</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -270,13 +262,13 @@
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-      <script>
+    <script>
         // 定数と地図初期化
         const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
          // 地図初期化（ズーム許容範囲を拡大）
         const map = L.map('map', {
            center: INITIAL_CENTER,
-           zoom: 20,               // 初期ズームを 20 に
+           zoom: 18,               // 初期ズームを 18 に
            minZoom: 5,             // 最小ズーム
            maxZoom: 19,            // 最大ズーム
            zoomControl: true,
@@ -375,14 +367,14 @@
             });
           }
           // ページ読み込み後に実行
-          window.addEventListener('load', () => loadMarkersSequentially());
+          document.addEventListener('DOMContentLoaded', () => loadMarkersSequentially());
         
         // 新：透明オーバーレイを生成してクリックを捕捉
 function showDetails(c) {
   const p = document.getElementById("details-panel");
   p.innerHTML = `
     <button class="btn-close float-end" onclick="hideDetails()"></button>
-    <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3" loading="lazy">
+    <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
     <h2 class="fs-4">${c.name}</h2>
     <p class="text-muted mb-3">${c.description}</p>
     <div class="border-top pt-3">
@@ -614,10 +606,13 @@ function userHTML(heading) {
 
         map.on("click", hideDetails);
         </script>
-        
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" defer></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
-        <script src="./static/js/eventsData.js" defer></script>
-        <script src="./static/js/events.js" defer></script>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+      defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      defer></script>
+    <script src="./static/js/eventsData.js" defer></script>
+    <script src="./static/js/events.js" defer></script>
   </body>
 </html>
