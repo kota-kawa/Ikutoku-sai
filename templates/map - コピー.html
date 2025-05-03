@@ -480,13 +480,12 @@ function showDetails(c) {
     detailsOverlay.addEventListener("click", function(ev) {
       ev.preventDefault();
       ev.stopPropagation();
+        // パネルを閉じ
       hideDetails();
 
-     // ─── ここでフォーカスを外す ───
-     if (focusedMarker) {
-       unfocusMarker(focusedMarker);
-       focusedMarker = null;
-     }
+   // 誤タップキャンセルフラグをクリア
+   cancelNextMarkerClick = false;
+
 
     });
 }
@@ -500,6 +499,7 @@ function hideDetails() {
   if (detailsOverlay && detailsOverlay.isConnected) {
     detailsOverlay.remove();
   }
+  // ※フォーカス解除はここではしない
 }
      
         
@@ -721,28 +721,36 @@ function userHTML(heading) {
           }
 
 
-          /*  マップ側 ― 空白クリックを捕捉 */
-          map.on('mousedown', function (ev) {
-            /* ピン（.custom-icon）上でなければ「空白クリック」とみなす */
-            if (!ev.originalEvent.target.closest('.custom-icon')) {
-              cancelNextMarkerClick = true;     // ← 次のピンクリックを無視
-            }
-          });
 
 
-            /* 新しいクリックハンドラ */
-            map.on("click", function (ev) {
-              // 15px 範囲以内にピンがなかったら「背景クリック」
-              if (!isNearAnyMarker(ev.latlng)) {
-                // パネルを閉じ（フォーカスは残る）
-                hideDetails();
-                // ここで初めてマーカーのフォーカスを解除
-                if (focusedMarker) {
-                  unfocusMarker(focusedMarker);
-                  focusedMarker = null;
-                }
-              }
-            });
+
+
+          // ─── マップの空白クリックでフォーカス解除 ───
+ map.on('mousedown', function (ev) {
+   // ピン上クリック以外なら「誤タップキャンセル」を ON
+   if (!ev.originalEvent.target.closest('.custom-icon')) {
+     cancelNextMarkerClick = true;
+   }
+ });
+
+// ── マップの何もない部分をクリックしたとき ──
+map.on("click", function(ev) {
+  // 近傍にピンがなければ「空白クリック」
+  if (!isNearAnyMarker(ev.latlng)) {
+    // 詳細パネルを閉じ（すでに閉じていてもOK）
+    hideDetails();
+    // 誤タップキャンセルフラグをクリア
+    cancelNextMarkerClick = false;
+    // ここで初めてフォーカス解除
+    if (focusedMarker) {
+      unfocusMarker(focusedMarker);
+      focusedMarker = null;
+    }
+  }
+});
+
+
+
 
 
 
