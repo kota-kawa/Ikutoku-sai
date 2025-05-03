@@ -298,36 +298,39 @@
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
+      <script>
         // 定数と地図初期化
         const INITIAL_CENTER = [35.486417749642015, 139.3428098153942];
-         // 地図初期化（ズーム許容範囲を拡大）
         const map = L.map('map', {
-           center: INITIAL_CENTER,
-           zoom: 18,               // 初期ズームを 18 に
-           minZoom: 5,             // 最小ズーム
-           maxZoom: 19,            // 最大ズーム
-           zoomControl: true,
-           scrollWheelZoom: true,  // ホイール／ピンチでの拡大縮小を有効化
-           touchZoom: true
-         });
-
-
-          // 建物ピンをまとめるレイヤー
-          const buildingLayer = L.layerGroup().addTo(map);
-  
-          let cancelNextMarkerClick = false;
-
+          center: INITIAL_CENTER,
+          zoom: 18,               // 初期ズームを 18 に
+          minZoom: 5,             // 最小ズーム
+          maxZoom: 19,            // 最大ズーム
+          zoomControl: true,
+          scrollWheelZoom: true,
+          touchZoom: true
+        });
+      
+        // 建物ピンをまとめるレイヤー
+        const buildingLayer = L.layerGroup().addTo(map);
+      
+        // 誤タップキャンセル用フラグとフォーカスマーカー
+        let cancelNextMarkerClick = false;
+        let focusedMarker = null;
+      
+        // 詳細パネルオーバーレイ
+        let detailsOverlay = null;
+      
+        // タイルレイヤー
         L.tileLayer(
-          //"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
           "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg",
           {
             attribution: '…',
-            maxNativeZoom: 18,  // 実際に用意されている最大タイルズーム
-            maxZoom: 19,        // Leaflet 側での拡大限界（タイルはアップサンプリングされます）
+            maxNativeZoom: 18,
+            maxZoom: 19,
           }
         ).addTo(map);
-        
+      
         // ユーティリティ関数
         const toRad = d => (d * Math.PI) / 180;
         const toDeg = r => (r * 180) / Math.PI;
@@ -350,16 +353,18 @@
             Math.sin(φ1) * Math.cos(φ2) * Math.cos(λ2 - λ1);
           return (toDeg(Math.atan2(y, x)) + 360) % 360;
         }
-        
-        // スポットマーカー
+      
+        // カスタムアイコン生成
         function createCustomIcon(url) {
           return L.divIcon({
-            className: "custom-marker", // クラス名を追加
+            className: "custom-marker",
             html: `<div class="custom-icon"><div class="icon-image" style="background-image:url('${url}')"></div></div>`,
             iconSize: [50, 60],
             iconAnchor: [25, 60],
           });
         }
+      
+        // スポット一覧
         const spots = [
           { location: [35.48604116703019, 139.34128951057255], image: "./static/map/K1号館.webp", name: "K1号館" },
           { location: [35.48650866834297, 139.34112683577234], image: "./static/map/K2号館.webp", name: "K2号館" },
@@ -374,186 +379,250 @@
           { location: [35.487920311541316, 139.3430478210974], image: "./static/map/自動車工房.webp", name: "自動車工房" },
           { location: [35.4867846462545, 139.34246309957499], image: "./static/map/KAIT工房.webp", name: "KAIT工房" },
           { location: [35.486649238937936, 139.34321411804413], image: "./static/map/KAIT広場.webp", name: "KAIT広場" },
-          
           { location: [35.44134206079602, 139.3663787109304], image: "./static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
           { location: [35.44012426180783, 139.36467281666947], image: "./static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
-          
           { location: [35.48543014113195, 139.34095161222936], image: "./static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },
           { location: [35.48549264919395, 139.3410855002179], image: "./static/map/本厚木駅直行バス停.webp", name: "本厚木駅直行バス停" },
-        
-        
         ];
-
-        let focusedMarker = null;
-
+      
+        // フォーカス制御
         function focusMarker(marker){
           const el = marker.getElement()?.querySelector('.custom-icon');
-          if(el) el.classList.add('focused');
+          if (el) el.classList.add('focused');
         }
         function unfocusMarker(marker){
           const el = marker.getElement()?.querySelector('.custom-icon');
-          if(el) el.classList.remove('focused');
+          if (el) el.classList.remove('focused');
         }
-
-         // 段階的にスポットマーカーをロード（150ms 間隔）
-          function loadMarkersSequentially(interval = 150) {
-            spots.forEach((s, idx) => {
-              setTimeout(() => {
-                const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
-
-                 .on('click', function(ev) {
-                 // ── 空白クリック直後の「誤タップ」を防止 ──
-                 if (cancelNextMarkerClick) {
-                   cancelNextMarkerClick = false;
-                   return;    // フォーカスも詳細も出さずに抜ける
-                 }
-                // 以降は既存のクリック処理
-                if (ev.originalEvent) {
-                  ev.originalEvent.preventDefault();
-                  ev.originalEvent.stopPropagation();
-                }
-                L.DomEvent.stopPropagation(ev);
-
-                showDetails({
-                  image:       s.image,
-                  name:        s.name,
-                  description: "ここにスポットの説明",
-                  address:     "住所",
-                  phone:       "電話番号"
+      
+        // マーカーを順次ロード
+        function loadMarkersSequentially(interval = 150) {
+          spots.forEach((s, idx) => {
+            setTimeout(() => {
+              const m = L.marker(s.location, { icon: createCustomIcon(s.image) })
+                .on('click', function(ev) {
+                  // 空白クリック直後の誤タップ防止
+                  if (cancelNextMarkerClick) {
+                    cancelNextMarkerClick = false;
+                    return;
+                  }
+                  ev.originalEvent?.preventDefault();
+                  ev.originalEvent?.stopPropagation();
+                  L.DomEvent.stopPropagation(ev);
+      
+                  showDetails({
+                    image:       s.image,
+                    name:        s.name,
+                    description: "ここにスポットの説明",
+                    address:     "住所",
+                    phone:       "電話番号"
+                  });
+      
+                  if (focusedMarker && focusedMarker !== m) {
+                    unfocusMarker(focusedMarker);
+                  }
+                  focusMarker(m);
+                  focusedMarker = m;
                 });
-
-                // フォーカス切替
-                if (focusedMarker && focusedMarker !== m) {
-                  unfocusMarker(focusedMarker);
-                }
-                focusMarker(m);
-                focusedMarker = m;
-              });
-                buildingLayer.addLayer(m);
-                s.marker = m;
-              }, interval * idx);
+              buildingLayer.addLayer(m);
+              s.marker = m;
+            }, interval * idx);
+          });
+        }
+      
+        // 詳細パネル表示
+        function showDetails(c) {
+          const p = document.getElementById("details-panel");
+          p.innerHTML = `
+            <button class="btn-close float-end" onclick="hideDetails()"></button>
+            <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
+            <h2 class="fs-4">${c.name}</h2>
+            <p class="text-muted mb-3">${c.description}</p>
+            <div class="border-top pt-3">
+              <div><strong>住所:</strong> ${c.address}</div>
+              <div><strong>電話番号:</strong> ${c.phone}</div>
+            </div>`;
+          p.classList.add("active");
+      
+          if (!detailsOverlay) {
+            detailsOverlay = document.createElement("div");
+            detailsOverlay.style.cssText = `
+              position:fixed; inset:0;
+              z-index:1000;
+              background:transparent;
+              cursor:pointer;
+            `;
+            L.DomEvent.disableClickPropagation(detailsOverlay);
+            L.DomEvent.disableScrollPropagation(detailsOverlay);
+            detailsOverlay.addEventListener("click", function(ev) {
+              ev.preventDefault();
+              ev.stopPropagation();
+              hideDetails();
+              cancelNextMarkerClick = false;
             });
           }
-
-          function focusMarker(marker){
-            const el = marker.getElement()?.querySelector('.custom-icon');
-            if(el) el.classList.add('focused');
-          }
-          function unfocusMarker(marker){
-            const el = marker.getElement()?.querySelector('.custom-icon');
-            if(el) el.classList.remove('focused');
-          }
-
-
-
-          // ページ読み込み後に実行
-          document.addEventListener('DOMContentLoaded', () => loadMarkersSequentially());
+          if (!detailsOverlay.isConnected) document.body.appendChild(detailsOverlay);
+        }
       
-
-        // 新：透明オーバーレイを生成してクリックを捕捉
-function showDetails(c) {
-  const p = document.getElementById("details-panel");
-  p.innerHTML = `
-    <button class="btn-close float-end" onclick="hideDetails()"></button>
-    <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
-    <h2 class="fs-4">${c.name}</h2>
-    <p class="text-muted mb-3">${c.description}</p>
-    <div class="border-top pt-3">
-      <div><strong>住所:</strong> ${c.address}</div>
-      <div><strong>電話番号:</strong> ${c.phone}</div>
-    </div>`;
-  p.classList.add("active");
-
-  // オーバーレイ未生成なら作成
-  if (!detailsOverlay) {
-  detailsOverlay = document.createElement("div");
-  detailsOverlay.style.cssText = `
-    position:fixed; inset:0;
-    z-index:1000;
-    background:transparent;
-    cursor:pointer;
-  `;
-  
-      // Leaflet の伝播停止＋ネイティブ伝播停止
-      L.DomEvent.disableClickPropagation(detailsOverlay);
-    L.DomEvent.disableScrollPropagation(detailsOverlay);
-    detailsOverlay.addEventListener("click", function(ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-        // パネルを閉じ
-      hideDetails();
-
-   // 誤タップキャンセルフラグをクリア
-   cancelNextMarkerClick = false;
-
-
-    });
-}
-  // body に付与してクリックを捕捉
-  if (!detailsOverlay.isConnected) document.body.appendChild(detailsOverlay);
-}
-
-function hideDetails() {
-  const p = document.getElementById("details-panel");
-  p.classList.remove("active");
-  if (detailsOverlay && detailsOverlay.isConnected) {
-    detailsOverlay.remove();
-  }
-  // ※フォーカス解除はここではしない
-}
-     
-        
-        // ユーザーマーカーと向き
-        let detailsOverlay = null; 
+        // 詳細パネル非表示
+        function hideDetails() {
+          const p = document.getElementById("details-panel");
+          p.classList.remove("active");
+          if (detailsOverlay && detailsOverlay.isConnected) {
+            detailsOverlay.remove();
+          }
+          // フォーカス解除はここでは行わない
+        }
+      
+        // 空白クリックでフォーカス解除
+        function isNearAnyMarker(clickLatLng, thresholdPx = 15) {
+          const clickPt = map.latLngToContainerPoint(clickLatLng);
+          let hit = false;
+          buildingLayer.eachLayer(m => {
+            if (hit) return;
+            const mPt = map.latLngToContainerPoint(m.getLatLng());
+            if (clickPt.distanceTo(mPt) < thresholdPx) hit = true;
+          });
+          return hit;
+        }
+      
+        map.on('mousedown', function (ev) {
+          if (!ev.originalEvent.target.closest('.custom-icon')) {
+            cancelNextMarkerClick = true;
+          }
+        });
+        map.on("click", function(ev) {
+          if (!isNearAnyMarker(ev.latlng)) {
+            hideDetails();
+            cancelNextMarkerClick = false;
+            if (focusedMarker) {
+              unfocusMarker(focusedMarker);
+              focusedMarker = null;
+            }
+          }
+        });
+      
+        // 初回メニュー疑似クリック用フラグ
+        let initialMenuSimulated = false;
+      
+        // ページ読み込み後
+        document.addEventListener('DOMContentLoaded', () => {
+          loadMarkersSequentially();
+      
+          // 一度だけ「研究室」→「全体」を素早く疑似クリック
+          setTimeout(() => {
+            if (!initialMenuSimulated) {
+              initialMenuSimulated = true;
+              document.querySelector('.menu-bar button:nth-child(2)')?.click(); // 研究室
+              document.querySelector('.menu-bar button:nth-child(1)')?.click(); // 全体
+            }
+          }, 500);
+        });
+      
+        // ユーザーマーカー＆コンパスモーダル
+        document.addEventListener('DOMContentLoaded', () => {
+          const compassModal = new bootstrap.Modal(document.getElementById('compassModal'), {
+            backdrop: 'static',
+            keyboard: false
+          });
+          compassModal.show();
+      
+          document.getElementById('allowCompass').addEventListener('click', () => {
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+              DeviceOrientationEvent.requestPermission()
+                .then(resp => {
+                  if (resp === 'granted') initCompass();
+                })
+                .finally(() => compassModal.hide());
+            } else {
+              initCompass();
+              compassModal.hide();
+            }
+          });
+      
+          document.getElementById('denyCompass').addEventListener('click', () => {
+            console.warn('Compass use denied by user');
+            compassModal.hide();
+          });
+        });
+      
+        // コンパス初期化
+        function initCompass() {
+          try {
+            if ('AbsoluteOrientationSensor' in window) {
+              const sensor = new AbsoluteOrientationSensor({ frequency: 30 });
+              sensor.addEventListener('reading', () => {
+                const [x, y, z, w] = sensor.quaternion;
+                const yaw = (Math.atan2(2*(w*z + x*y), 1 - 2*(y*y + z*z)) * 180) / Math.PI;
+                applyHeading((yaw + 360) % 360);
+              });
+              sensor.start();
+              return;
+            }
+          } catch (e) {
+            console.warn('AbsoluteOrientationSensor error:', e);
+          }
+          const handler = ev => {
+            if (ev.webkitCompassHeading != null) {
+              applyHeading(ev.webkitCompassHeading);
+            } else if (ev.alpha != null) {
+              applyHeading((360 - ev.alpha) % 360);
+            }
+          };
+          if (typeof DeviceOrientationEvent !== 'undefined') {
+            if (DeviceOrientationEvent.requestPermission) {
+              DeviceOrientationEvent.requestPermission()
+                .then(r => {
+                  if (r === 'granted') window.addEventListener('deviceorientation', handler, true);
+                })
+                .catch(console.error);
+            } else {
+              window.addEventListener('deviceorientationabsolute', handler, true);
+              window.addEventListener('deviceorientation', handler, true);
+            }
+          }
+        }
+      
+        // ユーザーマーカー描画
         let userMarker = null;
         let lastPos = null;
         let currentHeading = 0;
-
-// ユーザーマーカーと向き（色を濃く強調）
-function userHTML(heading) {
-  return `
-    <div style="position:relative;width:40px;height:40px">
-      <!-- 方向ウェッジ -->
-      <div class="direction-wedge" style="
-        position:absolute;
-        top:-20px; left:-20px;
-        width:80px; height:80px;
-        /* 内側の青を不透明度0.6にして濃く */
-        background: radial-gradient(
-          circle at 50% 50%,
-          rgba(0,122,255,30) 0%,
-          rgba(0,122,255,0) 80%
-        );
-        clip-path: polygon(50% 50%,25% 0%,75% 0%);
-        transform: rotate(${heading}deg);
-        transform-origin: 40px 40px;
-      "></div>
-
-      <!-- 外側サークル -->
-      <div style="
-        position:absolute;
-        top:0; left:0;
-        width:40px; height:40px;
-        border-radius:50%;
-        /* 背景を不透明度0.4に、境界線も濃く */
-        background: rgba(0,122,255,0.4);
-        border: 2px solid rgba(0,122,255,0.6);
-      "></div>
-
-      <!-- 中央ドット -->
-      <div style="
-        position:absolute;
-        top:8px; left:8px;
-        width:24px; height:24px;
-        border-radius:50%;
-        /* 中央の青も少し濃い目に */
-        background: #005FCC;
-        border: 2px solid #fff;
-      "></div>
-    </div>`;
-}
-
-
+      
+        function userHTML(heading) {
+          return `
+            <div style="position:relative;width:40px;height:40px">
+              <div class="direction-wedge" style="
+                position:absolute;
+                top:-20px; left:-20px;
+                width:80px; height:80px;
+                background: radial-gradient(
+                  circle at 50% 50%,
+                  rgba(0,122,255,0.6) 0%,
+                  rgba(0,122,255,0) 80%
+                );
+                clip-path: polygon(50% 50%,25% 0%,75% 0%);
+                transform: rotate(${heading}deg);
+                transform-origin: 40px 40px;
+              "></div>
+              <div style="
+                position:absolute;
+                top:0; left:0;
+                width:40px; height:40px;
+                border-radius:50%;
+                background: rgba(0,122,255,0.4);
+                border: 2px solid rgba(0,122,255,0.6);
+              "></div>
+              <div style="
+                position:absolute;
+                top:8px; left:8px;
+                width:24px; height:24px;
+                border-radius:50%;
+                background: #005FCC;
+                border: 2px solid #fff;
+              "></div>
+            </div>`;
+        }
+      
         function renderUser(lat, lon, heading) {
           lastPos = [lat, lon];
           if (!userMarker) {
@@ -577,83 +646,15 @@ function userHTML(heading) {
             );
           }
         }
+      
         function applyHeading(raw) {
           if (raw == null) return;
           const deg = (raw + getScreenAngle()) % 360;
           currentHeading = deg;
           if (lastPos) renderUser(lastPos[0], lastPos[1], deg);
         }
-        
-        // コンパス許可モーダル
-        document.addEventListener('DOMContentLoaded', () => {
-          const compassModal = new bootstrap.Modal(document.getElementById('compassModal'), {
-            backdrop: 'static',
-            keyboard: false
-          });
-          compassModal.show();
-        
-          document.getElementById('allowCompass').addEventListener('click', () => {
-            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-              DeviceOrientationEvent.requestPermission()
-                .then(resp => {
-                  if (resp === 'granted') initCompass();
-                  else console.warn('DeviceOrientation permission denied');
-                })
-                .catch(err => console.error('Compass request error', err))
-                .finally(() => compassModal.hide());
-            } else {
-              initCompass();
-              compassModal.hide();
-            }
-          });
-        
-          document.getElementById('denyCompass').addEventListener('click', () => {
-            console.warn('Compass use denied by user');
-            compassModal.hide();
-          });
-        });
-        
-        // 方位取得初期化
-        function initCompass() {
-          // 1) AbsoluteOrientationSensor
-          try {
-            if ('AbsoluteOrientationSensor' in window) {
-              const sensor = new AbsoluteOrientationSensor({ frequency: 30 });
-              sensor.addEventListener('reading', () => {
-                const [x, y, z, w] = sensor.quaternion;
-                const yaw = (Math.atan2(2*(w*z + x*y), 1 - 2*(y*y + z*z)) * 180) / Math.PI;
-                applyHeading((yaw + 360) % 360);
-              });
-              sensor.start();
-              return;
-            }
-          } catch (e) {
-            console.warn('AbsoluteOrientationSensor error:', e);
-          }
-        
-          // 2) DeviceOrientationEvent
-          const handler = ev => {
-            if (ev.webkitCompassHeading != null) {
-              applyHeading(ev.webkitCompassHeading);
-            } else if (ev.alpha != null) {
-              applyHeading((360 - ev.alpha) % 360);
-            }
-          };
-          if (typeof DeviceOrientationEvent !== 'undefined') {
-            if (DeviceOrientationEvent.requestPermission) {
-              DeviceOrientationEvent.requestPermission()
-                .then(r => {
-                  if (r === 'granted') window.addEventListener('deviceorientation', handler, true);
-                })
-                .catch(console.error);
-            } else {
-              window.addEventListener('deviceorientationabsolute', handler, true);
-              window.addEventListener('deviceorientation', handler, true);
-            }
-          }
-        }
-        
-        // GPSベクトルによる向き補完
+      
+        // GPSベアリングによる向き補完
         let lastBearingPos = null;
         function gpsBearing(lat, lon) {
           if (!lastBearingPos) {
@@ -671,92 +672,40 @@ function userHTML(heading) {
           lastBearingPos = [lat, lon];
           return calcBearing(pl, pn, lat, lon);
         }
-        
+      
         // 位置情報取得
         if ('geolocation' in navigator) {
-          +    navigator.geolocation.watchPosition(
-      ({ coords: { latitude, longitude } }) => {
-        const fallback = gpsBearing(latitude, longitude);
-        if (fallback != null && currentHeading === 0) currentHeading = fallback;
-        renderUser(latitude, longitude, currentHeading);
-      },
-      e => {
-        if (e.code === e.TIMEOUT) {
-          console.warn('位置情報の取得がタイムアウトしました。再試行します…');
-        } else {
-         console.error('Geolocation error', e);
-       }
-      },
-      {
-        enableHighAccuracy: true,
-        maximumAge: 5000,     // キャッシュ利用を5秒まで許可
-        timeout: 20000        // タイムアウトを20秒に延長
-      }
-    );
+          navigator.geolocation.watchPosition(
+            ({ coords: { latitude, longitude } }) => {
+              const fallback = gpsBearing(latitude, longitude);
+              if (fallback != null && currentHeading === 0) currentHeading = fallback;
+              renderUser(latitude, longitude, currentHeading);
+            },
+            e => {
+              if (e.code === e.TIMEOUT) {
+                console.warn('位置情報の取得がタイムアウトしました。再試行します…');
+              } else {
+                console.error('Geolocation error', e);
+              }
+            },
+            {
+              enableHighAccuracy: true,
+              maximumAge: 5000,
+              timeout: 20000
+            }
+          );
         } else {
           alert('Geolocation API に対応していません。');
         }
-        
-        // 初期詳細パネル非表示
+      
+        // 初期状態で詳細パネルを隠す
         hideDetails();
-
-
-
-          /**
-           * クリック位置が「実際にピンを押した」と判定できる距離内かどうかを調べる。
-           *   マーカーの中心とクリック位置のスクリーン座標間の距離を測定し、
-           *   しきい値（今回は 15px）より近ければ true を返す。
-           */
-          function isNearAnyMarker(clickLatLng, thresholdPx = 15) {
-            const clickPt = map.latLngToContainerPoint(clickLatLng);
-            let hit = false;
-
-            buildingLayer.eachLayer(m => {
-              if (hit) return;                      // すでに判定済みならスキップ
-              const mPt = map.latLngToContainerPoint(m.getLatLng());
-              const dist = clickPt.distanceTo(mPt);
-              if (dist < thresholdPx) hit = true;
-            });
-            return hit;
-          }
-
-
-
-
-
-
-          // ─── マップの空白クリックでフォーカス解除 ───
- map.on('mousedown', function (ev) {
-   // ピン上クリック以外なら「誤タップキャンセル」を ON
-   if (!ev.originalEvent.target.closest('.custom-icon')) {
-     cancelNextMarkerClick = true;
-   }
- });
-
-// ── マップの何もない部分をクリックしたとき ──
-map.on("click", function(ev) {
-  // 近傍にピンがなければ「空白クリック」
-  if (!isNearAnyMarker(ev.latlng)) {
-    // 詳細パネルを閉じ（すでに閉じていてもOK）
-    hideDetails();
-    // 誤タップキャンセルフラグをクリア
-    cancelNextMarkerClick = false;
-    // ここで初めてフォーカス解除
-    if (focusedMarker) {
-      unfocusMarker(focusedMarker);
-      focusedMarker = null;
-    }
-  }
-});
-
-
-
-
-
-
-        window.spots = spots;  // 親側で iframe.contentWindow.spots として参照可能に
-        window.map   = map;    // 同様に map インスタンスもエクスポート
-        </script>
+      
+        // iframe 等からも参照可能に
+        window.spots = spots;
+        window.map   = map;
+      </script>
+      
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
       defer></script>

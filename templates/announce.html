@@ -4,7 +4,7 @@
 {% block title %}幾徳祭 | ご案内・アクセス{% endblock %}
 
 {% block head_extra %}
-  <!-- Inline Styles from Announce Page -->
+  <!-- 元のスタイル -->
   <style>
     .hero {
       position: relative;
@@ -22,6 +22,7 @@
       background: url('{{ url_for("static", filename="sunset.webp") }}') center/cover no-repeat fixed;
       filter: brightness(.55);
       z-index: 0;
+      animation: zoomBackground 20s ease-in-out infinite;
     }
     .hero .inner { position: relative; z-index: 2; }
     .card {
@@ -33,8 +34,82 @@
       transform: translateY(-6px) scale(1.02);
       box-shadow: 0 15px 30px rgba(0,0,0,.15);
     }
-  </style>
 
+    /* 背景ズームアニメーション */
+    @keyframes zoomBackground {
+      0%   { transform: scale(1) }
+      50%  { transform: scale(1.05) }
+      100% { transform: scale(1) }
+    }
+
+    /* スケジュールタイムライン */
+    .timeline {
+      position: relative;
+      padding: 2rem 0;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 4px;
+      height: 100%;
+      background: var(--kait-purple);
+      transform: translateX(-50%);
+    }
+    .timeline-item {
+      position: relative;
+      width: 50%;
+      padding: 1rem 2rem;
+    }
+    .timeline-item:nth-child(odd)  { left: 0; }
+    .timeline-item:nth-child(even) { left: 50%; }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      top: 1.2rem;
+      right: -8px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--kait-purple);
+    }
+    .timeline-item:nth-child(even)::before {
+      left: -8px;
+      right: auto;
+    }
+
+    /* アクセスタブ下線アニメーション */
+    .nav-tabs .nav-link {
+      position: relative;
+      transition: color .3s;
+    }
+    .nav-tabs .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 100%;
+      height: 3px;
+      background: var(--kait-purple);
+      transform: translateX(-50%) scaleX(0);
+      transform-origin: center;
+      transition: transform .3s;
+    }
+    .nav-tabs .nav-link.active::after {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    /* 駐車場カードホバー */
+    .parking-card {
+      transition: transform .3s, box-shadow .3s;
+      border-radius: .75rem;
+    }
+    .parking-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,.12);
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -47,41 +122,197 @@
     </div>
   </section>
 
-  <!-- Main -->
   <main class="container my-5 pt-4">
     <!-- ご来場の方へ -->
     <section class="mb-5" data-aos="fade-up">
       <h2 class="mb-4">ご来場の方へ</h2>
       <div class="card p-4">
         <ul class="list-unstyled mb-0">
-          <li class="mb-2"><i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>飲酒は固くお断りいたします。</li>
-          <li class="mb-2"><i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>ドローン等の無許可飛行は禁止です。</li>
-          <li class="mb-2"><i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>ゴミは分別のうえ所定の回収場所へ。</li>
-          <li class="mb-2"><i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>ペットの同伴は原則ご遠慮ください。</li>
-          <li class="mb-2"><i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>体調不良の際はスタッフまでお申し出ください。</li>
+          <li class="mb-2">
+            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+            飲酒は固くお断りいたします。
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+            ドローン等の無許可飛行は禁止です。
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+            ゴミは分別のうえ所定の回収場所へ。
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+            ペットの同伴は原則ご遠慮ください。
+          </li>
+          <li class="mb-2">
+            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+            体調不良の際はスタッフまでお申し出ください。
+          </li>
         </ul>
       </div>
     </section>
 
-    <!-- アクセス -->
-    <section data-aos="fade-up" data-aos-delay="100">
-      <h2 class="mb-4">アクセス</h2>
-      <p class="mb-3">幾徳祭へは公共交通機関のご利用を推奨しております。</p>
+    <!-- 開催スケジュール -->
+    <section class="mb-5 timeline" data-aos="fade-up">
+      <h2 class="text-center mb-4">開催スケジュール</h2>
+
+      <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
+        <h5>10:00 - オープニングセレモニー</h5>
+        <p>ステージ前広場にて開会の挨拶を行います。</p>
+      </div>
+      <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
+        <h5>11:00 - 模擬店オープン</h5>
+        <p>キャンパス各所で屋台やフードトラックが開店。</p>
+      </div>
+      <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
+        <h5>13:00 - ステージパフォーマンス</h5>
+        <p>ダンス、演劇、音楽ライブなど多彩な演目をお楽しみください。</p>
+      </div>
+      <div class="timeline-item" data-aos="fade-left" data-aos-delay="400">
+        <h5>15:00 - ワークショップ開始</h5>
+        <p>ものづくり、AI体験など、参加型プログラムを実施。</p>
+      </div>
+      <div class="timeline-item" data-aos="fade-right" data-aos-delay="500">
+        <h5>17:00 - クローズセレモニー</h5>
+        <p>一日の締めくくりとして、閉会の挨拶を行います。</p>
+      </div>
+    </section>
+
+    <!-- アクセス（簡易） -->
+    <section class="mb-5" data-aos="fade-up" data-aos-delay="100">
+      <h2 class="mb-4">アクセス（簡易）</h2>
       <div class="row g-4">
         <div class="col-lg-6">
-          <iframe class="w-100 rounded" height="380" style="border:0;" loading="lazy" allowfullscreen
+          <iframe
+            class="w-100 rounded shadow"
+            height="380"
+            style="border:0;"
+            loading="lazy"
+            allowfullscreen
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.735162808246!2d139.33997817582735!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e0!3m2!1sja!2sjp!4v1745132850729!5m2!1sja!2sjp">
           </iframe>
         </div>
         <div class="col-lg-6">
           <div class="card h-100 p-3">
             <h5 class="card-title">公共交通機関でお越しの場合</h5>
-            <p class="card-text">小田急線「本厚木」駅 北口より 神奈中バス「神奈川工科大学行き」終点下車（約10分）。</p>
-            <a href="https://www.kait.jp/directions/" target="_blank" class="btn btn-outline-primary">大学公式アクセス案内を見る</a>
+            <p class="card-text">
+              小田急線「本厚木」駅 北口より
+              神奈中バス「神奈川工科大学行き」終点下車（約10分）。
+            </p>
+            <a
+              href="https://www.kait.jp/directions/"
+              target="_blank"
+              class="btn btn-outline-primary">
+              大学公式アクセス案内を見る
+            </a>
           </div>
         </div>
       </div>
     </section>
+
+    <!-- アクセス詳細タブ -->
+    <section class="mb-5" data-aos="fade-up" data-aos-delay="200">
+      <h2 class="mb-4 text-center">アクセス方法詳細</h2>
+      <ul
+        class="nav nav-tabs justify-content-center mb-3"
+        id="accessTab"
+        role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="train-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#train"
+            type="button"
+            role="tab">
+            <i class="bi bi-train-front-fill me-1"></i>公共交通
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="car-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#car"
+            type="button"
+            role="tab">
+            <i class="bi bi-car-front-fill me-1"></i>お車
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="bicycle-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#bicycle"
+            type="button"
+            role="tab">
+            <i class="bi bi-bicycle me-1"></i>自転車
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <!-- 公共交通 -->
+        <div
+          class="tab-pane fade show active"
+          id="train"
+          role="tabpanel">
+          <p>
+            小田急線「本厚木」駅 北口より
+            神奈中バス「神奈川工科大学行き」終点下車（約10分）。
+          </p>
+          <p>
+            または相模線「入谷」駅より徒歩25分（約2km）。
+          </p>
+        </div>
+        <!-- お車 -->
+        <div class="tab-pane fade" id="car" role="tabpanel">
+          <p>
+            東名高速道路「厚木IC」より約15分。
+            キャンパス周辺に複数の有料駐車場をご利用ください。
+          </p>
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+              <div class="card parking-card h-100 p-3">
+                <h6><i class="bi bi-building me-1"></i>第1駐車場</h6>
+                <p>収容台数：200台。キャンパス北門より徒歩5分。</p>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card parking-card h-100 p-3">
+                <h6><i class="bi bi-building me-1"></i>第2駐車場</h6>
+                <p>収容台数：150台。キャンパス西門より徒歩7分。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 自転車 -->
+        <div class="tab-pane fade" id="bicycle" role="tabpanel">
+          <p>
+            大学敷地内に無料自転車置き場がございます。
+            台数に限りがありますので、公共交通機関のご利用を推奨します。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- お問い合わせ -->
+    <section class="text-center mb-5" data-aos="fade-up" data-aos-delay="300">
+      <h2 class="mb-3">お問い合わせ</h2>
+      <p>
+        幾徳祭運営事務局<br>
+        <a href="tel:0461234567">046‐123‐4567</a> /
+        <a href="mailto:info@kaitfes.jp">info@kaitfes.jp</a>
+      </p>
+    </section>
   </main>
 {% endblock %}
 
+{% block scripts_extra %}
+  <script>
+    // AOSはlayout.htmlで初期化済み
+    // タブを確実に初期表示
+    var firstTabEl = document.querySelector('#accessTab button.nav-link');
+    new bootstrap.Tab(firstTabEl).show();
+  </script>
+{% endblock %}

@@ -18,6 +18,10 @@
     <link rel="preload" as="image" href="./static/map/K1号館.webp">
     <link rel="preload" as="image" href="./static/map/K2号館.webp">
 
+    <link
+    rel="stylesheet"
+    href="./static/css/map_icons.css"/>
+
     <!-- Leaflet CSS (遅延読み込み) -->
     <link
       rel="stylesheet"
@@ -62,11 +66,6 @@
       height: 100vh;
     }
 
-    /* 地図タイルの色調補正 
-    .leaflet-tile-pane img {
-      filter: saturate(1.8) contrast(1.2) brightness(1.0);
-    }*/
-
     /* メニューバー */
     .menu-bar {
       position: fixed;
@@ -88,69 +87,7 @@
       white-space: nowrap;
     }
 
-    /* カスタムピン */
-    .custom-icon {
-      position: relative;
-      z-index: 1;
-      width: 50px; height: 50px;
-      background: var(--brand-green);
-      border: 2px solid #ccc;
-      border-radius: 50%;
-      box-shadow: 0 2px 5px rgba(0,0,0,.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .custom-icon::after {
-      content: '';
-      position: absolute;
-      left: 50%; bottom: -11px;
-      transform: translateX(-50%);
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-top: 15px solid var(--brand-green);
-      z-index: -1;
-    }
-    .icon-image {
-      width: 90%; height: 90%;
-      background-size: cover;
-      background-position: center;
-      border-radius: 50%;
-      border: 1px solid #aaa;
-    }
 
-
-/* グルメ（青） */
-.event-icon-gourmet {
-  background: #005FCC;
-}
-.event-icon-gourmet::after {
-  border-top: 15px solid #005FCC;
-}
-
-/* 研究室（オレンジ） */
-.event-icon-lab {
-  background: #FF5733;
-}
-.event-icon-lab::after {
-  border-top: 15px solid #FF5733;
-}
-
-/* サークル（緑） */
-.event-icon-circle {
-  background: #28A745;
-}
-.event-icon-circle::after {
-  border-top: 15px solid #28A745;
-}
-
-/* 演奏・劇（紫） */
-.event-icon-performance {
-  background: #8E44AD;
-}
-.event-icon-performance::after {
-  border-top: 15px solid #8E44AD;
-}
 
 
     /* 詳細パネル */
@@ -176,7 +113,7 @@
         bottom: -9px;
         border-left: 8px solid transparent;
         border-right: 8px solid transparent;
-        border-top: 12px solid var(--brand-green);
+        border-top: 12px solid rgb(14,83,12);;
       }
       .details-panel {
         width: 100%;
@@ -216,12 +153,12 @@
     .custom-icon.focused {
       width: 60px;
       height: 60px;
-      border-color: #FFD700;           /* 金色の枠で強調 */
+      border-color: rgb(14,83,12);           /* 金色の枠で強調 */
     }
     .custom-icon.focused::after {
       bottom: -15px;                    /* 矢印の位置を少し下へ */
       border-top-width: 18px;           /* 矢印を少し大きく */
-      border-top-color: #FFD700;        /* 矢印の色も金色に */
+      border-top-color: rgb(14,83,12);        /* 矢印の色も金色に */
     }
     .custom-icon.focused .icon-image {
       width: 90%;
