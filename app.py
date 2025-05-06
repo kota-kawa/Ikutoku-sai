@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+load_dotenv()
+
 # セッション用シークレットキーを .env から設定
 app.secret_key = os.environ.get('SECRET_KEY')
 
@@ -21,7 +23,6 @@ def login():
         else:
             flash('パスワードが正しくありません。', 'error')
     return render_template('login.html')
-
 
 # ログアウト
 @app.route('/logout')
