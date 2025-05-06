@@ -18,7 +18,6 @@ def login():
     # すでにログイン済みなら bingo へ飛ばす
     if session.get('admin_logged_in'):
         return redirect(url_for('bingo'))
-
     if request.method == 'POST':
         pw = request.form.get('password', '')
         if pw == ADMIN_PASSWORD:
