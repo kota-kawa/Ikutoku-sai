@@ -110,7 +110,8 @@
 
   <!-- ログインフォーム -->
   <div class="form-container">
-    <form class="login-box" method="post">
+    <!-- action を明示して常に /login に送る -->
+    <form class="login-box" action="{{ url_for('login') }}" method="post">
       <h2>管理者ログイン</h2>
       {% with messages = get_flashed_messages(category_filter=["error"]) %}
         {% if messages %}
