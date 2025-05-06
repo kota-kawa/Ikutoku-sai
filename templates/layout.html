@@ -115,7 +115,14 @@
     <!-- ============ Footer ============ -->
     <footer class="text-center">
       <div class="container">
-        <small>© 2025 神奈川工科大学学友会イベント局</small>
+        <small>
+          © 2025 神奈川工科大学学友会イベント局
+          <!-- ビンゴへのリンクを追加 -->
+          &nbsp;|&nbsp;
+          <a href="{{ url_for('bingo') }}" class="text-decoration-none text-light">
+            ビンゴ(運営用)
+          </a>
+        </small>
       </div>
     </footer>
 

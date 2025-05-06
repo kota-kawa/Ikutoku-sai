@@ -1,26 +1,40 @@
-from flask import  render_template, redirect, session, request, Flask, url_for, jsonify
+import os
+from flask import Flask, render_template, redirect, session, request, url_for, flash
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
+# セッション用シークレットキーを .env から設定
+app.secret_key = os.environ.get('SECRET_KEY')
+
+# 管理者パスワード
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
+
+# ログインページ
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        pw = request.form.get('password', '')
+        if pw == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect(url_for('bingo'))
+        else:
+            flash('パスワードが正しくありません。', 'error')
+    return render_template('login.html')
 
 
+# ログアウト
+@app.route('/logout')
+def logout():
+    session.pop('admin_logged_in', None)
+    return redirect(url_for('login'))
+
+# ビンゴページ（管理者のみ）
 @app.route('/bingo')
 def bingo():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('login'))
     return render_template('bingo.html')
-
-@app.route('/api/action', methods=['POST'])
-def action():
-    data = request.json
-    gesture = data.get('gesture')
-    if gesture == 'click':
-        # クリック処理をここに実装
-        return jsonify({'status': 'clicked'})
-    elif gesture == 'scroll_up':
-        # スクロール処理をここに実装
-        return jsonify({'status': 'scrolled_up'})
-    # 他のジェスチャー処理
-    return jsonify({'status': 'unknown'}), 400
-
 
 @app.route('/')
 def index():
