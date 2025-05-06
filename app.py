@@ -2,6 +2,26 @@ from flask import  render_template, redirect, session, request, Flask, url_for, 
 
 app = Flask(__name__)
 
+
+
+@app.route('/bingo')
+def bingo():
+    return render_template('bingo.html')
+
+@app.route('/api/action', methods=['POST'])
+def action():
+    data = request.json
+    gesture = data.get('gesture')
+    if gesture == 'click':
+        # クリック処理をここに実装
+        return jsonify({'status': 'clicked'})
+    elif gesture == 'scroll_up':
+        # スクロール処理をここに実装
+        return jsonify({'status': 'scrolled_up'})
+    # 他のジェスチャー処理
+    return jsonify({'status': 'unknown'}), 400
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
