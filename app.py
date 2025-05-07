@@ -13,21 +13,25 @@ app.secret_key = os.environ.get('SECRET_KEY')
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 
 # ログインページ
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET'])
 def login():
-    # すでにログイン済みなら bingo へ飛ばす
+    # 既にログイン済みなら bingo へリダイレクト
     if session.get('admin_logged_in'):
-        return redirect('/bingo')
-    if request.method == 'POST':
-        pw = request.form.get('password', '')
-        if pw == ADMIN_PASSWORD:
-            session['admin_logged_in'] = True
-            # セッションを永続化したい場合は下行も追加
-            session.permanent = True
-            return redirect('/bingo')
-        else:
-            flash('パスワードが違います', 'error')
+        return redirect(url_for('bingo'))
     return render_template('login.html')
+
+
+# 認証処理専用（POST）
+@app.route('/login_submit', methods=['POST'])
+def login_submit():
+    pw = request.form.get('password', '')
+    if pw == ADMIN_PASSWORD:
+        session['admin_logged_in'] = True
+        session.permanent = True  # 必要ならセッションを永続化
+        return redirect(url_for('bingo'))
+    else:
+        flash('パスワードが違います', 'error')
+        return redirect(url_for('login'))
 
 #ビンゴページ（運営のみ）
 @app.route('/bingo')
