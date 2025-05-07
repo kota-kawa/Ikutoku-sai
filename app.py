@@ -23,7 +23,7 @@ def login():
         if pw == ADMIN_PASSWORD:
             session['admin_logged_in'] = True
             # セッションを永続化したい場合は下行も追加
-            # session.permanent = True
+            session.permanent = True
             return redirect(url_for('bingo'))
         else:
             flash('パスワードが違います', 'error')
