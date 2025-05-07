@@ -17,14 +17,14 @@ ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 def login():
     # すでにログイン済みなら bingo へ飛ばす
     if session.get('admin_logged_in'):
-        return redirect(url_for('bingo'))
+        return redirect('/bingo')
     if request.method == 'POST':
         pw = request.form.get('password', '')
         if pw == ADMIN_PASSWORD:
             session['admin_logged_in'] = True
             # セッションを永続化したい場合は下行も追加
             session.permanent = True
-            return redirect(url_for('bingo'))
+            return redirect('/bingo')
         else:
             flash('パスワードが違います', 'error')
     return render_template('login.html')
@@ -34,7 +34,7 @@ def login():
 def bingo():
     # 未ログインなら login へ戻す
     if not session.get('admin_logged_in'):
-        return redirect(url_for('login'))
+        return redirect('/login')
     return render_template('bingo.html')
 
 @app.route('/')
