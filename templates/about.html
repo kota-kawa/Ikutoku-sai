@@ -30,25 +30,6 @@
   font-weight: bold;
 }
 
-/* 実行委員会から用に、黄緑→緑 のグラデ */
-.gradient-text--green {
-  background: linear-gradient(
-    to right,
-    #a8e6cf,
-    #379683
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-
-  font-size: 1.05rem;
-  line-height: 1.75;
-  max-width: 720px;
-  margin-inline: auto;
-  text-align: left;
-  font-weight: bold;
-}
-
 
 /* ---------- Hero（画像パスそのまま） ---------- */
 .hero{
@@ -135,7 +116,7 @@
   position: relative;
   border-radius: 1.5rem;
   padding: clamp(1.8rem,4vw,2.4rem);
-  background: var(--glass-bg);
+  background: #2b2b2b !important;
   backdrop-filter: blur(18px);
   border: 2px solid transparent;
   background-clip: padding-box, border-box;
@@ -176,8 +157,8 @@
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="inner text-center" data-aos="fade-down">
-    <h1 class="display-4 fw-bold">幾徳祭とは</h1>
-    <p class="lead mb-3">神奈川工科大学が誇る学園祭</p>
+    <h1 class="display-4 fw-bold">ご挨拶と概要</h1>
+    <p class="lead mb-3">神奈川工科大学が誇る学園祭の開催にあたり</p>
   </div>
 </section>
 
@@ -193,7 +174,7 @@
 
   <!-- ---------- ごあいさつ ---------- -->
   <section id="greetings" class="apple-section" data-aos="fade-up">
-    <h2 class="apple-title">ごあいさつ</h2>
+    <h2 class="apple-title">ご挨拶</h2>
 
     <div class="greeting-list">
       {% set msgs = [
@@ -214,7 +195,7 @@
   <!-- ---------- 幾徳祭実行委員会から ---------- -->
   <section id="theme" class="apple-section" data-aos="fade-up">
     <h2 class="apple-title">幾徳祭実行委員会から</h2>
-    <p class="gradient-text--green">
+    <p class="gradient-text--purple">
       <strong>テーマについて</strong><br>
       幼虫から蝶になるという成長過程は、復活、再生、変化を意味すると考えられています。私たち学生は、様々なことに挑戦をするという意味で変化を続けてきました。その成果を、来てくださったお客様にお見せするという意味で、今年のテーマを蝶に決めました。
     </p>
