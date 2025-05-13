@@ -1,209 +1,239 @@
-<!-- templates/about.html -->
 {% extends "layout.html" %}
-
-{% block title %}幾徳祭 | 概要・ごあいさつ{% endblock %}
+{% block title %}幾徳祭 | 概要{% endblock %}
 
 {% block head_extra %}
-  <!-- Custom Style for About Page -->
-  <style>
-    :root {
-      --overlay-dark: rgba(0, 0, 0, .6);
-      --section-gap: 80px;
-    }
-    .hero {
-      position: relative;
-      height: 50vh;
-      text-align: center;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      background: url('{{ url_for("static", filename="sunset.webp") }}') center/cover no-repeat fixed;
-      filter: brightness(.5);
-      z-index: 0;
-    }
-    .hero .inner .btn {
-      margin-top: 1rem;
-      padding: .75rem 1.5rem;
-      font-size: 1.1rem;
-    }
-    h2.section-title {
-      position: relative;
-      padding-bottom: .5rem;
-    }
-    h2.section-title::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 3rem;
-      height: 4px;
-      background: var(--kait-purple);
-    }
-    .section-light { background: #fff; }
-    .section-dark  { background: #f1f3f5; }
-    .card {
-      transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
-      border: none;
-      border-radius: 1rem;
-    }
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(0,0,0,.15);
-    }
-   
-    /* 横スクロールを封じ込め */
-    body, html { overflow-x: hidden; } 
-  </style>
+<style>
+/* ---------- ベース変数 ---------- */
+:root{
+  --grad-main: linear-gradient(90deg, #0071e3 0%, #af52de 45%, #ff7f44 90%);
+  --txt-main: #1d1d1f; --txt-sub: #555;
+  --glass-bg: rgba(255,255,255,.55);
+  --glass-bg-dark: rgba(28,28,30,.55);
+}
+
+/* 概要用に、紫→ピンクのグラデ */
+.gradient-text--purple {
+  background: linear-gradient(
+    to right,
+    #6a0dad,  /* 紫 */
+    #ff1493   /* ディープピンク */
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: left;
+  font-weight: bold;
+}
+
+/* 実行委員会から用に、黄緑→緑 のグラデ */
+.gradient-text--green {
+  background: linear-gradient(
+    to right,
+    #a8e6cf,
+    #379683
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: left;
+  font-weight: bold;
+}
+
+
+/* ---------- Hero（画像パスそのまま） ---------- */
+.hero{
+  position: relative;
+  min-height: 50vh;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg{
+  position: absolute;
+  inset: 0;
+  background: url('{{ url_for("static", filename="sunset.webp") }}') center/cover no-repeat;
+  transform: scale(1.1); /* 疑似パララックス */
+  z-index: 0;
+  will-change: transform;
+  pointer-events: none; /* スクロールキャプチャ防止 */
+}
+@media (prefers-reduced-motion: no-preference){
+  .hero-bg{
+    animation: bgZoom 25s ease-in-out infinite;
+  }
+}
+@keyframes bgZoom{
+  0%   { transform: scale(1.05); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1.05); }
+}
+.hero .inner{
+  position: relative;
+  z-index: 1;
+}
+/* 読めない白文字問題に対応 */
+.hero .lead{
+  color: #fff!important;
+  text-shadow: 0 2px 4px rgba(0,0,0,.35);
+}
+
+/* ---------- セクション ---------- */
+.apple-section{
+  padding: clamp(4rem,8vw,7rem) 1rem;
+  max-width: 940px;
+  margin-inline: auto;
+}
+.apple-section:not(:last-of-type){
+  border-bottom: 1px solid #e5e5e5;
+}
+.apple-title{
+  font: 700 clamp(2.25rem,4vw,3rem)/1.2 system-ui;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  background: var(--grad-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 250% 100%;
+  animation: gradShift 12s ease infinite;
+}
+@keyframes gradShift{ 50%{ background-position:100% 50%; } }
+.apple-copy{
+  font-size: 1.05rem;
+  line-height: 1.75;
+  font-weight: bold;
+  color: var(--txt-main);
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: left;
+}
+.apple-copy + .apple-copy{
+  margin-top: 1.2rem;
+}
+@media(prefers-color-scheme:dark){
+  .apple-copy{ color:#e5e5ea; }
+}
+
+/* ---------- グラスカード (おしゃれ＆動き) ---------- */
+.greeting-list{
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.greeting-item{
+  position: relative;
+  border-radius: 1.5rem;
+  padding: clamp(1.8rem,4vw,2.4rem);
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  border: 2px solid transparent;
+  background-clip: padding-box, border-box;
+  overflow: hidden;
+  transition: .4s transform, .4s box-shadow;
+  /* 本体＋グラデ枠の二重指定 */
+  background-image:
+    var(--glass-bg),
+    var(--grad-main);
+}
+/* 左上の謎パーツをまるごと削除 */
+.greeting-item::before{ content:none; }
+.greeting-item:hover{
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 24px 46px rgba(0,0,0,.18);
+}
+.greeting-name{
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: .7rem;
+  line-height: 1.3;
+}
+@media(prefers-color-scheme:dark){
+  .greeting-item{
+    background: var(--glass-bg-dark);
+    background-image:
+      var(--glass-bg-dark),
+      var(--grad-main);
+  }
+  .greeting-name{ color:#fff; }
+}
+
+</style>
 {% endblock %}
 
 {% block content %}
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <div class="inner text-center" data-aos="fade-down">
-      <h1 class="display-4 fw-bold">幾徳祭とは</h1>
-      <p class="lead mb-3">神奈川工科大学が誇る学園祭</p>
-      <a href="#overview" class="btn btn-lg btn-outline-light">開催概要を見る</a>
+<!-- ===== Hero（マークアップ unchanged） ===== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="inner text-center" data-aos="fade-down">
+    <h1 class="display-4 fw-bold">幾徳祭とは</h1>
+    <p class="lead mb-3">神奈川工科大学が誇る学園祭</p>
+  </div>
+</section>
+
+<main>
+
+  <!-- ---------- 概要 ---------- -->
+  <section id="overview" class="apple-section" data-aos="fade-up">
+    <h2 class="apple-title">概要</h2>
+    <p class="gradient-text--purple">
+      幾徳祭とは、神奈川工科大学で行われる学園祭の名称です。幾徳祭では毎年、多数のイベントを行っています。学内は様々な模擬...す。またステージイベント・スタンプラリー・ビンゴが行われます。幾徳祭は、本学生や地域の方々との交流の場としても親しまれています。
+    </p>
+  </section>
+
+  <!-- ---------- ごあいさつ ---------- -->
+  <section id="greetings" class="apple-section" data-aos="fade-up">
+    <h2 class="apple-title">ごあいさつ</h2>
+
+    <div class="greeting-list">
+      {% set msgs = [
+        ("神奈川工科大学 学長　小宮　一三", "第49回の幾徳祭の開催おめでとうございます。今年の幾徳祭は ... 本学学生たちの活躍とともに、その姿をご覧いただければ幸いです。"),
+        ("神奈川工科大学 学生部長　塩川　茂樹", "皆様、神奈川工科大学の幾徳祭へ、ようこそ ... 幾徳祭として羽ばたいていくことを願っています。"),
+        ("学友会執行部 会長　山之内　優斗", "本日は、第49回幾徳祭にお越しいただきありがとうございます。 ... 良い思い出になることを祈念いたします。"),
+        ("学友会イベント局 局長　大塚　直人", "本日は第49回幾徳祭にお越しいただきありがとうございます。 ... 感謝とお礼を申し上げます。")
+      ] %}
+      {% for name, body in msgs %}
+      <article class="greeting-item" data-aos="fade-up" data-aos-delay="{{ loop.index * 60 }}">
+        <h3 class="greeting-name">{{ name }}</h3>
+        <p class="apple-copy">{{ body }}</p>
+      </article>
+      {% endfor %}
     </div>
   </section>
 
-  <!-- Main Content -->
-  <main class="container my-5 pt-5">
-    <!-- 開催概要 -->
-    <section id="overview" class="mb-5 section-light py-5" data-aos="fade-up">
-      <h2 class="section-title mb-4">開催概要</h2>
-      <div class="row g-4">
-        <div class="col-md-6" data-aos="fade-right">
-          <ul class="list-group list-group-flush fs-5">
-            <li class="list-group-item"><i class="bi bi-award-fill text-success me-2"></i>第50回 幾徳祭</li>
-            <li class="list-group-item"><i class="bi bi-calendar3 text-success me-2"></i>日程：11/2(土) – 11/3(日) 10:00–17:00</li>
-            <li class="list-group-item"><i class="bi bi-palette-fill text-success me-2"></i>テーマ：蝶</li>
-            <li class="list-group-item"><i class="bi bi-people-fill text-success me-2"></i>主催：神奈川工科大学 学友会イベント局</li>
-          </ul>
-        </div>
-        <div class="col-md-6" data-aos="fade-left">
-          <div class="card p-4 bg-white">
-            <p class="mb-0">
-              幾徳祭とは、神奈川工科大学で行われる学園祭の名称です。学内では模擬店・研究発表・展示・体験型イベントなど多彩な企画が実施され、地域住民や学生、受験生との交流の場となっています。思い出に残る2日間をぜひお楽しみください。
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+  <!-- ---------- 幾徳祭実行委員会から ---------- -->
+  <section id="theme" class="apple-section" data-aos="fade-up">
+    <h2 class="apple-title">幾徳祭実行委員会から</h2>
+    <p class="gradient-text--green">
+      <strong>テーマについて</strong><br>
+      幼虫から蝶になるという成長過程は、復活、再生、変化を意味すると考えられています。私たち学生は、様々なことに挑戦をするという意味で変化を続けてきました。その成果を、来てくださったお客様にお見せするという意味で、今年のテーマを蝶に決めました。
+    </p>
+  </section>
 
-    <!-- 見どころハイライト -->
-    <section class="mb-5 section-dark py-5" data-aos="fade-up" data-aos-delay="100">
-      <h2 class="section-title mb-4">見どころ</h2>
-      <div class="row g-4">
-        <div class="col-md-4" data-aos="zoom-in">
-          <div class="card h-100 text-center p-3">
-            <i class="bi bi-shop-window display-4 text-purple mb-3"></i>
-            <h5 class="card-title">模擬店エリア</h5>
-            <p class="card-text small">
-              定番のたこ焼きやクレープから、学生オリジナルの創作メニューまで、多彩な味覚をお楽しみいただけます。
-            </p>
-          </div>
-        </div>
-        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="50">
-          <div class="card h-100 text-center p-3">
-            <i class="bi bi-music-note-beamed display-4 text-purple mb-3"></i>
-            <h5 class="card-title">ステージイベント</h5>
-            <p class="card-text small">
-              ダンスパフォーマンスやバンド演奏など、学生たちのエネルギッシュなステージを見逃せません。
-            </p>
-          </div>
-        </div>
-        <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
-          <div class="card h-100 text-center p-3">
-            <i class="bi bi-flower1 display-4 text-purple mb-3"></i>
-            <h5 class="card-title">体験型コーナー</h5>
-            <p class="card-text small">
-              ロボット操作体験やデジタルアート制作など、最先端技術に触れるワークショップを多数ご用意。
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+</main>
 
-    <!-- ごあいさつ -->
-    <section class="mb-5 section-light py-5" data-aos="fade-up">
-      <h2 class="section-title mb-4">ごあいさつ</h2>
-      <div class="row g-4">
-        <!-- 学長 -->
-        <div class="col-md-6 col-lg-3" data-aos="fade-right">
-          <div class="card h-100 p-3">
-            <h5 class="card-title">学長</h5>
-            <p class="card-text small">
-              幾徳祭にお越しいただき誠にありがとうございます。本学の研究・教育成果をぜひご覧いただき、学生の活気を感じていただければ幸いです。
-            </p>
-          </div>
-        </div>
-        <!-- 学生部長 -->
-        <div class="col-md-6 col-lg-3" data-aos="fade-right" data-aos-delay="50">
-          <div class="card h-100 p-3">
-            <h5 class="card-title">学生部長</h5>
-            <p class="card-text small">
-              学生たちの自由な発想と情熱が結集した幾徳祭をどうぞお楽しみください。皆さまのご支援を心より感謝申し上げます。
-            </p>
-          </div>
-        </div>
-        <!-- 執行部会長 -->
-        <div class="col-md-6 col-lg-3" data-aos="fade-left" data-aos-delay="100">
-          <div class="card h-100 p-3">
-            <h5 class="card-title">執行部会長</h5>
-            <p class="card-text small">
-              準備段階から多くの方々にご協力いただきました。当日は安全かつ快適にお過ごしいただけるよう努めます。
-            </p>
-          </div>
-        </div>
-        <!-- イベント局局長 -->
-        <div class="col-md-6 col-lg-3" data-aos="fade-left" data-aos-delay="150">
-          <div class="card h-100 p-3">
-            <h5 class="card-title">イベント局局長</h5>
-            <p class="card-text small">
-              今年のテーマ「蝶」には、学生一人ひとりが羽ばたく姿を重ねています。多彩な企画で皆さまをお迎えします。
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- アクセス情報 -->
-    <section class="mb-5 section-dark py-5" data-aos="fade-up" data-aos-delay="100">
-      <h2 class="section-title mb-4">アクセス情報</h2>
-      <div class="ratio ratio-16x9 mb-4">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3291.0364019073113!2d139.33997817582733!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e1!3m2!1sja!2sjp!4v1745659754762!5m2!1sja!2sjp" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
-      <ul class="list-unstyled fs-6">
-        <li><i class="bi bi-train-front-fill text-success me-2"></i>最寄り駅：●●駅 徒歩10分</li>
-        <li><i class="bi bi-bus-front-fill text-success me-2"></i>バス停：●●大学前 下車すぐ</li>
-        <li><i class="bi bi-car-front-fill text-success me-2"></i>駐車場：無料駐車場200台完備</li>
-      </ul>
-    </section>
-
-    <!-- お問い合わせ & SNS -->
-    <section class="mb-5 section-light py-5 text-center" data-aos="fade-up">
-      <h2 class="section-title mb-4">お問い合わせ &amp; SNS</h2>
-      <p class="mb-3">ご質問・ご要望はお気軽に以下までご連絡ください。</p>
-      <p><i class="bi bi-envelope-fill me-2"></i><a href="mailto:info@kait-festival.jp">info@kait-festival.jp</a></p>
-      <div class="mt-3">
-        <a href="https://twitter.com/kait_jikkou" class="btn btn-outline-primary btn-lg me-2">
-          <i class="bi bi-twitter"></i> X
-        </a>
-        <a href="https://www.instagram.com/kait_festival" class="btn btn-outline-danger btn-lg me-2">
-          <i class="bi bi-instagram"></i> Instagram
-        </a>
-        <a href="https://www.youtube.com/channel/UCldcNEGEQND-EA0KEzRcpow" class="btn btn-outline-danger btn-lg">
-          <i class="bi bi-youtube"></i> YouTube
-        </a>
-      </div>
-    </section>
-  </main>
+<!-- ===== 動きを付与するスクリプト ===== -->
+<script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js" defer></script>
+<script defer>
+document.addEventListener('DOMContentLoaded', () => {
+  /* カードに3Dチルト */
+  VanillaTilt.init(document.querySelectorAll('.greeting-item'), {
+    max: 8,
+    speed: 400,
+    glare: true,
+    'max-glare': 0.25
+  });
+  // スクロール進捗バー関連のコードを削除し、スクロールが止まる不具合を解消しました。
+});
+</script>
 {% endblock %}
-

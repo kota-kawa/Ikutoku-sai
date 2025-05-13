@@ -42,43 +42,6 @@
       100% { transform: scale(1) }
     }
 
-    /* スケジュールタイムライン */
-    .timeline {
-      position: relative;
-      padding: 2rem 0;
-    }
-    .timeline::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 4px;
-      height: 100%;
-      background: var(--kait-purple);
-      transform: translateX(-50%);
-    }
-    .timeline-item {
-      position: relative;
-      width: 50%;
-      padding: 1rem 2rem;
-    }
-    .timeline-item:nth-child(odd)  { left: 0; }
-    .timeline-item:nth-child(even) { left: 50%; }
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      top: 1.2rem;
-      right: -8px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: var(--kait-purple);
-    }
-    .timeline-item:nth-child(even)::before {
-      left: -8px;
-      right: auto;
-    }
-
     /* アクセスタブ下線アニメーション */
     .nav-tabs .nav-link {
       position: relative;
@@ -149,32 +112,6 @@
             体調不良の際はスタッフまでお申し出ください。
           </li>
         </ul>
-      </div>
-    </section>
-
-    <!-- 開催スケジュール -->
-    <section class="mb-5 timeline" data-aos="fade-up">
-      <h2 class="text-center mb-4">開催スケジュール</h2>
-
-      <div class="timeline-item" data-aos="fade-right" data-aos-delay="100">
-        <h5>10:00 - オープニングセレモニー</h5>
-        <p>ステージ前広場にて開会の挨拶を行います。</p>
-      </div>
-      <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
-        <h5>11:00 - 模擬店オープン</h5>
-        <p>キャンパス各所で屋台やフードトラックが開店。</p>
-      </div>
-      <div class="timeline-item" data-aos="fade-right" data-aos-delay="300">
-        <h5>13:00 - ステージパフォーマンス</h5>
-        <p>ダンス、演劇、音楽ライブなど多彩な演目をお楽しみください。</p>
-      </div>
-      <div class="timeline-item" data-aos="fade-left" data-aos-delay="400">
-        <h5>15:00 - ワークショップ開始</h5>
-        <p>ものづくり、AI体験など、参加型プログラムを実施。</p>
-      </div>
-      <div class="timeline-item" data-aos="fade-right" data-aos-delay="500">
-        <h5>17:00 - クローズセレモニー</h5>
-        <p>一日の締めくくりとして、閉会の挨拶を行います。</p>
       </div>
     </section>
 

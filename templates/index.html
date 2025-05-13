@@ -233,35 +233,46 @@ body {
 </style>
 
 <style>
-  /* 
-受験を考えている方へ
-*/
-.advice {
-  background: linear-gradient(135deg, #fffcf7 0%, #f0f0f0 100%);
+/* ========= お問い合わせセクション ========= */
+.contact {
+    /* background: #f0f4ff;   /* ほんのり色を変えてセクションと区別 */
   padding: 4rem 0;
 }
-.advice h2 {
-  font-size: 2.5rem;
-  color: #000000;
-  margin-bottom: 1rem;
+.contact .container {
+  display: flex;
+  justify-content: center;
 }
-.advice p {
+.contact h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  width: 100%;
+}
+.contact p {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
+  text-align: center;
+  width: 100%;
 }
-.advice .btn-outline-primary {
-  border-color: #154ec9;
-  color: #154ec9;
-  border-radius: 48px;
-  padding: .8rem 2.8rem;
-  transition: background .3s, color .3s;
-}
-.advice .btn-outline-primary:hover {
-  background: #3b30d2;
+.contact .btn-contact {
+  display: block;       /* ブロック化 */
+  margin: 0 auto;       /* 左右マージン自動 */
+  width: 50%;
+  padding: .8rem 2.4rem;      /* 縦横のバランスを微調整 */
+  background: #0071e3;
   color: #fff;
+  border-radius: 9999px;      /* しっかり丸く */
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .3s, transform .2s;
+}
+.contact .btn-contact:hover {
+  background: #005bb5;
+  transform: translateY(-2px); /* 軽い浮き感 */
 }
 
 </style>
+
 
 
 <!-- ========= Hero Section (オリジナル) ========= -->
@@ -274,14 +285,13 @@ body {
     <p class="fs-2 my-3">11/2 – 11/3</p>
     <p class="fs-1 mb-4">テーマ：蝶</p>
     <p class="lead">各日 10：00 ～ 17：00</p>
-    <a href="#overview" class="btn btn-lg btn-light px-5 mt-3 shadow">詳しく見る</a>
   </div>
 </section>
 
-<!-- ========= 開催概要セクション（旧「幾徳祭とは？」を削除し、代替コンテンツ） ========= -->
+<!-- ========= 開催概要セクション ========= -->
 <section class="overview index-scroll" id="overview" data-aos="fade-up">
   <div class="container">
-    <h2>開催概要</h2>
+    <h2 class="pt-3">開催概要</h2>
     <ul class="overview-list">
       <li><strong>日程：</strong>2025年11月2日（土）〜11月3日（日）</li>
       <li><strong>時間：</strong>各日 10:00 〜 17:00</li>
@@ -316,17 +326,35 @@ body {
   </div>
 </section>
 
+<!-- ========= Feature: アクセス ========= -->
+<section class="module index-scroll" id="access" data-aos="fade-up">
+  <div class="img-col">
+    <img src="{{ url_for('static', filename='kait_landscape.webp') }}" alt="Access">
+  </div>
+  <div class="txt-col">
+    <h3>ご挨拶</h3>
+    <p>学長・学園祭実行委員からのご挨拶です。</p>
+    <a href="{{ url_for('announce') }}">交通案内 &raquo;</a>
+  </div>
+</section>
+
+<!-- ========= お問い合わせセクション ========= -->
+<!-- ========= お問い合わせセクション ========= -->
+<section class="contact index-scroll" id="contact" data-aos="fade-up">
+  <div class="container">
+    <div>
+      <h2>お問い合わせ</h2>
+      <p>ご質問・ご要望などございましたら、お気軽にお問い合わせください。</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScFBaeekKO5YE9RgBOf_C471BdEJozLqztXuCTLq4hGX5nXXw/viewform" class="btn-contact">お問い合わせはこちら &raquo;</a>
+    </div>
+  </div>
+</section>
+
+
 
 <!-- ↓「ステージ & 模擬店」セクションの直後に挿入 -->
   </section> <!-- id="events" の閉じタグ -->
 
-  <!-- ========= 受験を考えている方へ ========= -->
-  <section class="advice index-scroll" id="for-applicants" data-aos="fade-up">
-    <div class="container text-center">
-      <h2>受験を考えている方へ</h2>
-      <p>神奈川工科大学の学びやキャンパスライフについてまとめています。これから受験を考えている皆さんはこちらからご覧ください。</p>
-      <a href="https://op.kait.jp/top/admission/" class="btn btn-lg btn-outline-primary" target="_blank">入試情報を見る &raquo;</a>
-    </div>
   </section>
 
 {% endblock %}

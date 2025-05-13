@@ -71,9 +71,9 @@
   :root {
     /* pill の共通枠線 */
     --pill-border: #e8eff2;
-    /* メニュー背景：鮮やか水色グラデ */
-    --menu-bg-from: rgba(91,192,222,0.9);
-    --menu-bg-to:   rgba(49,183,239,0.9);
+  /* メニュー背景：favicon に合わせたブルーのグラデーション */
+  --menu-bg-from: rgba(141, 204, 251, 0.9);  /* #8DCCFB */
+  --menu-bg-to:   rgba(5, 83, 215, 0.9);     /* #0553D7 */
     /* ホバー時の白透過 */
     --hover-bg: rgba(255,255,255,0.25);
   }
@@ -85,7 +85,7 @@
 
   /* ヘッダー全体 */
   .custom-header {
-    position: absolute; top: 2%; left: 0; width: 100%;
+    position: fixed; top: 2%; left: 0; width: 100%;
     display: flex; justify-content: center;
     pointer-events: none; z-index: 1000;
   }
@@ -176,6 +176,7 @@
       border: 4px solid var(--pill-border);
       border-radius: 20px;
       padding: 1rem 1.5rem;
+      margin-right: 5%;
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
@@ -203,10 +204,10 @@
 
     <!-- デスクトップメニューpill -->
     <ul class="menu-pill">
-      <li><a href="{{ url_for('about') }}">概要</a></li>
-      <li><a href="{{ url_for('announce') }}">ご案内</a></li>
-      <li><a href="{{ url_for('event') }}">企画一覧</a></li>
-      <li><a href="{{ url_for('map') }}">MAP</a></li>
+      <li><a href="/about">ご挨拶</a></li>
+      <li><a href="/announce">アクセス</a></li>
+      <li><a href="/event">企画一覧</a></li>
+      <li><a href="/map">MAP</a></li>
     </ul>
 
     <!-- モバイル用ハンバーガー -->
@@ -214,10 +215,10 @@
       <span></span><span></span><span></span>
     </button>
     <div class="mobile-menu" id="mobileMenu">
-      <a href="{{ url_for('about') }}">概要</a>
-      <a href="{{ url_for('announce') }}">ご案内</a>
-      <a href="{{ url_for('event') }}">企画一覧</a></li>
-      <a href="{{ url_for('map') }}">MAP</a>
+      <a href="/about">ご挨拶</a>
+      <a href="/announce">アクセス</a>
+      <a href="/event">企画一覧</a></li>
+      <a href="/map">MAP</a>
     </div>
   </div>
 </nav>
@@ -256,6 +257,10 @@
           &nbsp;|&nbsp;
           <a href="/bingo" class="text-decoration-none text-light">
             ビンゴ(運営用)
+          </a>
+          &nbsp;|&nbsp;
+          <a href="https://op.kait.jp/top/admission/" class="text-decoration-none text-light" target="_blank">
+            受験を考えている方へ
           </a>
         </small>
       </div>
