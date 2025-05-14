@@ -5,7 +5,7 @@
 
 {% block head_extra %}
   <!-- 基本メタ -->
-  <meta name="description" content="神奈川工科大学の学園祭・第50回幾徳祭の公式サイト。2025年11月2日～3日に厚木市で開催。ステージイベントや模擬店情報、アクセスなどを掲載。">
+  <meta name="description" content="神奈川工科大学の学園祭・第50回幾徳祭の公式サイト。2025年11月1日～2日に厚木市で開催。ステージイベントや模擬店情報、アクセスなどを掲載。">
   <meta name="keywords" content="神奈川工科大学,幾徳祭,学園祭,2025,厚木市,イベント">
 
   <!-- 正規化URL -->
@@ -14,7 +14,7 @@
   <!-- Open Graph -->
   <meta property="og:site_name" content="第50回 幾徳祭">
   <meta property="og:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
-  <meta property="og:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月2日～3日に開催。ステージイベントや模擬店など、多彩なプログラムをお楽しみください。">
+  <meta property="og:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月1日～2日に開催。ステージイベントや模擬店など、多彩なプログラムをお楽しみください。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ url_for('index', _external=True) }}">
   <meta property="og:image" content="{{ url_for('static', filename='kait_landscape.webp', _external=True) }}">
@@ -23,7 +23,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@kait_jikkou">
   <meta name="twitter:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
-  <meta name="twitter:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月2日～3日に開催。ステージイベントや模擬店情報をチェック！">
+  <meta name="twitter:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月1日～2日に開催。ステージイベントや模擬店情報をチェック！">
   <meta name="twitter:image" content="{{ url_for('static', filename='kait_landscape.webp', _external=True) }}">
 
   <!-- JSON-LD構造化データ -->
@@ -104,7 +104,6 @@ body {
   position: absolute;
   inset: 0;
   background: url('{{ url_for("static", filename="kait_landscape.webp") }}') center/cover no-repeat;
-  filter: brightness(.55);
   transition: transform 10s ease;
 }
 .hero:hover .hero-bg {
@@ -188,17 +187,30 @@ body {
 .module.reverse .img-col {
   order: 2;
 }
+/* スマホ(〜768px)では .reverse の並び順をリセット */
+@media (max-width: 768px) {
+  .module.reverse .img-col,
+  .module.reverse .txt-col {
+    order: 0; /* 初期値(HTMLソース順)に戻す */
+  }
+}
+
 .img-col {
   flex: 1 1 52%;
   border-radius: 24px;
   overflow: hidden;
+  /* ↓ここからが追加・変更した部分 */
+  aspect-ratio: 9 / 6; /* 画像の縦横比を固定します。この値を変更することで、他のアスペクト比にも設定できます。 */
+  object-fit: cover;    /* コンテナに合わせて画像を拡大縮小し、はみ出た部分を切り取ります。 */
 }
+
 .img-col img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* コンテナいっぱいに画像を表示し、はみ出た部分は切り取られます。 */
   display: block;
 }
+
 .txt-col {
   flex: 1 1 40%;
 }
@@ -257,7 +269,6 @@ body {
 .contact .btn-contact {
   display: block;       /* ブロック化 */
   margin: 0 auto;       /* 左右マージン自動 */
-  width: 50%;
   padding: .8rem 2.4rem;      /* 縦横のバランスを微調整 */
   background: #0071e3;
   color: #fff;
@@ -271,6 +282,29 @@ body {
   transform: translateY(-2px); /* 軽い浮き感 */
 }
 
+/* スマホ表示 (〜768px) のとき */
+@media (max-width: 768px) {
+  /* ────────── お問い合わせボタン ────────── */
+  .contact .btn-contact {
+    width: 55%;           /* スマホでは55%幅に */
+    
+  }
+
+  /* ────────── 開催概要「詳細を見る」ボタン ────────── */
+  .overview .btn-white {
+    display: inline-block;  
+    margin-bottom: 1.5rem;  /* 下に余白を追加 */
+  }
+}
+
+/* PC表示 (769px〜) のとき */
+@media (min-width: 769px) {
+  .contact .btn-contact {
+    width: 45%;           /* デスクトップでは元の50%に戻す */
+  }
+  /* PC版で開催概要ボタンの余白を変えたい場合はここで調整 */
+}
+
 </style>
 
 
@@ -282,8 +316,8 @@ body {
   <img src="{{ url_for('static', filename='kait2.webp') }}" alt="Kait Bird 2" class="bird bird-right">
   <div class="inner" data-aos="zoom-in" data-aos-duration="1000">
     <h1 class="display-3 fw-bold">第 50 回幾徳祭</h1>
-    <p class="fs-2 my-3">11/2 – 11/3</p>
-    <p class="fs-1 mb-4">テーマ：蝶</p>
+    <p class="fs-2 my-3">11/1 – 11/2</p>
+    <p class="fs-1 mb-4">テーマ：継承</p>
     <p class="lead">各日 10：00 ～ 17：00</p>
   </div>
 </section>
@@ -293,10 +327,10 @@ body {
   <div class="container">
     <h2 class="pt-3">開催概要</h2>
     <ul class="overview-list">
-      <li><strong>日程：</strong>2025年11月2日（土）〜11月3日（日）</li>
+      <li><strong>日程：</strong>2025年11月1日（土）〜11月2日（日）</li>
       <li><strong>時間：</strong>各日 10:00 〜 17:00</li>
       <li><strong>場所：</strong>神奈川工科大学 本厚木キャンパス</li>
-      <li><strong>テーマ：</strong>「蝶」</li>
+      <li><strong>テーマ：</strong>「継承」</li>
     </ul>
     <a href="{{ url_for('about') }}" class="btn-white">詳細を見る</a>
   </div>
@@ -305,7 +339,7 @@ body {
 <!-- ========= Feature: アクセス ========= -->
 <section class="module index-scroll" id="access" data-aos="fade-up">
   <div class="img-col">
-    <img src="{{ url_for('static', filename='kait_landscape.webp') }}" alt="Access">
+    <img src="{{ url_for('static', filename='/top_page/access.webp') }}" alt="Access">
   </div>
   <div class="txt-col">
     <h3>アクセス</h3>
@@ -317,7 +351,7 @@ body {
 <!-- ========= Feature: ステージ & 模擬店 ========= -->
 <section class="module reverse index-scroll" id="events" data-aos="fade-up">
   <div class="img-col">
-    <img src="{{ url_for('static', filename='kait_landscape.webp') }}" alt="Events">
+    <img src="{{ url_for('static', filename='/top_page/mogiten.webp') }}" alt="Events">
   </div>
   <div class="txt-col">
     <h3>ステージ & 模擬店</h3>
@@ -329,12 +363,12 @@ body {
 <!-- ========= Feature: アクセス ========= -->
 <section class="module index-scroll" id="access" data-aos="fade-up">
   <div class="img-col">
-    <img src="{{ url_for('static', filename='kait_landscape.webp') }}" alt="Access">
+    <img src="{{ url_for('static', filename='/top_page/welcome.webp') }}" alt="Access">
   </div>
   <div class="txt-col">
     <h3>ご挨拶</h3>
     <p>学長・学園祭実行委員からのご挨拶です。</p>
-    <a href="{{ url_for('announce') }}">交通案内 &raquo;</a>
+    <a href="{{ url_for('announce') }}">ご挨拶 &raquo;</a>
   </div>
 </section>
 
