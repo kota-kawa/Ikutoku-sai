@@ -19,12 +19,18 @@
         justify-content: center;
         overflow: hidden;
       }
-      .hero-bg {
-        position: absolute;
-        inset: 0;
-        background: url('{{ url_for("static", filename="K2_ils.webp") }}') center/cover no-repeat fixed;
-        z-index: 0;
-      }
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  /* 旧：background: url(...) center/cover no-repeat fixed; */
+  background-image: url('{{ url_for("static", filename="K2_ils.webp") }}');
+  background-position: center;
+  background-size: cover;       /* 余白なく全体を覆う */
+  background-repeat: no-repeat;
+  background-attachment: scroll; /* ← fixed を外す */
+  z-index: 0;
+}
+
       .hero .inner {
         position: relative;
         z-index: 2;
