@@ -10,6 +10,12 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
+      <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+  <!-- iOS Safari でステータスバーの色を変えたい場合 -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
     <!-- External Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
@@ -59,6 +65,49 @@
     }
 </style>
 
+<!-- 泡アニメーション用CSS -->
+    <style>
+      /* 泡コンテナ */
+      .bubbles {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 2000; /* 背景に配置 */
+      }
+      .bubble {
+        position: absolute;
+        bottom: -50px;
+        background: rgba(173, 216, 230, 0.7); /* 薄い水色 */
+        border-radius: 50%;
+        opacity: 0.8;
+        animation: rise 8s infinite ease-in;
+      }
+      @keyframes rise {
+        0% {
+          transform: translateY(0) scale(0.5);
+          opacity: 0.8;
+        }
+        80% {
+          opacity: 0.4;
+        }
+        100% {
+          transform: translateY(-120vh) scale(1);
+          opacity: 0;
+        }
+      }
+      /* 各泡の大きさ・位置・アニメーション設定 */
+      .bubble:nth-child(1)  { width: 15px; height: 15px; left: 10%;  animation-duration: 7s; animation-delay: 0s; }
+      .bubble:nth-child(2)  { width: 20px; height: 20px; left: 25%;  animation-duration: 9s; animation-delay: 2s; }
+      .bubble:nth-child(3)  { width: 12px; height: 12px; left: 40%;  animation-duration: 6s; animation-delay: 1s; }
+      .bubble:nth-child(4)  { width: 18px; height: 18px; left: 55%;  animation-duration: 8s; animation-delay: 3s; }
+      .bubble:nth-child(5)  { width: 22px; height: 22px; left: 70%;  animation-duration: 10s; animation-delay: 4s; }
+      .bubble:nth-child(6)  { width: 14px; height: 14px; left: 85%;  animation-duration: 7.5s; animation-delay: 2.5s; }
+      /* 必要に応じて8〜20個程度まで増やしてください */
+    </style>
 
 <!-- ===== 鮮やかな水色ベース・ヘッダー CSS 全文 ===== -->
 <style>
@@ -194,6 +243,12 @@
 
 
 <body>
+
+      <!-- 泡を生成 -->
+    <div class="bubbles">
+      </div>
+
+
   <nav class="custom-header">
   <div class="header-inner">
     <!-- ロゴpill -->
@@ -240,7 +295,28 @@
 </script>
 
 
-
+  <!-- バブルを動的に生成するスクリプト -->
+  <script>
+    (function() {
+      const container = document.querySelector('.bubbles');
+      const count = 30; // 好きな数に変更
+      for (let i = 0; i < count; i++) {
+        const b = document.createElement('div');
+        b.classList.add('bubble');
+        // ランダムなサイズ
+        const size = 10 + Math.random() * 20; // 10〜30px
+        b.style.width = `${size}px`;
+        b.style.height = `${size}px`;
+        // 画面幅のランダムな位置
+        b.style.left = `${Math.random() * 100}%`;
+        // ランダムなアニメーション時間・遅延
+        const duration = 6 + Math.random() * 6; // 6〜12秒
+        b.style.animationDuration = `${duration}s`;
+        b.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(b);
+      }
+    })();
+  </script>
 
 
     <!-- ページ固有コンテンツ -->

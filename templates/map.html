@@ -175,11 +175,23 @@
   background-color: #e2e6ea;  /* ホバー時の背景色 */
   color: #005FCC;             /* ホバー時の文字色 */
 }
-
-
-
-
   </style>
+
+<style>
+/* 特定のエリアを囲む */
+.my-area-boundary {
+  /* 線の色 */
+  stroke: #36ffe4;
+  /* 線の太さ */
+  stroke-width: 3;
+  /* 破線にしたい場合 */
+  stroke-dasharray: 8, 4;
+  /* 塗りつぶしなし */
+  fill-opacity: 0;
+  /* マウス操作を無効化したい場合 */
+  pointer-events: none;
+}
+</style>
 
   </head>
 
@@ -534,7 +546,7 @@
                 width:80px; height:80px;
                 background: radial-gradient(
                   circle at 50% 50%,
-                  rgba(0,122,255,0.6) 0%,
+                  rgba(0,122,255,3.6) 0%,
                   rgba(0,122,255,0) 80%
                 );
                 clip-path: polygon(50% 50%,25% 0%,75% 0%);
@@ -643,6 +655,29 @@
         window.map   = map;
       </script>
       
+      
+      <script>
+// 例：囲みたいエリアの緯度経度リスト
+const areaCoords = [
+  //左上
+  [35.487860530019944, 139.34037514269602],
+  //右上
+  [35.48819249093486, 139.34462376154906],
+  //右下
+  [35.485091223681984, 139.3459004930207],
+  //左下
+  [35.48510869594534, 139.3409437710255]
+];
+
+// ポリゴンを作成し、マップに追加
+const areaBoundary = L.polygon(areaCoords, {
+  // CSS クラス名を指定（先ほど作った .my-area-boundary が適用される）
+  className: 'my-area-boundary',
+  // 必要であれば塗り色を設定（CSS で制御したければ不要）
+  // fill: false 
+}).addTo(map);
+
+      </script>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
       defer></script>
