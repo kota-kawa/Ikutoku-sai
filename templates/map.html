@@ -51,7 +51,7 @@
       rel="stylesheet" />
 
     <style>
-    :root { --brand-green: rgb(14,83,12); }
+    :root { --brand-green: rgb(14,83,12);  }
    
 
     html, body {
@@ -165,15 +165,48 @@
       height: 90%;
     }
 
-/* 戻るボタンのホバー効果 */
+/* 戻るボタン */
 #back-btn {
-  transition: background-color 0.2s ease, color 0.2s ease;
-  padding: 0.75rem 0.75rem;  /* ボタンの内側スペース */
-  font-size: 0.875rem;        /* 少し小さめの文字 */
+  position: fixed !important;
+  top: 1.5rem !important;
+  left: 5rem !important;
+  z-index: 2000 !important;
+
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.4rem;
+  height: 55px;
+  
+  padding: 0.4rem 0.8rem;
+  border: 2px solid rgba(42, 235, 225, 0.9);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+  color: rgba(182, 24, 230, 0.9);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.9rem;
+
+  transition: background-color 0.25s ease,
+              color 0.25s ease,
+              transform 0.2s ease;
 }
+#back-btn i {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+#back-btn span {
+  line-height: 1;
+}
+
+/* ホバー・フォーカス */
 #back-btn:hover {
-  background-color: #e2e6ea;  /* ホバー時の背景色 */
-  color: #005FCC;             /* ホバー時の文字色 */
+  background: rgba(43, 236, 172, 0.4);
+  color: #fff;
+  transform: translateX(-3px);
+}
+#back-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(18, 45, 202, 0.4);
 }
   </style>
 
@@ -197,11 +230,11 @@
 
   <body>
     <!-- ← ここから追加：戻るボタン -->
-    <a id="back-btn" href="/"
-      class="btn btn-light btn-lg shadow rounded-pill position-fixed"
-      style="top:20px; left:60px; z-index:1000;">
-      <i class="bi bi-arrow-left me-2"></i>戻る
-    </a>
+<a id="back-btn" href="/" class="position-fixed">
+  <i class="bi bi-arrow-left"></i>
+  <span>戻る</span>
+</a>
+
 
     <div id="map"></div>
 
