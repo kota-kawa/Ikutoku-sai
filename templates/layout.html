@@ -113,11 +113,29 @@ footer .sponsors-title {
   }
   /* スマホ表示（目安：576px以下）で１列表示 */
 @media (max-width: 576px) {
+  /* ロゴアイテムを1列にして、高さは自動に */
   footer .sponsor-item {
-    flex: 0 1 100%;
-    max-width: 100%;
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+    height: auto !important;       /* 固定高さを解除 */
+    overflow: visible;             /* はみ出しを隠さない */
+    margin-bottom: 1rem;           /* ロゴ間に余白を追加 */
+  }
+  /* 画像も縦横自動調整 */
+  footer .sponsor-item img {
+    width: 80%;                    /* 見切れない程度に縮小 */
+    height: auto;                  
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;                /* 中央寄せ */
+  }
+  /* 必要なら .sponsors 自体も縦並びに */
+  footer .sponsors {
+    flex-direction: column;
+    align-items: center;
   }
 }
+
 
 </style>
 
