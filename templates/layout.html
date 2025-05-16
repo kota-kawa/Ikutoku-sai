@@ -111,6 +111,8 @@ footer .sponsors-title {
     max-height: 100%;
     object-fit: contain;
   }
+
+
   /* スマホ表示（目安：576px以下）で１列表示 */
 @media (max-width: 576px) {
   /* ロゴアイテムを1列にして、高さは自動に */
@@ -404,8 +406,15 @@ footer .sponsors-title {
 <footer class="text-center">
   <div class="container">
     
+        <small>
+      © 2025 神奈川工科大学学友会イベント局
+      &nbsp;|&nbsp;
+      <a href="/bingo" class="text-decoration-none text-light">ビンゴ(運営用)</a>
+      &nbsp;|&nbsp;
+      <a href="https://op.kait.jp/top/admission/" class="text-decoration-none text-light" target="_blank">受験を考えている方へ</a>
+    </small>
+    
     <!-- ★ 協賛ロゴセクション ★ -->
-<!-- フッター内の sponsors セクション -->
 <div class="sponsors-section">
   <!-- ① 見出しを追加 -->
   <h2 class="sponsors-title">ご協賛</h2>
@@ -413,35 +422,28 @@ footer .sponsors-title {
   <div class="sponsors">
     <!-- ② 画像にリンクを張る -->
     <a href="https://example.com/sponsor1" class="sponsor-item" target="_blank" rel="noopener">
-      <img src="{{ url_for('static', filename='AD/ad1.webp') }}" alt="Sponsor 1" class="img-fluid">
+      <img src="{{ url_for('static', filename='AD/ad1.webp') }}" alt="Sponsor 1" >
     </a>
     <a href="https://example.com/sponsor2" class="sponsor-item" target="_blank" rel="noopener">
-      <img src="{{ url_for('static', filename='AD/ad2.webp') }}" alt="Sponsor 2" class="img-fluid">
+      <img src="{{ url_for('static', filename='AD/ad2.webp') }}" alt="Sponsor 2" >
     </a>
     <a href="https://example.com/sponsor3" class="sponsor-item" target="_blank" rel="noopener">
-      <img src="{{ url_for('static', filename='AD/ad3.webp') }}" alt="Sponsor 3" class="img-fluid">
+      <img src="{{ url_for('static', filename='AD/ad3.webp') }}" alt="Sponsor 3" >
     </a>
     <a href="https://example.com/sponsor4" class="sponsor-item" target="_blank" rel="noopener">
-      <img src="{{ url_for('static', filename='AD/ad4.webp') }}" alt="Sponsor 4" class="img-fluid">
+      <img src="{{ url_for('static', filename='AD/ad4.webp') }}" alt="Sponsor 4" >
     </a>
     <a href="https://example.com/sponsor5" class="sponsor-item" target="_blank" rel="noopener">
-      <img src="{{ url_for('static', filename='AD/ad5.webp') }}" alt="Sponsor 5" class="img-fluid">
+      <img src="{{ url_for('static', filename='AD/ad5.webp') }}" alt="Sponsor 5" >
     </a>
     <a href="https://example.com/sponsor6" class="sponsor-item" target="_blank" rel="noopener">
-      <img src="{{ url_for('static', filename='AD/ad6.webp') }}" alt="Sponsor 6" class="img-fluid">
+      <img src="{{ url_for('static', filename='AD/ad6.webp') }}" alt="Sponsor 6" >
     </a>
     <!-- さらに増えても自動改行されます -->
   </div>
 </div>
 
 
-    <small>
-      © 2025 神奈川工科大学学友会イベント局
-      &nbsp;|&nbsp;
-      <a href="/bingo" class="text-decoration-none text-light">ビンゴ(運営用)</a>
-      &nbsp;|&nbsp;
-      <a href="https://op.kait.jp/top/admission/" class="text-decoration-none text-light" target="_blank">受験を考えている方へ</a>
-    </small>
   </div>
 </footer>
 
