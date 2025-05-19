@@ -47,19 +47,12 @@
       padding: 0 1rem;
     }
 
-    /*── 駅線図カード ──*/
-    .card-station-map {
-      background: var(--card-bg);
-      border-radius: 8px;
-      box-shadow: 0 4px 12px var(--shadow);
-      padding: 1.5rem;
-      margin: 1rem auto 2rem;
-      max-width: 600px;
-    }
+    /*── 動く図（駅線図）──*/
     .station-map {
-      width: 100%;
+      width: 100%;     /* コンテンツ幅いっぱいに拡大 */
       height: auto;
       display: block;
+      overflow: visible; /* ここを追加 */
     }
     .station-map path {
       stroke: var(--accent);
@@ -84,11 +77,20 @@
       user-select: none;
     }
 
-    /*── バス用アニメーション色 ──*/
-    .bus-map .station-map path {
-      stroke: var(--bus-color);
+    /*── スマホ表示時に駅名を大きく＆オーバーフロー許可 ──*/
+    @media (max-width: 576px) {
+      .station-map {
+        overflow: visible; /* SVG外にはみ出す文字を表示 */
+      }
+      .station-label {
+        font-size: 1.5rem;
+      }
     }
+
+    /*── バス用アニメーション色 ──*/
+    .bus-map .station-map path,
     .bus-map .station-map circle.train {
+      stroke: var(--bus-color);
       fill: var(--bus-color);
     }
 
@@ -232,7 +234,7 @@
               <li>「愛甲石田」駅 南口 神奈中バス〈神奈川工科大学経由 厚木バスセンター行き〉「神奈川工科大学」下車</li>
             </ul>
             <!-- バス用 動く図（右→左スタート） -->
-            <div class="card-station-map bus-map">
+            <div class="bus-map">
               <svg class="station-map" viewBox="0 0 600 120"
                    xmlns="http://www.w3.org/2000/svg"
                    xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -261,28 +263,26 @@
             <h2><span class="icon">🚃</span>電車でお越しの方</h2>
             <p>小田急線「本厚木」駅よりバス10分 / 相模線「入谷」駅より徒歩約25分（約2km）。</p>
             <!-- 電車用 動く図（左→右スタート） -->
-            <div class="card-station-map">
-              <svg class="station-map" viewBox="0 0 600 120"
-                   xmlns="http://www.w3.org/2000/svg"
-                   xmlns:xlink="http://www.w3.org/1999/xlink">
-                <path id="track-2" d="M40 60 L560 60"/>
-                <circle class="train" r="8">
-                  <animateMotion dur="6s" repeatCount="indefinite"
-                    keyPoints="0;1;0" keyTimes="0;0.5;1">
-                    <mpath xlink:href="#track-2"/>
-                  </animateMotion>
-                </circle>
-                <circle class="station" cx="120" cy="60" r="12"/>
-                <!-- 二行ラベル -->
-                <text class="station-label" x="120" y="85">
-                  <tspan x="120" dy="0">愛甲石田</tspan><tspan x="120" dy="1.2em">or 相模大野</tspan>
-                </text>
-                <circle class="station" cx="300" cy="60" r="12"/>
-                <text class="station-label" x="300" y="95">本厚木</text>
-                <circle class="station" cx="480" cy="60" r="12"/>
-                <text class="station-label" x="480" y="95">海老名</text>
-              </svg>
-            </div>
+            <svg class="station-map" viewBox="0 0 600 120"
+                 xmlns="http://www.w3.org/2000/svg"
+                 xmlns:xlink="http://www.w3.org/1999/xlink">
+              <path id="track-2" d="M40 60 L560 60"/>
+              <circle class="train" r="8">
+                <animateMotion dur="6s" repeatCount="indefinite"
+                  keyPoints="0;1;0" keyTimes="0;0.5;1">
+                  <mpath xlink:href="#track-2"/>
+                </animateMotion>
+              </circle>
+              <circle class="station" cx="120" cy="60" r="12"/>
+              <!-- 二行ラベル -->
+              <text class="station-label" x="120" y="85">
+                <tspan x="120" dy="10">愛甲石田</tspan><tspan x="120" dy="1.2em">or 相模大野</tspan>
+              </text>
+              <circle class="station" cx="300" cy="60" r="12"/>
+              <text class="station-label" x="300" y="95">本厚木</text>
+              <circle class="station" cx="480" cy="60" r="12"/>
+              <text class="station-label" x="480" y="95">海老名</text>
+            </svg>
           </section>
 
           <!-- お車 -->

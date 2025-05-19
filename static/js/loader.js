@@ -1,6 +1,6 @@
 // static/loader.js
 (() => {
-  const MIN_DURATION = 1000;           // 1 秒
+  const MIN_DURATION = 1500;           // 1 秒
   const started = performance.now();   // 描画開始時刻
 
   window.addEventListener('load', () => {
