@@ -8,6 +8,7 @@
   <meta name="description" content="神奈川工科大学の学園祭・第50回幾徳祭の公式サイト。2025年11月1日～2日に厚木市で開催。ステージイベントや模擬店情報、アクセスなどを掲載。">
   <meta name="keywords" content="神奈川工科大学,幾徳祭,学園祭,2025,厚木市,イベント">
 
+   <link rel="stylesheet" href="{{ url_for('static', filename='/css/loader.css') }}">
   <!-- 正規化URL -->
   <link rel="canonical" href="{{ url_for('index', _external=True) }}">
 
@@ -25,6 +26,8 @@
   <meta name="twitter:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
   <meta name="twitter:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月1日～2日に開催。ステージイベントや模擬店情報をチェック！">
   <meta name="twitter:image" content="{{ url_for('static', filename='kait_landscape.webp', _external=True) }}">
+
+  <script src="{{ url_for('static', filename='/js/loader.js') }}" defer></script>
 
   <!-- JSON-LD構造化データ -->
   <script type="application/ld+json">
@@ -307,6 +310,9 @@ body {
 
 </style>
 
+<div id="preloader">
+  <iframe src="{{ url_for('static', filename='loader.html') }}" loading="eager"></iframe>
+</div>
 
 
 <!-- ========= Hero Section (オリジナル) ========= -->

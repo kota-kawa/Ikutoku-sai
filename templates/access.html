@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>アクセス | モダンデザイン</title>
+
+  <style>
+    /*── カラー ──*/
+    :root {
+      --bg-start:#f0f4f8;
+      --bg-end:#ffffff;
+      --line:#003366;
+      --accent:#0077c8;
+      --train:#2ecc71;
+      --text:#2c3e50;
+      --detail-heading:#8d6e63;
+      --card-bg:#ffffff;
+      --shadow:rgba(0,0,0,.1);
+    }
+
+    /*── リセット ──*/
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;}
+    body{
+      font-family:"Yu Gothic UI",sans-serif;
+      line-height:1.6;
+      color:var(--text);
+      background:linear-gradient(180deg,var(--bg-start),var(--bg-end));
+      padding:2rem 1rem;
+    }
+    main{max-width:720px;margin:auto;}
+
+    h1{
+      font-size:2rem;
+      text-align:center;
+      margin-bottom:1.5rem;
+      color:var(--line);
+    }
+
+    /*── 駅線図カード ──*/
+    .card{
+      background:var(--card-bg);
+      border-radius:8px;
+      box-shadow:0 4px 12px var(--shadow);
+      padding:1.5rem;
+      margin-bottom:2rem;
+    }
+    .station-map{width:100%;height:auto;display:block;}
+    .station-map path{stroke:var(--line);stroke-width:6;stroke-linecap:round;fill:none;}
+    .station-map circle.train{fill:var(--train);}  
+    .station-map circle.station{
+      fill:#fff;stroke:var(--accent);stroke-width:4;
+      transition:transform .2s,stroke .2s,fill .2s;
+      cursor:pointer;
+    }
+    .station-map circle.station:hover{
+      transform:scale(1.2);
+      stroke:var(--line);
+      fill:var(--accent);
+    }
+    .station-label{font-size:.9rem;fill:var(--text);text-anchor:middle;user-select:none;}
+
+    /*── Google Map ──*/
+    .map-container{
+      position:relative;
+      width:100%;
+      padding-top:56.25%;
+      margin-bottom:2rem;
+      border-radius:8px;
+      overflow:hidden;
+      box-shadow:0 4px 12px var(--shadow);
+    }
+    .map-container iframe{
+      position:absolute;top:0;left:0;width:100%;height:100%;border:0;
+    }
+
+    /*── ★ アクセス詳細（縦1列に調整）★ ──*/
+    .details-sections{
+      display:grid;
+      grid-template-columns:1fr; /* 1列固定 */
+      gap:1.5rem;
+      margin-bottom:2rem;
+    }
+    .detail-section{
+      background:var(--card-bg);
+      border-left:6px solid var(--accent);
+      border-radius:8px;
+      padding:1.25rem 1.5rem;
+      box-shadow:0 4px 12px var(--shadow);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .detail-section:hover{
+      transform:translateY(-4px);
+      box-shadow:0 6px 16px var(--shadow);
+    }
+    .detail-section h2{
+      font-size:1.2rem;
+      margin-bottom:.75rem;
+      display:flex;
+      align-items:center;
+      gap:.5rem;
+      color:var(--detail-heading);
+    }
+    .detail-section h2 .icon{font-size:1.25rem;line-height:1;}
+
+    .detail-section ul,
+    .detail-section p{
+      font-size:.95rem;
+      line-height:1.6;
+      margin:0;
+    }
+    .detail-section ul{list-style:none;padding:0;}
+    .detail-section ul li{
+      position:relative;
+      padding-left:1.2rem;
+      margin-bottom:.5rem;
+    }
+    .detail-section ul li::before{
+      content:'▶';
+      position:absolute;
+      left:0;top:0;
+      color:var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>当社オフィスへのアクセス</h1>
+
+    <!-- 駅線図 -->
+    <div class="card">
+      <svg class="station-map" viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink">
+        <!-- 線路 -->
+        <path id="track" d="M40 60 L560 60"/>
+
+        <!-- 緑の動く丸（往復） -->
+        <circle class="train" r="8">
+          <animateMotion dur="6s" repeatCount="indefinite"
+            keyPoints="0;1;0" keyTimes="0;0.5;1">
+            <mpath xlink:href="#track" />
+          </animateMotion>
+        </circle>
+
+        <!-- 駅マーカー -->
+        <circle class="station" cx="120" cy="60" r="12" />
+        <text class="station-label" x="120" y="95">愛甲石田</text>
+
+        <circle class="station" cx="300" cy="60" r="12" />
+        <text class="station-label" x="300" y="95">本厚木</text>
+
+        <circle class="station" cx="480" cy="60" r="12" />
+        <text class="station-label" x="480" y="95">海老名</text>
+      </svg>
+    </div>
+
+    <!-- Google Map -->
+    <div class="map-container">
+      <iframe
+        loading="lazy"
+        allowfullscreen
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.735162808246!2d139.33997817582735!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e0!3m2!1sja!2sjp!4v1745132850729!5m2!1sja!2sjp">
+      </iframe>
+    </div>
+
+    <!-- アクセス詳細  -->
+    <div class="details-sections">
+
+      <!-- バス -->
+      <section class="detail-section">
+        <h2><span class="icon">🚌</span>バスでお越しの方</h2>
+        <ul>
+          <li>京王バス渋55・65系統 東大裏バス停 専門前まで徒歩0分</li>
+          <li>京王バス渋55・65系統 二ツ橋バス停 北門まで徒歩1分</li>
+        </ul>
+      </section>
+
+      <!-- 電車 -->
+      <section class="detail-section">
+        <h2><span class="icon">🚃</span>電車でお越しの方</h2>
+        <p>京王井の頭線 駒場東大前駅より徒歩0分。東口改札を出て左に正門、西口改札を出て右に坂下門がございます。なお、エレベーターは西口側にございます。東口側は階段のみとなります。</p>
+      </section>
+
+      <!-- お車 -->
+      <section class="detail-section">
+        <h2><span class="icon">🚗</span>お車でお越しの方</h2>
+        <ul>
+          <li>東名高速道路 厚木ICより約15分</li>
+          <li>敷地内に来客用駐車場（3台）あり〈要予約〉</li>
+        </ul>
+      </section>
+
+      <!-- 自転車 -->
+      <section class="detail-section">
+        <h2><span class="icon">🚲</span>自転車でお越しの方</h2>
+        <p>ビル1階エントランス横に駐輪スペースがございます。台数に限りがございますのでご了承ください。</p>
+      </section>
+
+    </div>
+    <!-- /アクセス詳細 -->
+  </main>
+</body>
+</html>

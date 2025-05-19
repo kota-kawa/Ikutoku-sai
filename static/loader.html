@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Magic Circle</title>
+  <style>
+    /* ページ全体を黒背景に設定 */
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
+    /* SVGを全画面表示 */
+    svg { display: block; width: 100vw; height: 100vh; }
+    /* 魔法陣の線と円のスタイル */
+    .shape { fill: none; stroke: #00d8ff; stroke-width: 2; filter: url(#glow); }
+    .dashed { stroke-dasharray: 6,4; }
+    /* 回転アニメーション */
+    .rotate-slow { transform-origin: 50% 50%; animation: spin1 30s linear infinite; }
+    .rotate-fast { transform-origin: 50% 50%; animation: spin2 20s linear infinite; }
+    @keyframes spin1 { to { transform: rotate(360deg); } }
+    @keyframes spin2 { to { transform: rotate(-360deg); } }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 400 400">
+    <!-- 発光フィルター -->
+    <defs>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </feMerge>
+    </defs>
+
+    <!-- 外側グループ（ゆっくり回転） -->
+    <g class="rotate-slow">
+      <circle class="shape" cx="200" cy="200" r="180" />
+      <circle class="shape dashed" cx="200" cy="200" r="160" />
+      <circle class="shape" cx="200" cy="200" r="140" />
+    </g>
+
+    <!-- 内側グループ（速く回転） -->
+    <g class="rotate-fast">
+      <circle class="shape" cx="200" cy="200" r="100" />
+      <circle class="shape dashed" cx="200" cy="200" r="80" />
+      <circle class="shape" cx="200" cy="200" r="60" />
+    </g>
+
+    <!-- 中心ドット -->
+    <circle class="shape" cx="200" cy="200" r="10" />
+  </svg>
+
+  <script>
+    // SVG要素のネームスペース
+    const SVG_NS = 'http://www.w3.org/2000/svg';
+
+    // 回転させるグループに放射状の線を追加する関数
+    function drawRadialLines(groupSelector, outerR, innerR, count) {
+      const svg = document.querySelector('svg');
+      const group = svg.querySelector(groupSelector);
+      for (let i = 0; i < count; i++) {
+        const angle = (2 * Math.PI / count) * i;
+        const x1 = 200 + Math.cos(angle) * outerR;
+        const y1 = 200 + Math.sin(angle) * outerR;
+        const x2 = 200 + Math.cos(angle) * innerR;
+        const y2 = 200 + Math.sin(angle) * innerR;
+        const line = document.createElementNS(SVG_NS, 'line');
+        line.setAttribute('class', 'shape');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        group.appendChild(line);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // 外側放射線：12本
+      drawRadialLines('.rotate-slow', 180, 160, 12);
+      // 内側放射線：8本
+      drawRadialLines('.rotate-fast', 100, 80, 8);
+    });
+  </script>
+</body>
+</html>

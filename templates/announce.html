@@ -4,8 +4,8 @@
 {% block title %}幾徳祭 | ご案内・アクセス{% endblock %}
 
 {% block head_extra %}
-  <!-- 元のスタイル -->
   <style>
+    /* ===== Hero 背景＆アニメーション ===== */
     .hero {
       position: relative;
       height: 50vh;
@@ -24,231 +24,301 @@
       animation: zoomBackground 20s ease-in-out infinite;
     }
     .hero .inner { position: relative; z-index: 2; }
-    .card {
-      transition: transform .35s cubic-bezier(.25,.46,.45,.94), box-shadow .35s;
-      border: none;
-      border-radius: 1rem;
-    }
-    .card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 15px 30px rgba(0,0,0,.15);
-    }
-
-    /* 背景ズームアニメーション */
     @keyframes zoomBackground {
-      0%   { transform: scale(1) }
-      50%  { transform: scale(1.05) }
-      100% { transform: scale(1) }
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
-    /* アクセスタブ下線アニメーション */
-    .nav-tabs .nav-link {
-      position: relative;
-      transition: color .3s;
+    /*── 共通変数 ──*/
+    :root {
+      --accent: #0077c8;
+      --bus-color: #e67e22;
+      --card-bg: #ffffff;
+      --shadow: rgba(0,0,0,.1);
+      --detail-heading: #8d6e63;
+      --text: #2c3e50;
     }
-    .nav-tabs .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
+
+    /*── 中央寄せラッパー ──*/
+    .custom-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /*── 駅線図カード ──*/
+    .card-station-map {
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 4px 12px var(--shadow);
+      padding: 1.5rem;
+      margin: 1rem auto 2rem;
+      max-width: 600px;
+    }
+    .station-map {
       width: 100%;
-      height: 3px;
-      background: var(--kait-purple);
-      transform: translateX(-50%) scaleX(0);
-      transform-origin: center;
-      transition: transform .3s;
+      height: auto;
+      display: block;
     }
-    .nav-tabs .nav-link.active::after {
-      transform: translateX(-50%) scaleX(1);
+    .station-map path {
+      stroke: var(--accent);
+      stroke-width: 6;
+      stroke-linecap: round;
+      fill: none;
+    }
+    .station-map circle.train {
+      fill: var(--accent);
+    }
+    .station-map circle.station {
+      fill: #fff;
+      stroke: var(--accent);
+      stroke-width: 4;
+      transition: none;
+      cursor: default;
+    }
+    .station-label {
+      font-size: .9rem;
+      fill: var(--text);
+      text-anchor: middle;
+      user-select: none;
     }
 
-    /* 駐車場カードホバー */
-    .parking-card {
-      transition: transform .3s, box-shadow .3s;
-      border-radius: .75rem;
+    /*── バス用アニメーション色 ──*/
+    .bus-map .station-map path {
+      stroke: var(--bus-color);
     }
-    .parking-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0,0,0,.12);
+    .bus-map .station-map circle.train {
+      fill: var(--bus-color);
+    }
+
+    /*── Google Map ──*/
+    .map-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      padding-top: 56.25%;
+      margin: 0 auto 2rem;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    .map-container iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    /*── アクセス詳細カード ──*/
+    .details-sections {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .detail-section {
+      background: var(--card-bg);
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .detail-section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px var(--shadow);
+    }
+    .detail-section h2 {
+      font-size: 1.2rem;
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      color: var(--detail-heading);
+    }
+    .detail-section h2 .icon {
+      font-size: 1.25rem;
+    }
+    .detail-section ul,
+    .detail-section p {
+      font-size: .95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+    .detail-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .detail-section ul li {
+      position: relative;
+      padding-left: 1.2rem;
+      margin-bottom: .5rem;
+    }
+    .detail-section ul li::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--accent);
     }
   </style>
 {% endblock %}
 
 {% block content %}
-  <!-- Hero -->
+  <!-- ===== Hero ===== -->
   <section class="hero">
     <div class="hero-bg"></div>
     <div class="inner text-center" data-aos="fade-down">
-      <h1 class="display-4 fw-bold">ご案内 & アクセス</h1>
+      <h1 class="display-4 fw-bold">ご案内 &amp; アクセス</h1>
       <p class="lead mb-0">安心・安全にお楽しみいただくために</p>
     </div>
   </section>
 
-  <main class="container my-5 pt-4">
-    <!-- ご来場の方へ -->
-    <section class="mb-5" data-aos="fade-up">
-      <h2 class="mb-4">ご来場の方へ</h2>
-      <div class="card p-4">
-        <ul class="list-unstyled mb-0">
-          <li class="mb-2">
-            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
-            飲酒は固くお断りいたします。
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
-            ドローン等の無許可飛行は禁止です。
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
-            ゴミは分別のうえ所定の回収場所へ。
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
-            ペットの同伴は原則ご遠慮ください。
-          </li>
-          <li class="mb-2">
-            <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
-            体調不良の際はスタッフまでお申し出ください。
-          </li>
-        </ul>
-      </div>
-    </section>
+  <main class="my-5 pt-4">
+    <div class="custom-container">
 
-    <!-- アクセス（簡易） -->
-    <section class="mb-5" data-aos="fade-up" data-aos-delay="100">
-      <h2 class="mb-4">アクセス（簡易）</h2>
-      <div class="row g-4">
-        <div class="col-lg-6">
+      <!-- ===== ご来場の方へ ===== -->
+      <section class="mb-5" data-aos="fade-up">
+        <h2 class="mb-4">ご来場の方へ</h2>
+        <div class="card p-4">
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2">
+              <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+              飲酒は固くお断りいたします。
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+              ドローン等の無許可飛行は禁止です。
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+              ゴミは分別のうえ所定の回収場所へ。
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+              ペットの同伴は原則ご遠慮ください。
+            </li>
+            <li class="mb-2">
+              <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i>
+              体調不良の際はスタッフまでお申し出ください。
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== アクセス ===== -->
+      <section class="mb-5" data-aos="fade-up" data-aos-delay="100">
+        <h2 class="mb-4">アクセス</h2>
+
+        <!-- Google Map -->
+        <div class="map-container">
           <iframe
-            class="w-100 rounded shadow"
-            height="380"
-            style="border:0;"
             loading="lazy"
             allowfullscreen
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3248.735162808246!2d139.33997817582735!3d35.486095872650914!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601901b75d52e4bb%3A0x25daee3f56616714!2z56We5aWI5bed5bel56eR5aSn5a2m!5e0!3m2!1sja!2sjp!4v1745132850729!5m2!1sja!2sjp">
           </iframe>
         </div>
-        <div class="col-lg-6">
-          <div class="card h-100 p-3">
-            <h5 class="card-title">公共交通機関でお越しの場合</h5>
-            <p class="card-text">
-              小田急線「本厚木」駅 北口より
-              神奈中バス「神奈川工科大学行き」終点下車（約10分）。
-            </p>
-            <a
-              href="https://www.kait.jp/directions/"
-              target="_blank"
-              class="btn btn-outline-primary">
-              大学公式アクセス案内を見る
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- アクセス詳細タブ -->
-    <section class="mb-5" data-aos="fade-up" data-aos-delay="200">
-      <h2 class="mb-4 text-center">アクセス方法詳細</h2>
-      <ul
-        class="nav nav-tabs justify-content-center mb-3"
-        id="accessTab"
-        role="tablist">
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link active"
-            id="train-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#train"
-            type="button"
-            role="tab">
-            <i class="bi bi-train-front-fill me-1"></i>公共交通
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="car-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#car"
-            type="button"
-            role="tab">
-            <i class="bi bi-car-front-fill me-1"></i>お車
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button
-            class="nav-link"
-            id="bicycle-tab"
-            data-bs-toggle="tab"
-            data-bs-target="#bicycle"
-            type="button"
-            role="tab">
-            <i class="bi bi-bicycle me-1"></i>自転車
-          </button>
-        </li>
-      </ul>
-      <div class="tab-content">
-        <!-- 公共交通 -->
-        <div
-          class="tab-pane fade show active"
-          id="train"
-          role="tabpanel">
-          <p>
-            小田急線「本厚木」駅 北口より
-            神奈中バス「神奈川工科大学行き」終点下車（約10分）。
-          </p>
-          <p>
-            または相模線「入谷」駅より徒歩25分（約2km）。
-          </p>
-        </div>
-        <!-- お車 -->
-        <div class="tab-pane fade" id="car" role="tabpanel">
-          <p>
-            東名高速道路「厚木IC」より約15分。
-            キャンパス周辺に複数の有料駐車場をご利用ください。
-          </p>
-          <div class="row row-cols-1 row-cols-md-2 g-4">
-            <div class="col">
-              <div class="card parking-card h-100 p-3">
-                <h6><i class="bi bi-building me-1"></i>第1駐車場</h6>
-                <p>収容台数：200台。キャンパス北門より徒歩5分。</p>
-              </div>
-            </div>
-            <div class="col">
-              <div class="card parking-card h-100 p-3">
-                <h6><i class="bi bi-building me-1"></i>第2駐車場</h6>
-                <p>収容台数：150台。キャンパス西門より徒歩7分。</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 自転車 -->
-        <div class="tab-pane fade" id="bicycle" role="tabpanel">
-          <p>
-            大学敷地内に無料自転車置き場がございます。
-            台数に限りがありますので、公共交通機関のご利用を推奨します。
-          </p>
-        </div>
-      </div>
-    </section>
+        <!-- 詳細カード（縦１列）-->
+        <div class="details-sections">
 
-    <!-- お問い合わせ -->
-    <section class="text-center mb-5" data-aos="fade-up" data-aos-delay="300">
-      <h2 class="mb-3">お問い合わせ</h2>
-      <p>
-        幾徳祭運営事務局<br>
-        <a href="tel:0461234567">046‐123‐4567</a> /
-        <a href="mailto:info@kaitfes.jp">info@kaitfes.jp</a>
-      </p>
-    </section>
+          <!-- バス -->
+          <section class="detail-section">
+            <h2><span class="icon">🚌</span>バスでお越しの方</h2>
+            <ul>
+              <li>「本厚木」駅 北口 ①番乗場<br>神奈中バス〈神奈川工科大学行き〉終点下車（約10分）</li>
+              <li>「愛甲石田」駅 南口 神奈中バス〈神奈川工科大学経由 厚木バスセンター行き〉「神奈川工科大学」下車</li>
+            </ul>
+            <!-- バス用 動く図（右→左スタート） -->
+            <div class="card-station-map bus-map">
+              <svg class="station-map" viewBox="0 0 600 120"
+                   xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path id="bus-track" d="M560 60 L40 60"/>
+                <circle class="train" r="8">
+                  <animateMotion dur="6s" repeatCount="indefinite"
+                    keyPoints="0;1;0" keyTimes="0;0.5;1">
+                    <mpath xlink:href="#bus-track"/>
+                  </animateMotion>
+                </circle>
+                <circle class="station" cx="480" cy="60" r="12"/>
+                <text class="station-label" x="480" y="95">海老名</text>
+                <circle class="station" cx="300" cy="60" r="12"/>
+                <text class="station-label" x="300" y="95">本厚木</text>
+                <circle class="station" cx="120" cy="60" r="12"/>
+                <!-- 二行ラベル -->
+                <text class="station-label" x="120" y="85">
+                  <tspan x="120" dy="10">愛甲石田</tspan><tspan x="120" dy="1.3em">or 相模大野</tspan>
+                </text>
+              </svg>
+            </div>
+          </section>
+
+          <!-- 電車 -->
+          <section class="detail-section">
+            <h2><span class="icon">🚃</span>電車でお越しの方</h2>
+            <p>小田急線「本厚木」駅よりバス10分 / 相模線「入谷」駅より徒歩約25分（約2km）。</p>
+            <!-- 電車用 動く図（左→右スタート） -->
+            <div class="card-station-map">
+              <svg class="station-map" viewBox="0 0 600 120"
+                   xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path id="track-2" d="M40 60 L560 60"/>
+                <circle class="train" r="8">
+                  <animateMotion dur="6s" repeatCount="indefinite"
+                    keyPoints="0;1;0" keyTimes="0;0.5;1">
+                    <mpath xlink:href="#track-2"/>
+                  </animateMotion>
+                </circle>
+                <circle class="station" cx="120" cy="60" r="12"/>
+                <!-- 二行ラベル -->
+                <text class="station-label" x="120" y="85">
+                  <tspan x="120" dy="0">愛甲石田</tspan><tspan x="120" dy="1.2em">or 相模大野</tspan>
+                </text>
+                <circle class="station" cx="300" cy="60" r="12"/>
+                <text class="station-label" x="300" y="95">本厚木</text>
+                <circle class="station" cx="480" cy="60" r="12"/>
+                <text class="station-label" x="480" y="95">海老名</text>
+              </svg>
+            </div>
+          </section>
+
+          <!-- お車 -->
+          <section class="detail-section">
+            <h2><span class="icon">🚗</span>お車でお越しの方</h2>
+            <ul>
+              <li>東名高速道路「厚木IC」より約15分</li>
+              <li>大学周辺の有料駐車場をご利用ください</li>
+            </ul>
+          </section>
+
+          <!-- 自転車 -->
+          <section class="detail-section">
+            <h2><span class="icon">🚲</span>自転車でお越しの方</h2>
+            <p>大学敷地内に無料駐輪場をご用意しています（台数に限りあり）。</p>
+          </section>
+
+        </div>
+      </section>
+
+      <!-- ===== お問い合わせ ===== -->
+      <section class="text-center mb-5" data-aos="fade-up" data-aos-delay="200">
+        <h2 class="mb-3">お問い合わせ</h2>
+        <p>
+          幾徳祭運営事務局<br>
+          <a href="tel:0461234567">046-123-4567</a> /
+          <a href="mailto:info@kaitfes.jp">info@kaitfes.jp</a>
+        </p>
+      </section>
+
+    </div>
   </main>
 {% endblock %}
 
 {% block scripts_extra %}
   <script>
-    // AOSはlayout.htmlで初期化済み
-    // タブを確実に初期表示
-    var firstTabEl = document.querySelector('#accessTab button.nav-link');
-    new bootstrap.Tab(firstTabEl).show();
+    // AOS は layout.html 側で初期化済み
   </script>
 {% endblock %}
