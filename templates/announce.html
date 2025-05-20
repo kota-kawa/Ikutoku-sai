@@ -4,6 +4,10 @@
 {% block title %}幾徳祭 | ご案内・アクセス{% endblock %}
 
 {% block head_extra %}
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+  />
   <style>
     /* ===== Hero 背景＆アニメーション ===== */
     .hero {
@@ -33,7 +37,7 @@
     /*── 共通変数 ──*/
     :root {
       --accent: #0077c8;
-      --bus-color: #e67e22;
+      --bus-color: #7a22e6;
       --card-bg: #ffffff;
       --shadow: rgba(0,0,0,.1);
       --detail-heading: #8d6e63;
@@ -165,6 +169,50 @@
       top: 0;
       color: var(--accent);
     }
+
+
+    
+    /* ── キャンパス所在地 ── */
+    .campus-address {
+      text-align: center;
+      margin: 1.5rem auto 2rem;
+      font-size: .95rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ── 電車⇢バス 間の下矢印 ── */
+    .down-arrow {
+      text-align: center;
+      margin: 1rem 0;
+      font-size: 4rem;
+      color: var(--accent);
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(8px); }
+    }
+
+    /* ── バス時刻表リンク ── */
+    .timetable-link {
+      text-align: left;
+      margin-top: 1rem;
+    }
+    .timetable-link a {
+      display: inline-block;
+      padding: .4rem .8rem;
+      border: 2px solid var(--bus-color);
+      border-radius: 4px;
+      font-size: .9rem;
+      color: var(--bus-color);
+      text-decoration: none;
+      transition: background .2s, color .2s;
+    }
+    .timetable-link a:hover {
+      background: var(--bus-color);
+      color: #fff;
+    }
   </style>
 {% endblock %}
 
@@ -223,45 +271,29 @@
           </iframe>
         </div>
 
+          <!-- 追加：キャンパス所在地 -->
+        <div class="campus-address" data-aos="fade-up">
+          <p>
+            神奈川工科大学<br>
+            〒243-0292 神奈川県厚木市下荻野1030
+          </p>
+        </div>
+
         <!-- 詳細カード（縦１列）-->
         <div class="details-sections">
-
-          <!-- バス -->
-          <section class="detail-section">
-            <h2><span class="icon">🚌</span>バスでお越しの方</h2>
-            <ul>
-              <li>「本厚木」駅 北口 ①番乗場<br>神奈中バス〈神奈川工科大学行き〉終点下車（約10分）</li>
-              <li>「愛甲石田」駅 南口 神奈中バス〈神奈川工科大学経由 厚木バスセンター行き〉「神奈川工科大学」下車</li>
-            </ul>
-            <!-- バス用 動く図（右→左スタート） -->
-            <div class="bus-map">
-              <svg class="station-map" viewBox="0 0 600 120"
-                   xmlns="http://www.w3.org/2000/svg"
-                   xmlns:xlink="http://www.w3.org/1999/xlink">
-                <path id="bus-track" d="M560 60 L40 60"/>
-                <circle class="train" r="8">
-                  <animateMotion dur="6s" repeatCount="indefinite"
-                    keyPoints="0;1;0" keyTimes="0;0.5;1">
-                    <mpath xlink:href="#bus-track"/>
-                  </animateMotion>
-                </circle>
-                <circle class="station" cx="480" cy="60" r="12"/>
-                <text class="station-label" x="480" y="95">海老名</text>
-                <circle class="station" cx="300" cy="60" r="12"/>
-                <text class="station-label" x="300" y="95">本厚木</text>
-                <circle class="station" cx="120" cy="60" r="12"/>
-                <!-- 二行ラベル -->
-                <text class="station-label" x="120" y="85">
-                  <tspan x="120" dy="10">愛甲石田</tspan><tspan x="120" dy="1.3em">or 相模大野</tspan>
-                </text>
-              </svg>
-            </div>
-          </section>
-
+          
           <!-- 電車 -->
           <section class="detail-section">
             <h2><span class="icon">🚃</span>電車でお越しの方</h2>
-            <p>小田急線「本厚木」駅よりバス10分 / 相模線「入谷」駅より徒歩約25分（約2km）。</p>
+            <p>主要駅からの目安時間</p>
+            <ul>
+              <li>新宿-[小田急線]-本厚木　（約52分）</li>
+              <li>横浜-[相模鉄道]-海老名-[小田急線]-本厚木　（約45分）　</li>
+              <li>八王子-[JR横浜線]-町田-[小田急線]-本厚木　（約52分）</li>
+              <li>小田原-[小田急線]-本厚木　（約40分）</li>
+              <br>
+            </ul>
+            <p>↓ 本厚木駅からはバスを使います。</p>
             <!-- 電車用 動く図（左→右スタート） -->
             <svg class="station-map" viewBox="0 0 600 120"
                  xmlns="http://www.w3.org/2000/svg"
@@ -276,14 +308,64 @@
               <circle class="station" cx="120" cy="60" r="12"/>
               <!-- 二行ラベル -->
               <text class="station-label" x="120" y="85">
-                <tspan x="120" dy="10">愛甲石田</tspan><tspan x="120" dy="1.2em">or 相模大野</tspan>
+                <tspan x="120" dy="10">愛甲石田</tspan>
               </text>
               <circle class="station" cx="300" cy="60" r="12"/>
               <text class="station-label" x="300" y="95">本厚木</text>
               <circle class="station" cx="480" cy="60" r="12"/>
-              <text class="station-label" x="480" y="95">海老名</text>
+              <text class="station-label" x="480" y="95">厚木</text>
             </svg>
           </section>
+
+        <!-- 下矢印 -->
+        <div class="down-arrow" data-aos="fade-up">
+          <i class="bi bi-arrow-down-circle-fill"></i>
+        </div>
+
+          <!-- バス -->
+          <section class="detail-section">
+            <h2><span class="icon">🚌</span>バスでお越しの方
+            <br>
+              （本厚木駅よりバスを利用する場合、2つのルートがあります。）
+          </h2>
+            <ul>
+              <li>「本厚木」駅 北口 ①番乗り場<br>「あつぎ郷土博物館」行き、「神奈川工科大学経由・鳶尾団地」行き　→　「神奈川工科大学前」下車</li>
+              <li>「厚木バスセンター」①-②番乗り場<br>「神奈川工科大学」行き　→　終点で下車</li>
+            </ul>
+              <!-- 時刻表への外部リンク -->
+          <p class="timetable-link">
+            <a href="https://www.kait.jp/about/bus_timetable.pdf" target="_blank" rel="noopener">
+              🕒 バス時刻表を見る
+            </a>
+          </p>
+
+            <!-- バス用 動く図（右→左スタート） -->
+            <div class="bus-map">
+              <svg class="station-map" viewBox="0 0 600 120"
+                   xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink">
+                <path id="bus-track" d="M560 60 L40 60"/>
+                <circle class="train" r="8">
+                  <animateMotion dur="6s" repeatCount="indefinite"
+                    keyPoints="0;1;0" keyTimes="0;0.5;1">
+                    <mpath xlink:href="#bus-track"/>
+                  </animateMotion>
+                </circle>
+                <circle class="station" cx="480" cy="60" r="12"/>
+                <text class="station-label" x="480" y="95">神奈川工科大学</text>
+                <circle class="station" cx="300" cy="60" r="12"/>
+                <text class="station-label" x="300" y="95">
+                  <tspan x="300" dy="0">各停留所</tspan><tspan x="300" dy="1.3em">（一般路線バスのみ）</tspan>
+                </text>
+                <circle class="station" cx="120" cy="60" r="12"/>
+                <!-- 二行ラベル -->
+                <text class="station-label" x="120" y="85">
+                  <tspan x="120" dy="10">本厚木駅前</tspan><tspan x="120" dy="1.3em">or 厚木バスセンター</tspan>
+                </text>
+              </svg>
+            </div>
+          </section>
+
 
           <!-- お車 -->
           <section class="detail-section">
