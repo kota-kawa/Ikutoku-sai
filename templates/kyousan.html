@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+{% block title %}幾徳祭 | ご協賛のお願い{% endblock %}
+
+{% block head_extra %}
+<style>
+/* ---------- ベース変数 ---------- */
+:root{
+  --grad-main: linear-gradient(90deg, #0071e3 0%, #af52de 45%, #ff7f44 90%);
+  --txt-main: #1d1d1f; --txt-sub: #555;
+  --glass-bg: rgba(255,255,255,.55);
+  --glass-bg-dark: rgba(28,28,30,.55);
+  --contact-bg: #4D90FE;
+  --contact-bg-hover: #3F7CE5;
+  --contact-radius: 50px;
+}
+
+/* ---------- Hero（画像パスそのまま） ---------- */
+.hero{
+  position: relative;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.hero-bg{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("{{ url_for('static', filename='K4_ils.webp') }}") center/cover no-repeat;
+  will-change: transform;
+  pointer-events: none;
+  z-index: 0;
+}
+@media(prefers-reduced-motion: no-preference){
+  .hero-bg{
+    animation: bgZoom 25s ease-in-out infinite;
+  }
+}
+@keyframes bgZoom{
+  0%   { transform: scale(1.05); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1.05); }
+}
+.hero .inner{
+  position: relative;
+  z-index: 1;
+}
+.hero .lead{
+  color: #fff!important;
+  text-shadow: 0 2px 4px rgba(0,0,0,.35);
+}
+
+/* ---------- セクション ---------- */
+.apple-section{
+  padding: clamp(4rem,8vw,7rem) 1rem;
+  max-width: 940px;
+  margin-inline: auto;
+}
+.apple-title{
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: .7rem;
+  line-height: 1.1;
+}
+.gradient-text--purple {
+  background: linear-gradient(
+    to right,
+    #6a0dad,
+    #ff1493
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 250% 100%;
+  animation: gradShift 12s ease infinite;
+  margin-bottom: .7rem;
+  line-height: 1.3;
+}
+@keyframes gradShift{ 50%{ background-position:100% 50%; } }
+.apple-copy{
+  font-size: 1.05rem;
+  line-height: 1.75;
+  font-weight: bold;
+  color: var(--txt-main);
+  max-width: 720px;
+  margin-inline: auto;
+  text-align: left;
+}
+
+/* ---------- お問い合わせボタン ---------- */
+.contact-btn {
+  display: inline-block;
+  background-color: var(--contact-bg);
+  padding: 1rem 2.5rem;
+  border-radius: var(--contact-radius);
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  line-height: 1;
+}
+.contact-btn:hover {
+  background-color: var(--contact-bg-hover);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="inner text-center" data-aos="fade-down">
+    <h1 class="display-4 fw-bold">ご協賛のお願い</h1>
+    <p class="lead mb-3">神奈川工科大学 幾徳祭実行委員会では、企業・団体の皆様からのご協賛を募集しています。</p>
+  </div>
+</section>
+
+<main>
+  <section id="sponsorship" class="apple-section" data-aos="fade-up">
+    <h2 class="apple-title">ご協賛プラン</h2>
+    <p class="gradient-text--purple">
+      幾徳祭は、学生だけでなく地域の皆様にも楽しんでいただけるイベントです。より魅力的な学園祭を実現するため、貴社のご支援をお願い申し上げます。
+    </p>
+    <ul class="apple-copy">
+      <li>プラチナスポンサー: ご協賛金額 500,000円以上</li>
+      <li>ゴールドスポンサー: ご協賛金額 300,000円以上</li>
+      <li>シルバースポンサー: ご協賛金額 100,000円以上</li>
+      <li>ブロンズスポンサー: ご協賛金額 50,000円以上</li>
+    </ul>
+    <p class="apple-copy">
+      各プランに応じて、学内外へのプロモーション機会をご提供いたします。詳細資料をご希望の場合は、お気軽にお問い合わせください。
+    </p>
+    <div class="text-center mt-5">
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScFBaeekKO5YE9RgBOf_C471BdEJozLqztXuCTLq4hGX5nXXw/viewform" class="contact-btn">お問い合わせはこちら »</a>
+    </div>
+  </section>
+</main>
+{% endblock %}

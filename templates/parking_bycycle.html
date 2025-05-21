@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>統合マップ（K1・K2のみ）</title>
+  <link rel="icon" href="./static/favicon.ico" />
+  <link rel="preconnect" href="https://server.arcgisonline.com" />
+  <link rel="dns-prefetch" href="https://server.arcgisonline.com" />
+  <link rel="preload" as="image" href="./static/map/K1号館.webp" />
+  <link rel="preload" as="image" href="./static/map/K2号館.webp" />
+  <link rel="stylesheet" href="./static/css/map_icons.css" />
+
+  <!-- Leaflet & Bootstrap CSS（遅延読み込み） -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet"
+                  href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" /></noscript>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet"
+                  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" /></noscript>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        rel="stylesheet" />
+
+  <style>
+    :root { --brand-green: rgb(14,83,12); }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
+    #map { width: 100vw; height: 100vh; }
+
+    /* ───────── 詳細パネル ───────── */
+    .details-panel {
+      position: fixed;
+      top: 0; left: -400px;
+      width: 400px; max-width: 90%;
+      height: 100%;
+      overflow-y: auto;
+      transition: left .3s ease;
+      z-index: 1001;
+    }
+    .details-panel.active { left: 0; }
+
+    /* 縦向き（既存） */
+    @media (max-width: 768px) {
+      .custom-icon { width: 40px; height: 40px; }
+      .custom-icon::after {
+        bottom: -9px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 12px solid var(--brand-green);
+      }
+      .details-panel { width: 100%; left: 100%; }
+      .details-panel.active { left: 0; }
+    }
+
+    /* 追加：横向き・小さな画面（高さ <= 500px） */
+    @media (orientation: landscape) and (max-height: 500px) {
+      .details-panel        { width: 70%; left: 100%; height: 100%; }
+      .details-panel.active { left: 30%; }
+    }
+
+    /* Leafletアイコンのクリック制御など（既存） */
+    .leaflet-marker-icon { pointer-events: none; }
+    .leaflet-marker-icon .custom-icon,
+    .leaflet-marker-icon .custom-icon * { pointer-events: auto; }
+    .leaflet-marker-icon.custom-marker { pointer-events: none !important; }
+    .leaflet-marker-icon.custom-marker .custom-icon {
+      pointer-events: auto !important;
+    }
+
+    /* フォーカス時（既存） */
+    .custom-icon.focused {
+      width: 60px; height: 60px;
+      border-color: var(--brand-green);
+    }
+    .custom-icon.focused::after {
+      bottom: -15px;
+      border-top-width: 18px;
+      border-top-color: var(--brand-green);
+    }
+    .custom-icon.focused .icon-image { width: 90%; height: 90%; }
+
+    /* 戻るボタン（既存） */
+    #back-btn {
+      position: fixed !important;
+      top: 1.5rem !important;
+      left: 5rem !important;
+      z-index: 2000 !important;
+      display: inline-flex !important;
+      align-items: center;
+      gap: .4rem;
+      height: 55px;
+      padding: .4rem .8rem;
+      border: 2px solid rgba(42,235,225,.9);
+      border-radius: 999px;
+      background: rgba(255,255,255,.5);
+      color: rgba(182,24,230,.9);
+      font-weight: bold;
+      font-size: .9rem;
+      text-decoration: none;
+      transition: background-color .25s ease,
+                  color .25s ease,
+                  transform .2s ease;
+    }
+    #back-btn:hover {
+      background: rgba(43,236,172,.4);
+      color: #fff;
+      transform: translateX(-3px);
+    }
+    #back-btn:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(18,45,202,.4);
+    }
+
+    /* ユーザー現在地アイコンは背景も枠線も無し */
+.user-location-icon{
+  background: transparent !important;
+  border: none !important;
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- 戻るボタン -->
+  <a id="back-btn" href="/" class="position-fixed">
+    <i class="bi bi-arrow-left"></i><span>戻る</span>
+  </a>
+
+  <div id="map"></div>
+
+  <!-- 詳細パネル -->
+  <div id="details-panel" class="details-panel bg-white shadow p-3">
+    <button class="btn-close float-end" onclick="hideDetails()"></button>
+  </div>
+
+  <!-- Leaflet & Bootstrap JS -->
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    /* ───────── 地図初期化 ───────── */
+    const INITIAL_CENTER = [35.48543078370346, 139.342897008065];
+    const map = L.map('map', {
+      center: INITIAL_CENTER,
+      zoom: 18,
+      minZoom: 5,
+      maxZoom: 19,
+      zoomControl: true,
+      scrollWheelZoom: true,
+      touchZoom: true
+    });
+    L.tileLayer(
+      'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+      {maxNativeZoom: 18, maxZoom: 19}
+    ).addTo(map);
+
+    /* ───────── K1・K2 のスポット（既存） ───────── */
+    const buildingLayer = L.layerGroup().addTo(map);
+    let cancelNextMarkerClick = false;
+    let focusedMarker = null;
+    let detailsOverlay = null;
+
+    function createCustomIcon(url) {
+      return L.divIcon({
+        className: 'custom-marker',
+        html: `<div class="custom-icon"><div class="icon-image" style="background-image:url('${url}')"></div></div>`,
+        iconSize: [50,60],
+        iconAnchor: [25,60]
+      });
+    }
+
+    const spots = [
+      {
+        location: [35.48543078370346, 139.342897008065],
+        image: './static/map/K1号館.webp',
+        name:  '駐輪場'
+      }
+    ];
+
+    function focusMarker(m) {
+      m.getElement()?.querySelector('.custom-icon')?.classList.add('focused');
+    }
+    function unfocusMarker(m) {
+      m.getElement()?.querySelector('.custom-icon')?.classList.remove('focused');
+    }
+
+    function loadMarkers() {
+      spots.forEach(s => {
+        const m = L.marker(s.location, {icon: createCustomIcon(s.image)})
+          .on('click', ev => {
+            if (cancelNextMarkerClick) { cancelNextMarkerClick = false; return; }
+            ev.originalEvent.preventDefault();
+            ev.originalEvent.stopPropagation();
+            L.DomEvent.stopPropagation(ev);
+
+            showDetails({
+              image: s.image, name: s.name,
+              description: 'ここにスポットの説明',
+              address: '住所', phone: '電話番号'
+            });
+
+            if (focusedMarker && focusedMarker !== m) unfocusMarker(focusedMarker);
+            focusMarker(m); focusedMarker = m;
+          });
+        buildingLayer.addLayer(m); s.marker = m;
+      });
+    }
+
+    /* ───────── 詳細パネル表示 / 非表示（既存） ───────── */
+    function showDetails(c) {
+      const p = document.getElementById('details-panel');
+      p.innerHTML = `
+        <button class="btn-close float-end" onclick="hideDetails()"></button>
+        <img src="${c.image}" alt="${c.name}" class="img-fluid rounded mb-3">
+        <h2 class="fs-4">${c.name}</h2>
+        <p class="text-muted mb-3">${c.description}</p>
+        <div class="border-top pt-3">
+          <div><strong>住所:</strong> ${c.address}</div>
+          <div><strong>電話番号:</strong> ${c.phone}</div>
+        </div>`;
+      p.classList.add('active');
+
+      if (!detailsOverlay) {
+        detailsOverlay = document.createElement('div');
+        Object.assign(detailsOverlay.style, {
+          position:'fixed', inset:0, zIndex:1000,
+          background:'transparent', cursor:'pointer'
+        });
+        L.DomEvent.disableClickPropagation(detailsOverlay);
+        L.DomEvent.disableScrollPropagation(detailsOverlay);
+        detailsOverlay.addEventListener('click', ev => {
+          ev.preventDefault(); ev.stopPropagation();
+          hideDetails(); cancelNextMarkerClick = false;
+        });
+      }
+      if (!detailsOverlay.isConnected) document.body.appendChild(detailsOverlay);
+    }
+    function hideDetails() {
+      document.getElementById('details-panel').classList.remove('active');
+      if (detailsOverlay?.isConnected) detailsOverlay.remove();
+    }
+
+    /* 地図クリックでパネルを閉じる（既存） */
+    function isNearAnyMarker(latlng, thresholdPx = 15) {
+      const clickPt = map.latLngToContainerPoint(latlng);
+      let hit = false;
+      buildingLayer.eachLayer(m => {
+        if (hit) return;
+        const mPt = map.latLngToContainerPoint(m.getLatLng());
+        if (clickPt.distanceTo(mPt) < thresholdPx) hit = true;
+      });
+      return hit;
+    }
+    map.on('mousedown', ev => {
+      if (!ev.originalEvent.target.closest('.custom-icon')) cancelNextMarkerClick = true;
+    });
+    map.on('click', ev => {
+      if (!isNearAnyMarker(ev.latlng)) {
+        hideDetails(); cancelNextMarkerClick = false;
+        if (focusedMarker) { unfocusMarker(focusedMarker); focusedMarker = null; }
+      }
+    });
+
+    /* ───────── ユーザー現在地マーカー（シンプルな青丸） ───────── */
+    let userMarker = null;
+    function userHTML() {
+      return `
+        <div style="
+          width:24px;height:24px;
+          border-radius:50%;
+          background:#007AFF;
+          border:3px solid #fff;
+          box-shadow:0 0 0 4px rgba(0,122,255,.3);
+        "></div>`;
+    }
+    function renderUser(lat, lon) {
+      const icon = L.divIcon({html:userHTML(), iconSize:[24,24], iconAnchor:[12,12],className: 'user-location-icon' });
+      if (!userMarker) {
+        userMarker = L.marker([lat,lon], {icon}).addTo(map);
+      } else {
+        userMarker.setLatLng([lat,lon]).setIcon(icon);
+      }
+    }
+    if ('geolocation' in navigator) {
+      navigator.geolocation.watchPosition(
+        ({coords:{latitude,longitude}}) => renderUser(latitude, longitude),
+        e => console.warn('Geolocation error', e),
+        {enableHighAccuracy:true, maximumAge:5000, timeout:20000}
+      );
+    }
+
+    /* 初期状態 */
+    hideDetails();
+    document.addEventListener('DOMContentLoaded', loadMarkers);
+  </script>
+</body>
+</html>

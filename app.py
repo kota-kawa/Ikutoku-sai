@@ -58,9 +58,25 @@ def event():
 def about():
     return render_template('about.html')
 
+@app.route('/kyousan')
+def kyousan():
+    return render_template('kyousan.html')
+
 @app.route('/map')
 def map():
     return render_template('map.html')
+
+@app.route('/bus_stop')
+def bus_stop():
+    return render_template('bus_stop.html')
+
+@app.route('/parking_bycycle')
+def parking_bycycle():
+    return render_template('parking_bycycle.html')
+
+@app.route('/parking_car')
+def parking_car():
+    return render_template('parking_car.html')
 
 #アプリの実行する
 if __name__ == '__main__':

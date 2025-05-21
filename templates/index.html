@@ -290,9 +290,7 @@ body {
   /* ────────── お問い合わせボタン ────────── */
   .contact .btn-contact {
     width: 70%;           /* スマホでは55%幅に */
-    
   }
-
   /* ────────── 開催概要「詳細を見る」ボタン ────────── */
   .overview .btn-white {
     display: inline-block;  
@@ -338,7 +336,7 @@ body {
       <li><strong>住所：</strong>〒243-0292 神奈川県厚木市下荻野1030</li>
       <li><strong>テーマ：</strong>「継承」</li>
     </ul>
-    <a href="{{ url_for('about') }}" class="btn-white">詳細を見る</a>
+    <!--<a href="/about" class="btn-white">詳細を見る</a>-->
   </div>
 </section>
 
@@ -350,7 +348,7 @@ body {
   <div class="txt-col">
     <h3>アクセス</h3>
     <p>小田急線「本厚木駅」からバスで約 25 分。駐車場もあります。</p>
-    <a href="{{ url_for('announce') }}">交通案内 &raquo;</a>
+    <a href="/announce">交通案内 &raquo;</a>
   </div>
 </section>
 
@@ -362,7 +360,7 @@ body {
   <div class="txt-col">
     <h3>ステージ & 模擬店</h3>
     <p>ライブ、研究展示、ワークショップ…100 を超える企画がキャンパス全体で展開。</p>
-    <a href="{{ url_for('event') }}">企画一覧 &raquo;</a>
+    <a href="/event">企画一覧 &raquo;</a>
   </div>
 </section>
 
@@ -374,7 +372,7 @@ body {
   <div class="txt-col">
     <h3>ご挨拶</h3>
     <p>学長・学園祭実行委員からのご挨拶です。</p>
-    <a href="{{ url_for('announce') }}">ご挨拶 &raquo;</a>
+    <a href="/about">ご挨拶 &raquo;</a>
   </div>
 </section>
 
