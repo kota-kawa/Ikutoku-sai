@@ -1,109 +1,147 @@
-{% extends "layout.html" %}
+{% extends 'layout.html' %}
 {% block title %}幾徳祭 | ご協賛のお願い{% endblock %}
 
 {% block head_extra %}
 <style>
-/* ---------- ベース変数 ---------- */
-:root{
-  --grad-main: linear-gradient(90deg, #0071e3 0%, #af52de 45%, #ff7f44 90%);
-  --txt-main: #1d1d1f; --txt-sub: #555;
-  --glass-bg: rgba(255,255,255,.55);
-  --glass-bg-dark: rgba(28,28,30,.55);
-  --contact-bg: #4D90FE;
-  --contact-bg-hover: #3F7CE5;
-  --contact-radius: 50px;
-}
-
-/* ---------- Hero（画像パスそのまま） ---------- */
-.hero{
-  position: relative;
-  height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-}
-.hero-bg{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url("{{ url_for('static', filename='K4_ils.webp') }}") center/cover no-repeat;
-  will-change: transform;
-  pointer-events: none;
-  z-index: 0;
-}
-@media(prefers-reduced-motion: no-preference){
-  .hero-bg{
-    animation: bgZoom 25s ease-in-out infinite;
+  /* カスタムプロパティ */
+  :root {
+    --grad-main    : #0071e3;
+    --txt-main     : #1d1d1f;
+    --txt-sub      : #555;
+    --bg-section   : #ffffff;
   }
-}
-@keyframes bgZoom{
-  0%   { transform: scale(1.05); }
-  50%  { transform: scale(1.15); }
-  100% { transform: scale(1.05); }
-}
-.hero .inner{
-  position: relative;
-  z-index: 1;
-}
-.hero .lead{
-  color: #fff!important;
-  text-shadow: 0 2px 4px rgba(0,0,0,.35);
-}
 
-/* ---------- セクション ---------- */
-.apple-section{
-  padding: clamp(4rem,8vw,7rem) 1rem;
-  max-width: 940px;
-  margin-inline: auto;
+  /* Heroセクション（変更なし） */
+  .hero {
+    position        : relative;
+    height          : 400px;
+    display         : flex;
+    align-items     : center;
+    justify-content : center;
+    color           : #fff;
+    overflow        : hidden;
+  }
+  .hero-bg {
+    position        : absolute;
+    top             : 0; left: 0;
+    width           : 100%; height: 100%;
+    background      : url("{{ url_for('static', filename='K4_ils.webp') }}") center/cover no-repeat;
+    z-index         : 0;
+  }
+  .hero .inner {
+    position        : relative;
+    z-index         : 1;
+  }
+
+  /* コンテンツセクション */
+  .apple-section {
+    background-color: var(--bg-section);
+    border-left     : 6px solid var(--grad-main);
+    border-radius   : 8px;
+    padding         : 2.5rem 1.5rem;
+    box-shadow      : 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width       : 800px;
+    margin          : 2.5rem auto 2.5rem;
+  }
+
+  .apple-title {
+    font-size       : 2rem;
+    font-weight     : 700;
+    color           : var(--grad-main);
+    margin-bottom   : 1rem;
+    line-height     : 1.2;
+    position        : relative;
+  }
+  .apple-title::after {
+    content         : "";
+    display         : block;
+    width           : 40px;
+    height          : 4px;
+    background      : var(--grad-main);
+    margin-top      : 0.5rem;
+  }
+
+  .apple-copy {
+    font-size       : 1.125rem;
+    line-height     : 1.75;
+    color           : var(--txt-main);
+    margin-bottom   : 1.5rem;
+    text-align      : justify;
+  }
+  .apple-copy ul {
+    list-style-type : disc;
+    padding-left    : 1.5rem;
+  }
+  .apple-copy li {
+    margin-bottom   : 0.75rem;
+  }
+
+  /* フッター余白 */
+  .footer-cta {
+    text-align      : center;
+    margin          : 3rem 0;
+  }
+</style>
+
+
+
+<style>
+/* ========= お問い合わせセクション ========= */
+.contact {
+    /* background: #f0f4ff;   /* ほんのり色を変えてセクションと区別 */
+  padding: 4rem 0;
 }
-.apple-title{
+.contact .container {
+  display: flex;
+  justify-content: center;
+}
+.contact h2 {
   font-size: 2.5rem;
-  font-weight: 700;
+  margin-bottom: 1rem;
   text-align: center;
-  margin-bottom: .7rem;
-  line-height: 1.1;
+  width: 100%;
 }
-.gradient-text--purple {
-  background: linear-gradient(
-    to right,
-    #6a0dad,
-    #ff1493
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-size: 250% 100%;
-  animation: gradShift 12s ease infinite;
-  margin-bottom: .7rem;
-  line-height: 1.3;
+.contact p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  width: 100%;
 }
-@keyframes gradShift{ 50%{ background-position:100% 50%; } }
-.apple-copy{
-  font-size: 1.05rem;
-  line-height: 1.75;
-  font-weight: bold;
-  color: var(--txt-main);
-  max-width: 720px;
-  margin-inline: auto;
-  text-align: left;
-}
-
-/* ---------- お問い合わせボタン ---------- */
-.contact-btn {
-  display: inline-block;
-  background-color: var(--contact-bg);
-  padding: 1rem 2.5rem;
-  border-radius: var(--contact-radius);
+.contact .btn-contact {
+  display: block;       /* ブロック化 */
+  margin: 0 auto;       /* 左右マージン自動 */
+  padding: .8rem 2.4rem;      /* 縦横のバランスを微調整 */
+  background: #0071e3;
   color: #fff;
-  font-size: 1.25rem;
+  border-radius: 9999px;      /* しっかり丸く */
   font-weight: 600;
   text-decoration: none;
-  line-height: 1;
+  transition: background .3s, transform .2s;
 }
-.contact-btn:hover {
-  background-color: var(--contact-bg-hover);
+.contact .btn-contact:hover {
+  background: #005bb5;
+  transform: translateY(-2px); /* 軽い浮き感 */
+}
+
+/* スマホ表示 (〜768px) のとき */
+@media (max-width: 768px) {
+  /* ────────── お問い合わせボタン ────────── */
+  .contact .btn-contact {
+    width: 80%;           /* スマホでは55%幅に */
+  }
+  /* ────────── 開催概要「詳細を見る」ボタン ────────── */
+  .overview .btn-white {
+    display: inline-block;  
+    margin-bottom: 1.5rem;  /* 下に余白を追加 */
+  }
+}
+
+/* PC表示 (769px〜) のとき */
+@media (min-width: 769px) {
+  .contact .btn-contact {
+    width: 60%;           /* デスクトップでは元の50%に戻す */
+  }
+  /* PC版で開催概要ボタンの余白を変えたい場合はここで調整 */
 }
 </style>
 {% endblock %}
@@ -111,30 +149,61 @@
 {% block content %}
 <section class="hero">
   <div class="hero-bg"></div>
-  <div class="inner text-center" data-aos="fade-down">
-    <h1 class="display-4 fw-bold">ご協賛のお願い</h1>
-    <p class="lead mb-3">神奈川工科大学 幾徳祭実行委員会では、企業・団体の皆様からのご協賛を募集しています。</p>
+  <div class="inner text-center">
+    <h1 class="display-4 fw-bold">ご協賛・賛助のお願い</h1>
+    <p class="lead mb-3">
+      神奈川工科大学 幾徳祭実行委員会では、企業・団体および個人の皆様からのご支援を募集しております。
+    </p>
   </div>
 </section>
 
-<main>
-  <section id="sponsorship" class="apple-section" data-aos="fade-up">
-    <h2 class="apple-title">ご協賛プラン</h2>
-    <p class="gradient-text--purple">
-      幾徳祭は、学生だけでなく地域の皆様にも楽しんでいただけるイベントです。より魅力的な学園祭を実現するため、貴社のご支援をお願い申し上げます。
-    </p>
-    <ul class="apple-copy">
-      <li>プラチナスポンサー: ご協賛金額 500,000円以上</li>
-      <li>ゴールドスポンサー: ご協賛金額 300,000円以上</li>
-      <li>シルバースポンサー: ご協賛金額 100,000円以上</li>
-      <li>ブロンズスポンサー: ご協賛金額 50,000円以上</li>
-    </ul>
+<main class="mx-2">
+  <section id="intro" class="apple-section">
+    <h2 class="apple-title">はじめに</h2>
     <p class="apple-copy">
-      各プランに応じて、学内外へのプロモーション機会をご提供いたします。詳細資料をご希望の場合は、お気軽にお問い合わせください。
+      平素より幾徳祭に多大なるご協力を賜り、厚く御礼申し上げます。幾徳祭は今年で第50回を迎え、11月の2日間にわたり開催される神奈川工科大学の学生主催イベントです。今年は節目の第50回ということで一段と力を入れて、各種展示や屋台、ステージなどを行いますので、かなり盛り上がるでしょう。
     </p>
-    <div class="text-center mt-5">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLScFBaeekKO5YE9RgBOf_C471BdEJozLqztXuCTLq4hGX5nXXw/viewform" class="contact-btn">お問い合わせはこちら »</a>
-    </div>
+    <p class="apple-copy">
+      幾徳祭の成功は、ひとえに皆様からの温かいご支援によるものです。今後とも、幾徳祭がより多くの方々に愛されるイベントとなるようご協力を賜りますようお願い申し上げます。
+    </p>
   </section>
+
+  <section id="corporate" class="apple-section">
+    <h2 class="apple-title">企業の皆さまへ</h2>
+    <p class="apple-copy">
+      現在、幾徳祭では企業の皆さまからの協賛を募集しております。協賛金や物品のご提供により、幾徳祭の運営および来場者体験の向上にご協力いただければ幸いです。
+    </p>
+    <p class="apple-copy">
+      協賛に関する詳細資料をご用意しております。ご検討のほどよろしくお願いいたします。資料請求やご質問は、下記のお問い合わせボタンよりご連絡ください。
+    </p>
+    <h3 class="apple-title">協賛形態</h3>
+    <ul class="apple-copy">
+      <li><strong>パンフレット広告協賛</strong><br>何らかの形で協賛いただければ、公式パンフレットに貴社の広告を掲載いたします。</li>
+      <li><strong>ウェブバナー広告協賛</strong><br>第50回幾徳祭公式ウェブサイトにバナー広告を掲載いたします。</li>
+      <li><strong>物品協賛</strong><br>ご提供いただいたチケットや商品を来場者や参加団体に配布いたします。</li>
+    </ul>
+  </section>
+
+  <section id="individual" class="apple-section">
+    <h2 class="apple-title">個人の方へ</h2>
+    <p class="apple-copy">
+      幾徳祭実行委員会では、個人の皆さまからの賛助も募集しております。皆さまからのご支援は、企画運営の充実や新たな挑戦の原動力となります。
+    </p>
+    <p class="apple-copy">
+      ご希望の方には、8月に郵送にて詳細をご案内いたします。ご興味をお持ちの方は、下記のお問い合わせボタンよりお申し込みください。
+    </p>
+  </section>
+
+<!-- ========= お問い合わせセクション ========= -->
+<section class="contact index-scroll" id="contact" data-aos="fade-up">
+  <div class="container">
+    <div>
+      <h2>お問い合わせ</h2>
+      <p>協賛・取材などもこちらからよろしくお願いします。</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLScFBaeekKO5YE9RgBOf_C471BdEJozLqztXuCTLq4hGX5nXXw/viewform" class="btn-contact">お問い合わせはこちら &raquo;</a>
+    </div>
+  </div>
+</section>
+
 </main>
 {% endblock %}
