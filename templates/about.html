@@ -103,7 +103,7 @@
   margin-top: 1.2rem;
 }
 @media(prefers-color-scheme:dark){
-  .apple-copy{ color:#e5e5ea; }
+  .apple-copy{ color: #e5e5ea; }
 }
 
 /* ---------- グラスカード (おしゃれ＆動き) ---------- */
@@ -126,6 +126,8 @@
   background-image:
     var(--glass-bg),
     var(--grad-main);
+  /* ライトモード時のテキスト色を明示 */
+  color: var(--txt-main);
 }
 /* 左上の謎パーツをまるごと削除 */
 .greeting-item::before{ content:none; }
@@ -133,11 +135,13 @@
   transform: translateY(-6px) scale(1.02);
   box-shadow: 0 24px 46px rgba(0,0,0,.18);
 }
+/* 見出しの色も明示 */
 .greeting-name{
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: .7rem;
   line-height: 1.3;
+  color: var(--txt-main);
 }
 @media(prefers-color-scheme:dark){
   .greeting-item{
@@ -145,8 +149,10 @@
     background-image:
       var(--glass-bg-dark),
       var(--grad-main);
+    /* ダークモード時はテキストを淡い白に */
+    color: #e5e5ea;
   }
-  .greeting-name{ color:#fff; }
+  .greeting-name{ color: #fff; }
 }
 
 </style>
