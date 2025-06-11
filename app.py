@@ -58,7 +58,7 @@ def event():
 def about():
     return render_template('about.html')
 
-@app.route('/kyousan')
+@app.route('/eeeeee')
 def kyousan():
     return render_template('kyousan.html')
 
