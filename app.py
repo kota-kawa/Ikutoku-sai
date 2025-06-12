@@ -43,28 +43,28 @@ def bingo():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('coming_soon.html')
 
 #デザイン画面
 @app.route('/announce')
 def announce():
-    return render_template('announce.html')
+    return render_template('coming_soon.html')
 
 @app.route('/event')
 def event():
-    return render_template('event.html')
+    return render_template('coming_soon.html')
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('coming_soon.html')
 
 @app.route('/eeeeee')
 def kyousan():
-    return render_template('kyousan.html')
+    return render_template('coming_soon.html')
 
 @app.route('/map')
 def map():
-    return render_template('map.html')
+    return render_template('coming_soon.html')
 
 @app.route('/bus_stop')
 def bus_stop():
