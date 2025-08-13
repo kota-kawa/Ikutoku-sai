@@ -1,67 +1,15 @@
 <!-- templates/index.html -->
 {% extends "layout.html" %}
-{% block title %}第50回 幾徳祭 | 神奈川工科大学 学園祭 公式サイト{% endblock %}
+{% block title %}第100回 宇宙祭のサイト{% endblock %}
 
 
 {% block head_extra %}
-  <!-- 基本メタ -->
-  <meta name="description" content="神奈川工科大学の学園祭・第50回幾徳祭の公式サイト。2025年11月1日～2日に厚木市で開催。ステージイベントや模擬店情報、アクセスなどを掲載。">
-  <meta name="keywords" content="神奈川工科大学,幾徳祭,学園祭,2025,厚木市,イベント">
-
    <link rel="stylesheet" href="{{ url_for('static', filename='/css/loader.css') }}">
   <!-- 正規化URL -->
   <link rel="canonical" href="{{ url_for('index', _external=True) }}">
 
-  <!-- Open Graph -->
-  <meta property="og:site_name" content="第50回 幾徳祭">
-  <meta property="og:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
-  <meta property="og:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月1日～2日に開催。ステージイベントや模擬店など、多彩なプログラムをお楽しみください。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ url_for('index', _external=True) }}">
-  <meta property="og:image" content="{{ url_for('static', filename='kait_landscape.webp', _external=True) }}">
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:site" content="@kait_jikkou">
-  <meta name="twitter:title" content="第50回 幾徳祭 | 神奈川工科大学 学園祭">
-  <meta name="twitter:description" content="神奈川工科大学の学園祭・第50回幾徳祭。11月1日～2日に開催。ステージイベントや模擬店情報をチェック！">
-  <meta name="twitter:image" content="{{ url_for('static', filename='kait_landscape.webp', _external=True) }}">
-
   <script src="{{ url_for('static', filename='/js/loader.js') }}" defer></script>
 
-  <!-- JSON-LD構造化データ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    "name": "第50回 幾徳祭",
-    "startDate": "2025-11-01T10:00+09:00",
-    "endDate": "2025-11-02T17:00+09:00",
-    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "location": {
-      "@type": "Place",
-      "name": "神奈川工科大学 幾徳会館",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "下荻野1030",
-        "addressLocality": "厚木市",
-        "addressRegion": "神奈川県",
-        "postalCode": "243-0292",
-        "addressCountry": "JP"
-      }
-    },
-    "image": [
-      "{{ url_for('static', filename='kait_landscape.webp', _external=True) }}"
-    ],
-    "description": "神奈川工科大学の学園祭・第50回幾徳祭。ステージイベントや模擬店など多彩なプログラムを開催。",
-    "organizer": {
-      "@type": "Organization",
-      "name": "神奈川工科大学",
-      "url": "https://www.kait.jp"
-    }
-  }
-  </script>
 {% endblock %}
 
 
@@ -335,10 +283,10 @@ body {
   <div class="container">
     <h2 class="pt-3">開催概要</h2>
     <ul class="overview-list">
-      <li><strong>日程：</strong>2025年11月1日（土）〜11月2日（日）</li>
+      <li><strong>日程：</strong>2100年12月1日（土）〜12月2日（日）</li>
       <li><strong>時間：</strong>各日 10:00 〜 17:00</li>
-      <li><strong>住所：</strong>〒243-0292 神奈川県厚木市下荻野1030</li>
-      <li><strong>テーマ：</strong>「継承」</li>
+      <li><strong>住所：</strong>〒111-1111 月の裏側</li>
+      <li><strong>テーマ：</strong>「餅つき」</li>
     </ul>
     <!--<a href="/about" class="btn-white">詳細を見る</a>-->
   </div>
@@ -351,7 +299,7 @@ body {
   </div>
   <div class="txt-col">
     <h3>アクセス</h3>
-    <p>小田急線「本厚木駅」からバスで約 25 分。駐車場もあります。</p>
+    <p>宇宙船からバスで約 25 分。駐車場もあります。</p>
     <a href="/announce">交通案内 &raquo;</a>
   </div>
 </section>
@@ -359,7 +307,7 @@ body {
 <!-- ========= Feature: ステージ & 模擬店 ========= -->
 <section class="module reverse index-scroll" id="events" data-aos="fade-up">
   <div class="img-col">
-    <img src="{{ url_for('static', filename='/top_page/mogiten2.webp') }}" alt="Events">
+    <img src="{{ url_for('static', filename='/top_page/mogiten.webp') }}" alt="Events">
   </div>
   <div class="txt-col">
     <h3>ステージ & 模擬店</h3>
@@ -375,7 +323,7 @@ body {
   </div>
   <div class="txt-col">
     <h3>ご挨拶</h3>
-    <p>学長・学園祭実行委員からのご挨拶です。</p>
+    <p>宇宙祭実行委員からのご挨拶です。</p>
     <a href="/about">ご挨拶 &raquo;</a>
   </div>
 </section>
@@ -387,16 +335,12 @@ body {
       <h2>お問い合わせ</h2>
       <p>ご質問・ご要望などございましたら、お気軽にお問い合わせください。</p>
       <p>協賛・取材などもこちらからよろしくお願いします。</p>
-      <a href="https://forms.gle/hDtaJVNBFxGamAJ4A" class="btn-contact">お問い合わせはこちら &raquo;</a>
+      <a href="/" class="btn-contact">お問い合わせはこちら &raquo;</a>
     </div>
   </div>
 </section>
 
 
 
-<!-- ↓「ステージ & 模擬店」セクションの直後に挿入 -->
-  </section> <!-- id="events" の閉じタグ -->
-
-  </section>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 <!-- templates/event.html -->
 {% extends "layout.html" %}
 
-{% block title %}幾徳祭 | 企画紹介{% endblock %}
+{% block title %}宇宙祭 | 企画紹介{% endblock %}
 
 {% block head_extra %}
   <!-- Inline Styles from Event Page -->
@@ -144,29 +144,29 @@
     <!-- 会場マップ -->
     <section id="map" class="py-5 bg-light">
       <h2 class="mb-4">会場マップ</h2>
-      <iframe src="/map" frameborder="0" allowfullscreen title="幾徳祭 会場マップ"></iframe>
+      <iframe src="/map" frameborder="0" allowfullscreen title="宇宙祭 会場マップ"></iframe>
     </section>
 
 
     <section id="facilities" class="container mb-5">
       <h2 class="mb-4">施設一覧</h2>
       <div class="facility-menu d-flex flex-wrap gap-2 justify-content-center">
-        <button class="btn btn-outline-secondary" data-facility="K1号館">① K1号館</button>
-        <button class="btn btn-outline-secondary" data-facility="K2号館">② K2号館</button>
-        <button class="btn btn-outline-secondary" data-facility="K3号館">③ K3号館</button>
-        <button class="btn btn-outline-secondary" data-facility="K4号館">④ K4号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K1号館">① A1号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K2号館">② A2号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K3号館">③ B3号館</button>
+        <button class="btn btn-outline-secondary" data-facility="K4号館">④ B4号館</button>
         <button class="btn btn-outline-secondary" data-facility="C2号館">⑤ C2号館</button>
         <button class="btn btn-outline-secondary" data-facility="C5号館">⑥ C5号館</button>
         <button class="btn btn-outline-secondary" data-facility="C6号館">⑦ C6号館</button>
-        <button class="btn btn-outline-secondary" data-facility="E1号館">⑧ E1号館</button>
-        <button class="btn btn-outline-secondary" data-facility="E2号館">⑨ E2号館</button>
-        <button class="btn btn-outline-secondary" data-facility="E6号館">⑩ E6号館</button>
-        <button class="btn btn-outline-secondary" data-facility="KAIT広場">⑪ KAIT広場</button>
-        <button class="btn btn-outline-secondary" data-facility="KAIT TOWN">⑫ KAIT TOWN</button>
-        <button class="btn btn-outline-secondary" data-facility="KAIT工房">⑬ KAIT工房</button>
+        <button class="btn btn-outline-secondary" data-facility="E1号館">⑧ D1号館</button>
+        <button class="btn btn-outline-secondary" data-facility="E2号館">⑨ D2号館</button>
+        <button class="btn btn-outline-secondary" data-facility="E6号館">⑩ D6号館</button>
+        <button class="btn btn-outline-secondary" data-facility="宇宙広場">⑪ 宇宙広場</button>
+        <button class="btn btn-outline-secondary" data-facility="宇宙 TOWN">⑫ 宇宙 TOWN</button>
+        <button class="btn btn-outline-secondary" data-facility="宇宙工房">⑬ 宇宙工房</button>
         <button class="btn btn-outline-secondary" data-facility="先進技術研究所">⑭ 先進技術研究所</button>
         <button class="btn btn-outline-secondary" data-facility="中央緑地">⑮ 中央緑地</button>
-        <button class="btn btn-outline-secondary" data-facility="KAITアリーナ">⑯ KAITアリーナ</button>
+        <button class="btn btn-outline-secondary" data-facility="宇宙アリーナ">⑯ 宇宙アリーナ</button>
       </div>
     </section>
 
@@ -214,11 +214,11 @@
                 <h5 class="card-title">ビンゴ大会</h5>
                 <p class="text-muted small mb-1">#ビンゴ #ゲーム</p>
                 <p class="card-text small flex-grow-1">
-                  11月1日(土), 11月2日(日) 15:00開始。<br>
+                  12月1日(土), 11月2日(日) 15:00開始。<br>
                   豪華景品が当たる！<br>
                   ※参加にはビンゴカード（総合受付配布）が必要。
                 </p>
-                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> KAITアリーナ</p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 宇宙アリーナ</p>
               </div>
             </div>
           </div>
@@ -239,15 +239,15 @@
                   なにかしらのトークショー。<br>
                   ※有料／11月2日(土)のみ開催。
                 </p>
-                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> KAITアリーナ</p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> 宇宙アリーナ</p>
               </div>
             </div>
           </div>
           <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="card h-100 shadow-sm">
-              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="Rock in KAIT">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="Rock in 宇宙">
               <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Rock in KAIT</h5>
+                <h5 class="card-title">Rock in 宇宙</h5>
                 <p class="text-muted small mb-1">#ライブ #バンド</p>
                 <p class="card-text small flex-grow-1">
                   文化祭Live バンド演奏。<br>
@@ -358,9 +358,9 @@
         <div class="row g-4 justify-content-center">
           <div class="col-sm-8 col-md-6 col-lg-4">
             <div class="card h-100 shadow-sm">
-              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="田中哲雄研究室">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="月の砂研究室">
               <div class="card-body d-flex flex-column">
-                <h5 class="card-title">田中哲雄研究室</h5>
+                <h5 class="card-title">月の砂研究室</h5>
                 <p class="text-muted small mb-1">#研究室公開 #クイズ</p>
                 <p class="card-text small flex-grow-1">
                   C2号館2階全体でQRクイズラリー開催中！ぜひ挑戦を。
@@ -378,14 +378,14 @@
         <div class="row g-4 justify-content-center">
           <div class="col-sm-6 col-md-4 col-lg-3">
             <div class="card h-100 shadow-sm">
-              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="KAIT VR体験">
+              <img src="{{ url_for('static', filename='sunset.webp') }}" class="card-img-top" alt="宇宙 VR体験">
               <div class="card-body d-flex flex-column">
-                <h5 class="card-title">KAIT VR体験</h5>
+                <h5 class="card-title">宇宙 VR体験</h5>
                 <p class="text-muted small mb-1">#講義室展示 #VR</p>
                 <p class="card-text small flex-grow-1">
                   VRゴーグルで驚きの没入体験を！老若男女楽しめます。
                 </p>
-                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> K3号館3階 3306教室</p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> A3号館3階 3306教室</p>
               </div>
             </div>
           </div>
@@ -398,7 +398,7 @@
                 <p class="card-text small flex-grow-1">
                   天文部による自作プラネタリウム。夜空を再現します！
                 </p>
-                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> K3号館3階 3307教室</p>
+                <p class="small mt-auto mb-0"><i class="bi bi-geo-alt-fill"></i> A3号館3階 3307教室</p>
               </div>
             </div>
           </div>
