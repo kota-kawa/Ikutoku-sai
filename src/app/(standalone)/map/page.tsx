@@ -48,6 +48,23 @@ type LeafletGlobal = {
 export default function MapPage() {
   useEffect(() => {
     let cancelled = false;
+    let watchId: number | null = null;
+
+    const setGeoStatus = (message: string, tone: "info" | "warn" | "error" = "warn") => {
+      const el = document.getElementById("geo-status");
+      if (!el) return;
+      el.textContent = message;
+      el.dataset.tone = tone;
+      el.classList.add("show");
+    };
+
+    const clearGeoStatus = () => {
+      const el = document.getElementById("geo-status");
+      if (!el) return;
+      el.classList.remove("show");
+      el.textContent = "";
+      delete el.dataset.tone;
+    };
 
     const loadScript = (src: string) =>
       new Promise<void>((resolve, reject) => {
@@ -444,18 +461,31 @@ export default function MapPage() {
         return calcBearing(pl, pn, lat, lon);
       }
 
-      if ("geolocation" in navigator) {
-        navigator.geolocation.watchPosition(
+      const startWatch = () => {
+        if (!("geolocation" in navigator)) {
+          setGeoStatus("このブラウザは位置情報に対応していません。", "error");
+          return;
+        }
+        watchId = navigator.geolocation.watchPosition(
           ({ coords: { latitude, longitude } }) => {
+            clearGeoStatus();
             const fallback = gpsBearing(latitude, longitude);
             if (fallback != null && currentHeading === 0) currentHeading = fallback;
             renderUser(latitude, longitude, currentHeading);
           },
           (e) => {
+            if (e.code === e.PERMISSION_DENIED) {
+              setGeoStatus("位置情報の許可がブロックされています。ブラウザ設定で許可してください。", "error");
+              if (watchId != null) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+              }
+              return;
+            }
             if (e.code === e.TIMEOUT) {
-              console.warn("位置情報の取得がタイムアウトしました。再試行します…");
+              setGeoStatus("位置情報の取得がタイムアウトしました。", "warn");
             } else {
-              console.error("Geolocation error", e);
+              setGeoStatus("位置情報を取得できませんでした。", "warn");
             }
           },
           {
@@ -464,8 +494,36 @@ export default function MapPage() {
             timeout: 20000
           }
         );
+      };
+
+      const perms = navigator.permissions?.query?.({ name: "geolocation" as PermissionName });
+      if (perms) {
+        perms
+          .then((status) => {
+            if (status.state === "denied") {
+              setGeoStatus("位置情報の許可がブロックされています。ブラウザ設定で許可してください。", "error");
+              return;
+            }
+            if (status.state === "prompt") {
+              setGeoStatus("位置情報を許可すると現在地が表示されます。", "info");
+            }
+            startWatch();
+            status.onchange = () => {
+              if (status.state === "denied") {
+                setGeoStatus("位置情報の許可がブロックされています。ブラウザ設定で許可してください。", "error");
+                if (watchId != null) {
+                  navigator.geolocation.clearWatch(watchId);
+                  watchId = null;
+                }
+              } else if (status.state === "granted") {
+                clearGeoStatus();
+                if (watchId == null) startWatch();
+              }
+            };
+          })
+          .catch(() => startWatch());
       } else {
-        alert("Geolocation API に対応していません。");
+        startWatch();
       }
 
       hideDetails();
@@ -687,6 +745,9 @@ export default function MapPage() {
 
     return () => {
       cancelled = true;
+      if (watchId != null && "geolocation" in navigator) {
+        navigator.geolocation.clearWatch(watchId);
+      }
     };
   }, []);
 
@@ -872,6 +933,36 @@ export default function MapPage() {
           box-shadow: 0 0 0 3px rgba(28, 91, 209, 0.35);
         }
 
+        .geo-status {
+          position: fixed;
+          top: max(1rem, env(safe-area-inset-top));
+          right: max(1rem, env(safe-area-inset-right));
+          z-index: 2000;
+          padding: 0.45rem 0.9rem;
+          border-radius: 999px;
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #f8fafc;
+          background: rgba(15, 23, 42, 0.85);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: var(--panel-shadow);
+          backdrop-filter: blur(10px);
+          opacity: 0;
+          transform: translateY(-6px);
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          pointer-events: none;
+        }
+        .geo-status.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .geo-status[data-tone="info"] {
+          background: rgba(28, 91, 209, 0.85);
+        }
+        .geo-status[data-tone="error"] {
+          background: rgba(127, 29, 29, 0.85);
+        }
+
         .my-area-boundary {
           stroke: #36ffe4;
           stroke-width: 3;
@@ -885,6 +976,8 @@ export default function MapPage() {
         <i className="bi bi-arrow-left"></i>
         <span>戻る</span>
       </a>
+
+      <div id="geo-status" className="geo-status" role="status" aria-live="polite"></div>
 
       <div id="map"></div>
 

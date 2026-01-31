@@ -1,8 +1,8 @@
-// File: /app/src/app/(standalone)/parking_bycycle/page.tsx
-import * as entry from '../../../../../src/app/(standalone)/parking_bycycle/page.js'
+// File: /app/src/app/(site)/page.tsx
+import * as entry from '../../../../src/app/(site)/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../../src/app/(standalone)/parking_bycycle/page.js')
+type TEntry = typeof import('../../../../src/app/(site)/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

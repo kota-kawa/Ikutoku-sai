@@ -1,8 +1,6 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/(standalone)/map/page": "app/(standalone)/map/page.js",
-  "/(standalone)/parking_car/page": "app/(standalone)/parking_car/page.js",
-  "/(standalone)/parking_bycycle/page": "app/(standalone)/parking_bycycle/page.js",
-  "/(standalone)/bus_stop/page": "app/(standalone)/bus_stop/page.js",
-  "/(site)/event/page": "app/(site)/event/page.js"
+  "/(site)/event/page": "app/(site)/event/page.js",
+  "/(site)/page": "app/(site)/page.js"
 }
