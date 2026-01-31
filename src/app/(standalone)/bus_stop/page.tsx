@@ -1,7 +1,7 @@
 "use client";
 // NOTE: External CDN globals (Leaflet/Bootstrap) lack local typings; any is used for interop.
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 type LeafletMarker = {
   getElement: () => HTMLElement | null;
@@ -39,16 +39,8 @@ type LeafletGlobal = {
 };
 
 export default function BusStopPage() {
-  const [isEmbedded, setIsEmbedded] = useState(false);
-
   useEffect(() => {
     let cancelled = false;
-
-    // Check if embedded via query param
-    const searchParams = new URLSearchParams(window.location.search);
-    if (searchParams.get("embed") === "true") {
-      setIsEmbedded(true);
-    }
 
     const loadScript = (src: string) =>
       new Promise<void>((resolve, reject) => {
@@ -365,12 +357,10 @@ export default function BusStopPage() {
         }
       `}} />
 
-      {!isEmbedded && (
-        <a id="back-btn" href="/" className="position-fixed">
-          <i className="bi bi-arrow-left"></i>
-          <span>戻る</span>
-        </a>
-      )}
+      <a id="back-btn" href="/" className="position-fixed">
+        <i className="bi bi-arrow-left"></i>
+        <span>戻る</span>
+      </a>
 
       <div id="map"></div>
 

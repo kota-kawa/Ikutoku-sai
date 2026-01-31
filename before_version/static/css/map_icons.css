@@ -1,0 +1,99 @@
+
+    /* カスタムピン */
+    .custom-icon {
+        position: relative;
+        z-index: 1;
+        width: 50px; height: 50px;
+        background: var(--brand-green);
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-icon::after {
+        content: '';
+        position: absolute;
+        left: 50%; bottom: -11px;
+        transform: translateX(-50%);
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 15px solid var(--brand-green);
+        z-index: -1;
+      }
+      .icon-image {
+        width: 90%; height: 90%;
+        background-size: cover;
+        background-position: center;
+        border-radius: 50%;
+        border: 1px solid #aaa;
+      }
+      
+      
+      
+      /* グルメ（青） */
+.event-icon-gourmet {
+    background: #005FCC;
+  }
+  .event-icon-gourmet::after {
+    border-top: 15px solid #005FCC;
+  }
+  
+  /* 研究室（オレンジ） */
+  .event-icon-lab {
+    background: #FF5733;
+  }
+  .event-icon-lab::after {
+    border-top: 15px solid #FF5733;
+  }
+  
+  /* サークル（緑） */
+  .event-icon-circle {
+    background: #28A745;
+  }
+  .event-icon-circle::after {
+    border-top: 15px solid #28A745;
+  }
+  
+  /* 演奏・劇（紫） */
+  .event-icon-performance {
+    background: #8E44AD;
+  }
+  .event-icon-performance::after {
+    border-top: 15px solid #8E44AD;
+  }
+
+
+
+/* フォーカス時の色をカテゴリー別に上書き */
+.custom-icon.event-icon-gourmet.focused {
+    border-color: #005FCC;
+  }
+  .custom-icon.event-icon-gourmet.focused::after {
+    border-top-color: #005FCC;
+  }
+  
+  .custom-icon.event-icon-lab.focused {
+    border-color: #FF5733;
+  }
+  .custom-icon.event-icon-lab.focused::after {
+    border-top-color: #FF5733;
+  }
+  
+  .custom-icon.event-icon-circle.focused {
+    border-color: #28A745;
+  }
+  .custom-icon.event-icon-circle.focused::after {
+    border-top-color: #28A745;
+  }
+  
+  .custom-icon.event-icon-performance.focused {
+    border-color: #8E44AD;
+  }
+  .custom-icon.event-icon-performance.focused::after {
+    border-top-color: #8E44AD;
+  }
+  
+
+

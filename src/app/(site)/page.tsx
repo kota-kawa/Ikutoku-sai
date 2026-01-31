@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 
 export function generateMetadata(): Metadata {
-  const h = headers();
-  const host = h.get("x-forwarded-host") || h.get("host") || "";
-  const proto = h.get("x-forwarded-proto") || "http";
-  const canonical = host ? `${proto}://${host}/` : "/";
   return {
     title: "第100回 宇宙祭のサイト",
     alternates: {
-      canonical
+      canonical: "/"
     }
   };
 }
@@ -235,6 +230,9 @@ export default function HomePage() {
           }
         }
       `}} />
+
+      <link rel="stylesheet" href="/static/css/loader.css" />
+      <script src="/static/js/loader.js" defer></script>
 
       <div id="preloader">
         <iframe src="/static/loader.html" loading="eager"></iframe>

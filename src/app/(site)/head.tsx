@@ -17,12 +17,18 @@ export default function Head() {
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
         rel="stylesheet"
       />
-      <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        rel="stylesheet"
-      />
       <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
-      <link rel="stylesheet" href="/static/css/loader.css" />
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-4TPL68169Q');
+  `
+        }}
+      />
     </>
   );
 }

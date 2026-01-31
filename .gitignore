@@ -4,16 +4,34 @@
 *.dll
 *.txt
 *.Identifier
+
 # ログファイルを無視
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *.cgi
 *.htaccess
+
 # OSやIDEの一時ファイルを無視
 .DS_Store
 Thumbs.db
 .vscode/
+.idea/
+
+# プロジェクト固有
 portfolio/
-# ビルドディレクトリを無視
-/build/
+
+# Python
 /venv/
 __pycache__/
+*.py[cod]
+*$py.class
+
+# Node.js / Next.js
+node_modules/
+/.next/
+/out/
+/coverage/
+/.pnp
+.pnp.js

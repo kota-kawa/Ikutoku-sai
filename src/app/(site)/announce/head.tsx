@@ -1,3 +1,11 @@
 export default function Head() {
-  return <title>宇宙祭 | ご案内・アクセス</title>;
+  return (
+    <>
+      <title>宇宙祭 | ご案内・アクセス</title>
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      />
+    </>
+  );
 }

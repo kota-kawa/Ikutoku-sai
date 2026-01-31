@@ -1,0 +1,20 @@
+/* static/loader.css */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;          /* 読み込み中は真っ黒 */
+  display: flex;
+  overflow: hidden;
+  transition: opacity .6s ease;
+}
+#preloader.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+#preloader iframe {
+  border: none;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;      /* 誤タップ防止 */
+}
