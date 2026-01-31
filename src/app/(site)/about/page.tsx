@@ -1,42 +1,50 @@
 "use client";
 
 import { useEffect } from "react";
-import Script from "next/script";
 
 export default function AboutPage() {
   useEffect(() => {
-    const w = window as Window & {
-      VanillaTilt?: { init: (els: NodeListOf<Element>, opts: unknown) => void };
-    };
-    if (w.VanillaTilt) {
-      w.VanillaTilt.init(document.querySelectorAll(".greeting-item"), {
-        max: 8,
-        speed: 400,
-        glare: true,
-        "max-glare": 0.25
+    const loadScript = (src: string, id: string) =>
+      new Promise<void>((resolve, reject) => {
+        if (document.getElementById(id)) {
+          resolve();
+          return;
+        }
+        const script = document.createElement("script");
+        script.id = id;
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Failed to load ${src}`));
+        document.body.appendChild(script);
       });
-    }
+
+    const init = async () => {
+      try {
+        await loadScript(
+          "https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js",
+          "vanilla-tilt"
+        );
+        const w = window as Window & {
+          VanillaTilt?: { init: (els: NodeListOf<Element>, opts: unknown) => void };
+        };
+        w.VanillaTilt?.init(document.querySelectorAll(".greeting-item"), {
+          max: 8,
+          speed: 400,
+          glare: true,
+          "max-glare": 0.25
+        });
+      } catch {
+        // ignore script load errors
+      }
+    };
+
+    init();
   }, []);
 
   return (
     <>
-      <Script
-        src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.3/dist/vanilla-tilt.min.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          const w = window as Window & {
-            VanillaTilt?: { init: (els: NodeListOf<Element>, opts: unknown) => void };
-          };
-          w.VanillaTilt?.init(document.querySelectorAll(".greeting-item"), {
-            max: 8,
-            speed: 400,
-            glare: true,
-            "max-glare": 0.25
-          });
-        }}
-      />
-
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         :root {
           --grad-main: linear-gradient(90deg, #0071e3 0%, #af52de 45%, #ff7f44 90%);
           --grad-greeting-title: linear-gradient(90deg, #a7bde4 0%, #454b97 50%, #62c4ad 100%);
@@ -48,7 +56,7 @@ export default function AboutPage() {
         }
 
         .gradient-text--purple {
-          background: linear-gradient(to right, #6a0dad, #ff11003);
+          background: linear-gradient(to right, #006080, #0080a0);
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -194,7 +202,7 @@ export default function AboutPage() {
             background-image: var(--glass-bg-dark), var(--grad-greeting-item);
           }
         }
-      `}</style>
+      `}} />
 
       <section className="hero">
         <div className="hero-bg"></div>

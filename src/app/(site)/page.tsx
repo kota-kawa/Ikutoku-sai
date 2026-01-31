@@ -17,7 +17,7 @@ export function generateMetadata(): Metadata {
 export default function HomePage() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         :root {
           --page-bg: #f5f5f7;
           --txt: #1d1d1f;
@@ -234,7 +234,7 @@ export default function HomePage() {
             width: 45%;
           }
         }
-      `}</style>
+      `}} />
 
       <div id="preloader">
         <iframe src="/static/loader.html" loading="eager"></iframe>

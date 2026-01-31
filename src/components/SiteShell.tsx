@@ -2,10 +2,57 @@
 
 import type { ReactNode } from "react";
 import { useEffect } from "react";
-import Script from "next/script";
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   useEffect(() => {
+    const loadScript = (src: string, id?: string) =>
+      new Promise<void>((resolve, reject) => {
+        if (id && document.getElementById(id)) {
+          resolve();
+          return;
+        }
+        if (!id && document.querySelector(`script[src="${src}"]`)) {
+          resolve();
+          return;
+        }
+        const script = document.createElement("script");
+        if (id) script.id = id;
+        script.src = src;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Failed to load ${src}`));
+        document.body.appendChild(script);
+      });
+
+    const injectInline = (id: string, code: string) => {
+      if (document.getElementById(id)) return;
+      const script = document.createElement("script");
+      script.id = id;
+      script.text = code;
+      document.body.appendChild(script);
+    };
+
+    const initScripts = async () => {
+      try {
+        await loadScript("https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q", "ga-src");
+        injectInline(
+          "ga-init",
+          "window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4TPL68169Q');"
+        );
+        await loadScript(
+          "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js",
+          "bootstrap-js"
+        );
+        await loadScript("https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js", "aos-js");
+        const w = window as Window & { AOS?: { init: (opts: unknown) => void } };
+        w.AOS?.init({ once: true, offset: 120, duration: 700 });
+      } catch {
+        // ignore third-party script failures
+      }
+    };
+
+    initScripts();
+
     const burger = document.getElementById("burgerBtn");
     const mobile = document.getElementById("mobileMenu");
 
@@ -53,53 +100,63 @@ export default function SiteShell({ children }: { children: ReactNode }) {
     };
     window.addEventListener("scroll", onScroll);
 
-    const MIN_DURATION = 1500;
-    const started = performance.now();
-    const onLoad = () => {
-      const preloader = document.getElementById("preloader");
-      if (!preloader) return;
-      const elapsed = performance.now() - started;
-      const remaining = Math.max(0, MIN_DURATION - elapsed);
+    const SHOW_AFTER_LOAD_MS = 2000;
+    const MAX_WAIT_MS = 12000;
+    let loadFired = false;
+    const preloader = document.getElementById("preloader");
+    if (preloader) {
+      preloader.style.position = "fixed";
+      preloader.style.inset = "0";
+      preloader.style.zIndex = "9999";
+      preloader.style.background = "#000";
+      preloader.style.display = "flex";
+      preloader.style.overflow = "hidden";
+      preloader.style.opacity = "1";
+      preloader.style.visibility = "visible";
+      const frame = preloader.querySelector("iframe");
+      if (frame) {
+        frame.style.border = "none";
+        frame.style.width = "100vw";
+        frame.style.height = "100vh";
+        frame.style.pointerEvents = "none";
+      }
+    }
+    const hidePreloader = () => {
+      if (!preloader || preloader.classList.contains("hide")) return;
+      preloader.classList.add("hide");
+      preloader.style.transition = "opacity .6s ease";
+      preloader.style.opacity = "0";
       window.setTimeout(() => {
-        preloader.classList.add("hide");
-      }, remaining);
+        if (!preloader) return;
+        preloader.style.visibility = "hidden";
+        preloader.style.pointerEvents = "none";
+      }, 650);
+    };
+    const onLoad = () => {
+      if (loadFired) return;
+      loadFired = true;
+      window.setTimeout(hidePreloader, SHOW_AFTER_LOAD_MS);
     };
     if (document.readyState === "complete") {
       onLoad();
     } else {
-      window.addEventListener("load", onLoad);
+      window.addEventListener("load", onLoad, { once: true });
     }
+    const fallbackTimer = window.setTimeout(() => {
+      if (!loadFired) hidePreloader();
+    }, MAX_WAIT_MS);
 
     return () => {
       burger?.removeEventListener("click", toggleMenu);
       document.removeEventListener("click", onDocClick);
       window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(fallbackTimer);
       window.removeEventListener("load", onLoad);
     };
   }, []);
 
   return (
     <>
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"
-      />
-      <Script id="ga-init" strategy="afterInteractive">
-        {"window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-4TPL68169Q');"}
-      </Script>
-      <Script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        strategy="afterInteractive"
-      />
-      <Script
-        src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"
-        strategy="afterInteractive"
-        onLoad={() => {
-          const w = window as Window & { AOS?: { init: (opts: unknown) => void } };
-          w.AOS?.init({ once: true, offset: 120, duration: 700 });
-        }}
-      />
-
       <div className="bubbles" />
 
       <nav className="custom-header">
@@ -241,7 +298,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         </div>
       </footer>
 
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         html,
         body {
           scroll-behavior: smooth;
@@ -588,7 +645,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             background-color: var(--hover-bg);
           }
         }
-      `}</style>
+      `}} />
     </>
   );
 }

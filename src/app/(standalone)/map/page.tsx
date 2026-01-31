@@ -692,7 +692,7 @@ export default function MapPage() {
 
   return (
     <>
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         :root {
           --brand-green: rgb(14, 83, 12);
         }
@@ -845,7 +845,7 @@ export default function MapPage() {
           fill-opacity: 0;
           pointer-events: none;
         }
-      `}</style>
+      `}} />
 
       <a id="back-btn" href="/" className="position-fixed">
         <i className="bi bi-arrow-left"></i>

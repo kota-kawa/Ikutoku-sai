@@ -6,10 +6,13 @@
   background: #000;          /* 読み込み中は真っ黒 */
   display: flex;
   overflow: hidden;
-  transition: opacity .6s ease;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .6s ease, visibility 0s linear .6s;
 }
 #preloader.hide {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 #preloader iframe {

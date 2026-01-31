@@ -36,7 +36,7 @@ export default function EventPage() {
 
   return (
     <>
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .hero {
           position: relative;
           height: 50vh;
@@ -136,7 +136,7 @@ export default function EventPage() {
           object-fit: cover;
           height: 180px;
         }
-      `}</style>
+      `}} />
 
       <section className="hero">
         <div className="hero-bg"></div>

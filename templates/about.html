@@ -25,21 +25,18 @@
 
 /* 概要用に、紫→ピンクのグラデ */
 .gradient-text--purple {
-  background: linear-gradient(
-    to right,
-    #6a0dad,  /* 紫 */
-    #ff11003   /* ディープピンク */
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-
+  color: #0b4f5f !important;
+  background: none !important;
+  -webkit-text-fill-color: #0b4f5f !important;
   font-size: 1.05rem;
   line-height: 1.75;
   max-width: 720px;
   margin-inline: auto;
   text-align: left;
   font-weight: bold;
+}
+@media(prefers-color-scheme:dark){
+  .gradient-text--purple{ color: #0b4f5f !important; }
 }
 
 

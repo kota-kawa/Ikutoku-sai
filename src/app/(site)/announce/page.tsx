@@ -1,7 +1,7 @@
 export default function AnnouncePage() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         .hero {
           position: relative;
           height: 50vh;
@@ -292,7 +292,7 @@ export default function AnnouncePage() {
             width: 45%;
           }
         }
-      `}</style>
+      `}} />
 
       <section className="hero">
         <div className="hero-bg"></div>
@@ -441,7 +441,7 @@ export default function AnnouncePage() {
 
                 <div className="map-container map-container--small" data-aos="fade-up">
                   <iframe
-                    src="/bus_stop"
+                    src="/bus_stop?embed=true"
                     width="600"
                     height="450"
                     style={{ border: 0 }}
@@ -469,7 +469,7 @@ export default function AnnouncePage() {
                 </ul>
                 <div className="map-container map-container--small" data-aos="fade-up">
                   <iframe
-                    src="/parking_car"
+                    src="/parking_car?embed=true"
                     width="600"
                     height="450"
                     style={{ border: 0 }}
@@ -493,7 +493,7 @@ export default function AnnouncePage() {
 
                 <div className="map-container map-container--small" data-aos="fade-up">
                   <iframe
-                    src="/parking_bycycle"
+                    src="/parking_bycycle?embed=true"
                     width="600"
                     height="450"
                     style={{ border: 0 }}

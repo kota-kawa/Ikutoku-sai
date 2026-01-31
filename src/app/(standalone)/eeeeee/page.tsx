@@ -1,7 +1,7 @@
 export default function ComingSoonPage() {
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         * {
           margin: 0;
           padding: 0;
@@ -46,7 +46,7 @@ export default function ComingSoonPage() {
             opacity: 1;
           }
         }
-      `}</style>
+      `}} />
 
       <div className="container">
         <h1 className="title">COMING SOON</h1>

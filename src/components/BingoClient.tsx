@@ -98,7 +98,7 @@ export default function BingoClient() {
 
   return (
     <>
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button {
           -webkit-appearance: none;
@@ -239,7 +239,7 @@ export default function BingoClient() {
             opacity: 1;
           }
         }
-      `}</style>
+      `}} />
 
       <header>ビンゴナンバーリスト</header>
 

@@ -27,7 +27,7 @@ export default function LoginForm({ showError }: { showError: boolean }) {
 
   return (
     <>
-      <style jsx global>{`
+      <style dangerouslySetInnerHTML={{ __html: `
         * {
           margin: 0;
           padding: 0;
@@ -182,7 +182,7 @@ export default function LoginForm({ showError }: { showError: boolean }) {
             opacity: 0;
           }
         }
-      `}</style>
+      `}} />
 
       <div className="bg"></div>
       <div className="circle circle1"></div>
