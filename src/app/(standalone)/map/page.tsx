@@ -146,23 +146,23 @@ export default function MapPage() {
       }
 
       const spots = [
-        { location: [35.48604116703019, 139.34128951057255], image: "./static/map/K1号館.webp", name: "K1号館" },
-        { location: [35.48650866834297, 139.34112683577234], image: "./static/map/K2号館.webp", name: "K2号館" },
-        { location: [35.48565158052546, 139.34141709865116], image: "./static/map/K3号館.webp", name: "K3号館" },
-        { location: [35.485683613095844, 139.3419922129912], image: "./static/map/K4号館.webp", name: "K4号館" },
-        { location: [35.485597402140684, 139.34321173217694], image: "./static/map/KAITアリーナ.webp", name: "KAITアリーナ" },
-        { location: [35.4860692562503, 139.34187073632998], image: "./static/map/先進研.webp", name: "先進研" },
-        { location: [35.48714378031437, 139.34102852276388], image: "./static/map/バイオ棟.webp", name: "バイオ棟" },
-        { location: [35.4876058212225, 139.34111663074825], image: "./static/map/自動車棟.webp", name: "自動車棟" },
-        { location: [35.48768007599212, 139.34208759034047], image: "./static/map/ロボット.webp", name: "ロボット" },
-        { location: [35.48638279161658, 139.34182473387625], image: "./static/map/広場.webp", name: "広場" },
-        { location: [35.487920311541316, 139.3430478210974], image: "./static/map/自動車工房.webp", name: "自動車工房" },
-        { location: [35.4867846462545, 139.34246309957499], image: "./static/map/KAIT工房.webp", name: "KAIT工房" },
-        { location: [35.486649238937936, 139.34321411804413], image: "./static/map/KAIT広場.webp", name: "KAIT広場" },
-        { location: [35.44134206079602, 139.3663787109304], image: "./static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
-        { location: [35.44012426180783, 139.36467281666947], image: "./static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
-        { location: [35.48543014113195, 139.34095161222936], image: "./static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },
-        { location: [35.48549264919395, 139.3410855002179], image: "./static/map/本厚木駅直行バス停.webp", name: "本厚木駅直行バス停" }
+        { location: [35.48604116703019, 139.34128951057255], image: "/static/map/K1号館.webp", name: "K1号館" },
+        { location: [35.48650866834297, 139.34112683577234], image: "/static/map/K2号館.webp", name: "K2号館" },
+        { location: [35.48565158052546, 139.34141709865116], image: "/static/map/K3号館.webp", name: "K3号館" },
+        { location: [35.485683613095844, 139.3419922129912], image: "/static/map/K4号館.webp", name: "K4号館" },
+        { location: [35.485597402140684, 139.34321173217694], image: "/static/map/KAITアリーナ.webp", name: "KAITアリーナ" },
+        { location: [35.4860692562503, 139.34187073632998], image: "/static/map/先進研.webp", name: "先進研" },
+        { location: [35.48714378031437, 139.34102852276388], image: "/static/map/バイオ棟.webp", name: "バイオ棟" },
+        { location: [35.4876058212225, 139.34111663074825], image: "/static/map/自動車棟.webp", name: "自動車棟" },
+        { location: [35.48768007599212, 139.34208759034047], image: "/static/map/ロボット.webp", name: "ロボット" },
+        { location: [35.48638279161658, 139.34182473387625], image: "/static/map/広場.webp", name: "広場" },
+        { location: [35.487920311541316, 139.3430478210974], image: "/static/map/自動車工房.webp", name: "自動車工房" },
+        { location: [35.4867846462545, 139.34246309957499], image: "/static/map/KAIT工房.webp", name: "KAIT工房" },
+        { location: [35.486649238937936, 139.34321411804413], image: "/static/map/KAIT広場.webp", name: "KAIT広場" },
+        { location: [35.44134206079602, 139.3663787109304], image: "/static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
+        { location: [35.44012426180783, 139.36467281666947], image: "/static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
+        { location: [35.48543014113195, 139.34095161222936], image: "/static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },
+        { location: [35.48549264919395, 139.3410855002179], image: "/static/map/本厚木駅直行バス停.webp", name: "本厚木駅直行バス停" }
       ];
 
       function focusMarker(marker: LeafletMarker) {
@@ -583,7 +583,7 @@ export default function MapPage() {
           className: "",
           html: `
             <div class="custom-icon ${cls}">
-              <div class="icon-image" style="background-image:url('./static/sunset.webp')"></div>
+              <div class="icon-image" style="background-image:url('/static/sunset.webp')"></div>
             </div>`,
           iconSize: [50, 60],
           iconAnchor: [25, 60]
@@ -635,7 +635,7 @@ export default function MapPage() {
               L.DomEvent.stopPropagation(ev);
 
               showDetails({
-                image: "./static/sunset.webp",
+                image: "/static/sunset.webp",
                 name: evt.name,
                 description: evt.description,
                 address: evt.venue,
@@ -694,18 +694,28 @@ export default function MapPage() {
     <>
       <style dangerouslySetInnerHTML={{ __html: `
         :root {
-          --brand-green: rgb(14, 83, 12);
+          --brand-green: #0e530c;
+          --brand-blue: #1c5bd1;
+          --panel-bg: rgba(255, 255, 255, 0.92);
+          --panel-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+          --panel-border: rgba(15, 23, 42, 0.12);
+          --ink: #1f2a3a;
+          --muted: #6b7280;
         }
 
         html,
         body {
           margin: 0;
           height: 100%;
-          font-family: Arial, Helvetica, sans-serif;
+          font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
           overflow: hidden;
+          background: #0b1320;
+          color: var(--ink);
         }
 
         #map {
+          position: fixed;
+          inset: 0;
           width: 100vw;
           height: 100vh;
         }
@@ -722,6 +732,12 @@ export default function MapPage() {
           overflow-x: auto;
           -webkit-overflow-scrolling: touch;
           scrollbar-width: none;
+          padding: 0.6rem 0.8rem;
+          border-radius: 999px;
+          background: var(--panel-bg);
+          border: 1px solid var(--panel-border);
+          box-shadow: var(--panel-shadow);
+          backdrop-filter: blur(10px);
         }
         .menu-bar::-webkit-scrollbar {
           display: none;
@@ -730,6 +746,19 @@ export default function MapPage() {
         .menu-bar button {
           flex: 1 0 auto;
           white-space: nowrap;
+        }
+        .menu-bar .btn {
+          border-radius: 999px;
+          font-weight: 600;
+          color: var(--ink);
+          background: rgba(15, 23, 42, 0.04);
+          border: 1px solid rgba(15, 23, 42, 0.08);
+          transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .menu-bar .btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 8px 16px rgba(15, 23, 42, 0.16);
+          background: rgba(28, 91, 209, 0.1);
         }
 
         .details-panel {
@@ -742,6 +771,9 @@ export default function MapPage() {
           overflow-y: auto;
           transition: left 0.3s ease;
           z-index: 1001;
+          background: var(--panel-bg);
+          border-right: 1px solid var(--panel-border);
+          box-shadow: var(--panel-shadow);
         }
         .details-panel.active {
           left: 0;
@@ -768,6 +800,7 @@ export default function MapPage() {
           .menu-bar {
             bottom: 10px;
             gap: 0.4rem;
+            width: clamp(240px, 94%, 560px);
           }
         }
 
@@ -804,18 +837,19 @@ export default function MapPage() {
 
         #back-btn {
           position: fixed !important;
-          top: 1.5rem !important;
-          left: 5rem !important;
+          top: max(1rem, env(safe-area-inset-top)) !important;
+          left: max(1rem, env(safe-area-inset-left)) !important;
           z-index: 2000 !important;
           display: inline-flex !important;
           align-items: center;
           gap: 0.4rem;
           height: 55px;
           padding: 0.4rem 0.8rem;
-          border: 2px solid rgba(42, 235, 225, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.55);
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.5);
-          color: rgba(182, 24, 230, 0.9);
+          background: rgba(15, 23, 42, 0.5);
+          color: #f8fafc;
+          backdrop-filter: blur(12px);
           text-decoration: none;
           font-weight: bold;
           font-size: 0.9rem;
@@ -829,13 +863,13 @@ export default function MapPage() {
           line-height: 1;
         }
         #back-btn:hover {
-          background: rgba(43, 236, 172, 0.4);
+          background: rgba(28, 91, 209, 0.6);
           color: #fff;
           transform: translateX(-3px);
         }
         #back-btn:focus {
           outline: none;
-          box-shadow: 0 0 0 3px rgba(18, 45, 202, 0.4);
+          box-shadow: 0 0 0 3px rgba(28, 91, 209, 0.35);
         }
 
         .my-area-boundary {
