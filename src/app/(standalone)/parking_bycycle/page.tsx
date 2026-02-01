@@ -60,8 +60,13 @@ export default function ParkingBycyclePage() {
       });
 
     const init = async () => {
-      await loadScript("https://unpkg.com/leaflet@1.7.1/dist/leaflet.js");
-      await loadScript("https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js");
+      try {
+        await loadScript("https://unpkg.com/leaflet@1.7.1/dist/leaflet.js");
+        await loadScript("https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js");
+      } catch (e) {
+        console.warn("Script load error", e);
+      }
+
       if (cancelled) return;
 
       const w = window as Window & { L?: LeafletGlobal; hideDetails?: () => void };
@@ -113,7 +118,7 @@ export default function ParkingBycyclePage() {
       const spots = [
         {
           location: [35.48543078370346, 139.342897008065],
-          image: "./static/map/K1号館.webp",
+          image: "/static/map/K1号館.webp",
           name: "駐輪場"
         }
       ];
@@ -169,7 +174,7 @@ export default function ParkingBycyclePage() {
 
       function loadMarkers() {
         spots.forEach((s) => {
-          const marker = L.marker(s.location, { icon: createCustomIcon(s.image) }).on("click", (ev: any) => {
+          const marker = L.marker(s.location as [number, number], { icon: createCustomIcon(s.image) }).on("click", (ev: any) => {
             if (cancelNextMarkerClick) {
               cancelNextMarkerClick = false;
               return;
@@ -254,6 +259,14 @@ export default function ParkingBycyclePage() {
 
   return (
     <>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      />
       <style dangerouslySetInnerHTML={{ __html: `
         :root {
           --brand-green: rgb(14, 83, 12);
@@ -285,6 +298,73 @@ export default function ParkingBycyclePage() {
           left: 0;
         }
 
+        /* Leaflet が生成するアイコンの外枠（透明矩形）はクリックを透過させる */
+        .leaflet-marker-icon{
+          pointer-events:none;           /* 透過領域はイベント無効 */
+        }
+
+        /* 実際の円形ピンとその子要素だけクリックを受け付ける */
+        .leaflet-marker-icon .custom-icon,
+        .leaflet-marker-icon .custom-icon *{
+          pointer-events:auto;           /* 円内部を有効化 */
+        }
+
+        /* カスタムマーカーにイベント制御を追加 */
+        .leaflet-marker-icon.custom-marker {
+          pointer-events: none !important;
+        }
+        .leaflet-marker-icon.custom-marker .custom-icon {
+          pointer-events: auto !important;
+        }
+
+        /* カスタムピン */
+        .custom-icon {
+            position: relative;
+            z-index: 1;
+            width: 50px; height: 50px;
+            background: var(--brand-green);
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-icon::after {
+            content: '';
+            position: absolute;
+            left: 50%; bottom: -11px;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid var(--brand-green);
+            z-index: -1;
+        }
+        .icon-image {
+            width: 90%; height: 90%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            border: 1px solid #aaa;
+        }
+
+        /* スポットマーカーのフォーカス時 */
+        .custom-icon.focused {
+          width: 60px;
+          height: 60px;
+          border-color: var(--brand-green);
+        }
+        .custom-icon.focused::after {
+          bottom: -15px;
+          border-top-width: 18px;
+          border-top-color: var(--brand-green);
+        }
+        .custom-icon.focused .icon-image {
+          width: 90%;
+          height: 90%;
+        }
+
+        /* モバイル用調整 (≤768px) */
         @media (max-width: 768px) {
           .custom-icon {
             width: 40px;
@@ -304,6 +384,7 @@ export default function ParkingBycyclePage() {
             left: 0;
           }
         }
+        
         @media (orientation: landscape) and (max-height: 500px) {
           .details-panel {
             width: 70%;
@@ -313,35 +394,6 @@ export default function ParkingBycyclePage() {
           .details-panel.active {
             left: 30%;
           }
-        }
-
-        .leaflet-marker-icon {
-          pointer-events: none;
-        }
-        .leaflet-marker-icon .custom-icon,
-        .leaflet-marker-icon .custom-icon * {
-          pointer-events: auto;
-        }
-        .leaflet-marker-icon.custom-marker {
-          pointer-events: none !important;
-        }
-        .leaflet-marker-icon.custom-marker .custom-icon {
-          pointer-events: auto !important;
-        }
-
-        .custom-icon.focused {
-          width: 60px;
-          height: 60px;
-          border-color: var(--brand-green);
-        }
-        .custom-icon.focused::after {
-          bottom: -15px;
-          border-top-width: 18px;
-          border-top-color: var(--brand-green);
-        }
-        .custom-icon.focused .icon-image {
-          width: 90%;
-          height: 90%;
         }
 
         #back-btn {
@@ -387,7 +439,7 @@ export default function ParkingBycyclePage() {
       <div id="map"></div>
 
       <div id="details-panel" className="details-panel bg-white shadow p-3">
-        <button className="btn-close float-end"></button>
+        <button className="btn-close float-end" onClick={(window as any).hideDetails}></button>
       </div>
     </>
   );

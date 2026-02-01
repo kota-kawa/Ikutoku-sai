@@ -44,6 +44,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(site)/page.js"
+    ],
+    "/(site)/event/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(site)/event/page.js"
     ]
   }
 }

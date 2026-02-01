@@ -55,7 +55,7 @@ type LeafletGlobal = {
   };
 };
 
-// --- Event Data Definition ---
+// --- Event Data Definition (Matches eventsData.js) ---
 const eventData = {
   gourmet: [
     { building: "K1号館", name: "カフェAlpha",       description: "焙煎珈琲とケーキのお店",       venue: "K1号館 1F 大ホール横",             contact: "046-123-4567" },
@@ -183,25 +183,25 @@ export default function MapClient() {
       });
       tileLayer.addTo(map);
 
-      // --- Spots Data ---
+      // --- Spots Data (Corrected paths) ---
       const spots = [
-        { location: [35.48604116703019, 139.34128951057255], image: "./static/map/K1号館.webp", name: "K1号館" },
-        { location: [35.48650866834297, 139.34112683577234], image: "./static/map/K2号館.webp", name: "K2号館" },
-        { location: [35.48565158052546, 139.34141709865116], image: "./static/map/K3号館.webp", name: "K3号館" },
-        { location: [35.485683613095844, 139.3419922129912], image: "./static/map/K4号館.webp", name: "K4号館" },
-        { location: [35.485597402140684, 139.34321173217694], image: "./static/map/KAITアリーナ.webp", name: "KAITアリーナ" },
-        { location: [35.4860692562503, 139.34187073632998], image: "./static/map/先進研.webp", name: "先進研" },
-        { location: [35.48714378031437, 139.34102852276388], image: "./static/map/バイオ棟.webp", name: "バイオ棟" },
-        { location: [35.4876058212225, 139.34111663074825], image: "./static/map/自動車棟.webp", name: "自動車棟" },
-        { location: [35.48768007599212, 139.34208759034047], image: "./static/map/ロボット.webp", name: "ロボット" },
-        { location: [35.48638279161658, 139.34182473387625], image: "./static/map/広場.webp", name: "広場" },
-        { location: [35.487920311541316, 139.3430478210974], image: "./static/map/自動車工房.webp", name: "自動車工房" },
-        { location: [35.4867846462545, 139.34246309957499], image: "./static/map/KAIT工房.webp", name: "KAIT工房" },
-        { location: [35.486649238937936, 139.34321411804413], image: "./static/map/KAIT広場.webp", name: "KAIT広場" },
-        { location: [35.44134206079602, 139.3663787109304], image: "./static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
-        { location: [35.44012426180783, 139.36467281666947], image: "./static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
-        { location: [35.48543014113195, 139.34095161222936], image: "./static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },
-        { location: [35.48549264919395, 139.3410855002179], image: "./static/map/本厚木駅直行バス停.webp", name: "本厚木駅直行バス停" },
+        { location: [35.48604116703019, 139.34128951057255], image: "/static/map/K1号館.webp", name: "K1号館" },
+        { location: [35.48650866834297, 139.34112683577234], image: "/static/map/K2号館.webp", name: "K2号館" },
+        { location: [35.48565158052546, 139.34141709865116], image: "/static/map/K3号館.webp", name: "K3号館" },
+        { location: [35.485683613095844, 139.3419922129912], image: "/static/map/K4号館.webp", name: "K4号館" },
+        { location: [35.485597402140684, 139.34321173217694], image: "/static/map/KAITアリーナ.webp", name: "KAITアリーナ" },
+        { location: [35.4860692562503, 139.34187073632998], image: "/static/map/先進研.webp", name: "先進研" },
+        { location: [35.48714378031437, 139.34102852276388], image: "/static/map/バイオ棟.webp", name: "バイオ棟" },
+        { location: [35.4876058212225, 139.34111663074825], image: "/static/map/自動車棟.webp", name: "自動車棟" },
+        { location: [35.48768007599212, 139.34208759034047], image: "/static/map/ロボット.webp", name: "ロボット" },
+        { location: [35.48638279161658, 139.34182473387625], image: "/static/map/広場.webp", name: "広場" },
+        { location: [35.487920311541316, 139.3430478210974], image: "/static/map/自動車工房.webp", name: "自動車工房" },
+        { location: [35.4867846462545, 139.34246309957499], image: "/static/map/KAIT工房.webp", name: "KAIT工房" },
+        { location: [35.486649238937936, 139.34321411804413], image: "/static/map/KAIT広場.webp", name: "KAIT広場" },
+        { location: [35.44134206079602, 139.3663787109304], image: "/static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
+        { location: [35.44012426180783, 139.36467281666947], image: "/static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
+        { location: [35.48543014113195, 139.34095161222936], image: "/static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },
+        { location: [35.48549264919395, 139.3410855002179], image: "/static/map/本厚木駅直行バス停.webp", name: "本厚木駅直行バス停" },
       ];
 
       // Merge event data into spots
@@ -615,6 +615,15 @@ export default function MapClient() {
 
   return (
     <>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      />
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      />
+      
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -774,13 +783,104 @@ export default function MapClient() {
   outline: none;
   box-shadow: 0 0 0 3px rgba(18, 45, 202, 0.4);
 }
-  `
-        }}
-      />
 
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
+/* --- map_icons.css content --- */
+    /* カスタムピン */
+    .custom-icon {
+        position: relative;
+        z-index: 1;
+        width: 50px; height: 50px;
+        background: var(--brand-green);
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0,0,0,.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .custom-icon::after {
+        content: '';
+        position: absolute;
+        left: 50%; bottom: -11px;
+        transform: translateX(-50%);
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 15px solid var(--brand-green);
+        z-index: -1;
+      }
+      .icon-image {
+        width: 90%; height: 90%;
+        background-size: cover;
+        background-position: center;
+        border-radius: 50%;
+        border: 1px solid #aaa;
+      }
+      
+      
+      
+      /* グルメ（青） */
+.event-icon-gourmet {
+    background: #005FCC;
+  }
+  .event-icon-gourmet::after {
+    border-top: 15px solid #005FCC;
+  }
+  
+  /* 研究室（オレンジ） */
+  .event-icon-lab {
+    background: #FF5733;
+  }
+  .event-icon-lab::after {
+    border-top: 15px solid #FF5733;
+  }
+  
+  /* サークル（緑） */
+  .event-icon-circle {
+    background: #28A745;
+  }
+  .event-icon-circle::after {
+    border-top: 15px solid #28A745;
+  }
+  
+  /* 演奏・劇（紫） */
+  .event-icon-performance {
+    background: #8E44AD;
+  }
+  .event-icon-performance::after {
+    border-top: 15px solid #8E44AD;
+  }
+
+
+
+/* フォーカス時の色をカテゴリー別に上書き */
+.custom-icon.event-icon-gourmet.focused {
+    border-color: #005FCC;
+  }
+  .custom-icon.event-icon-gourmet.focused::after {
+    border-top-color: #005FCC;
+  }
+  
+  .custom-icon.event-icon-lab.focused {
+    border-color: #FF5733;
+  }
+  .custom-icon.event-icon-lab.focused::after {
+    border-top-color: #FF5733;
+  }
+  
+  .custom-icon.event-icon-circle.focused {
+    border-color: #28A745;
+  }
+  .custom-icon.event-icon-circle.focused::after {
+    border-top-color: #28A745;
+  }
+  
+  .custom-icon.event-icon-performance.focused {
+    border-color: #8E44AD;
+  }
+  .custom-icon.event-icon-performance.focused::after {
+    border-top-color: #8E44AD;
+  }
+
 /* 特定のエリアを囲む */
 .my-area-boundary {
   /* 線の色 */
@@ -806,7 +906,7 @@ export default function MapClient() {
       <div id="map"></div>
 
       <div id="details-panel" className="details-panel bg-white shadow p-3">
-        <button className="btn-close float-end"></button>
+        <button className="btn-close float-end" onClick={(window as any).hideDetails}></button>
       </div>
 
       <div className="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">
