@@ -41,7 +41,7 @@ type LeafletGlobal = {
   };
 };
 
-export default function ParkingBycyclePage() {
+export default function BusStopPageContent() {
   useEffect(() => {
     let cancelled = false;
 
@@ -64,14 +64,14 @@ export default function ParkingBycyclePage() {
       await loadScript("https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js");
       if (cancelled) return;
 
-      const w = window as Window & { L?: LeafletGlobal; hideDetails?: () => void };
+      const w = window as Window & { L?: LeafletGlobal };
       const L = w.L;
       if (!L) return;
 
-      const INITIAL_CENTER: [number, number] = [35.48543078370346, 139.342897008065];
+      const INITIAL_CENTER: [number, number] = [35.440597935921396, 139.36547942874043];
       const map = L.map("map", {
         center: INITIAL_CENTER,
-        zoom: 18,
+        zoom: 16,
         minZoom: 5,
         maxZoom: 19,
         zoomControl: true,
@@ -111,11 +111,8 @@ export default function ParkingBycyclePage() {
       }
 
       const spots = [
-        {
-          location: [35.48543078370346, 139.342897008065],
-          image: "./static/map/K1号館.webp",
-          name: "駐輪場"
-        }
+        { location: [35.441361570995085, 139.36637359539466], image: "./static/map/K1号館.webp", name: "厚木バスセンター" },
+        { location: [35.44012517248984, 139.36459832308577], image: "./static/map/K2号館.webp", name: "本厚木駅 北口バス停 " }
       ];
 
       function focusMarker(m: LeafletMarker) {
@@ -165,7 +162,7 @@ export default function ParkingBycyclePage() {
         if (detailsOverlay?.isConnected) detailsOverlay.remove();
       }
 
-      w.hideDetails = hideDetails;
+      (window as any).hideDetails = hideDetails;
 
       function loadMarkers() {
         spots.forEach((s) => {
@@ -177,7 +174,6 @@ export default function ParkingBycyclePage() {
             ev.originalEvent.preventDefault();
             ev.originalEvent.stopPropagation();
             L.DomEvent.stopPropagation(ev);
-
             showDetails({ image: s.image, name: s.name, description: "ここにスポットの説明", address: "住所", phone: "電話番号" });
             if (focusedMarker && focusedMarker !== marker) unfocusMarker(focusedMarker);
             focusMarker(marker);
@@ -217,10 +213,8 @@ export default function ParkingBycyclePage() {
       function userHTML() {
         return `
           <div style="
-            width:24px;height:24px;
-            border-radius:50%;
-            background:#007AFF;
-            border:3px solid #fff;
+            width:24px;height:24px;border-radius:50%;
+            background:#007AFF;border:3px solid #fff;
             box-shadow:0 0 0 4px rgba(0,122,255,.3);
           "></div>`;
       }

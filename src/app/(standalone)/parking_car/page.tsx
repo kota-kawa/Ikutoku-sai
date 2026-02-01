@@ -27,7 +27,10 @@ type LeafletMap = {
 
 type LeafletGlobal = {
   map: (id: string, opts: Record<string, unknown>) => LeafletMap;
-  tileLayer: (url: string, opts: Record<string, unknown>) => { addTo: (map: unknown) => void };
+  tileLayer: (url: string, opts: Record<string, unknown>) => {
+    addTo: (map: unknown) => void;
+    on: (event: string, handler: (ev: any) => void) => void;
+  };
   layerGroup: () => LeafletLayerGroup;
   divIcon: (opts: Record<string, unknown>) => unknown;
   marker: (loc: [number, number], opts: Record<string, unknown>) => LeafletMarker;
@@ -75,10 +78,23 @@ export default function ParkingCarPage() {
         scrollWheelZoom: true,
         touchZoom: true
       });
-      L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg", {
+      const AERIAL_TILE = "https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg";
+      const FALLBACK_TILE = "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
+      const tileLayer = L.tileLayer(AERIAL_TILE, {
         maxNativeZoom: 18,
         maxZoom: 19
-      }).addTo(map);
+      });
+      tileLayer.on("tileerror", (ev: any) => {
+        if (!ev || !ev.tile || !ev.coords) return;
+        if (ev.tile.dataset && ev.tile.dataset.fallbackApplied) return;
+        const fallback = FALLBACK_TILE
+          .replace("{z}", String(ev.coords.z))
+          .replace("{x}", String(ev.coords.x))
+          .replace("{y}", String(ev.coords.y));
+        if (ev.tile.dataset) ev.tile.dataset.fallbackApplied = "1";
+        ev.tile.src = fallback;
+      });
+      tileLayer.addTo(map);
 
       const buildingLayer = L.layerGroup().addTo(map);
       let cancelNextMarkerClick = false;

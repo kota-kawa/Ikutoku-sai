@@ -1,3 +1,9 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "宇宙祭 | ご案内・アクセス",
+};
+
 export default function AnnouncePage() {
   return (
     <>
