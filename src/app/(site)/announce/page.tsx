@@ -447,7 +447,7 @@ export default function AnnouncePage() {
 
                 <div className="map-container map-container--small" data-aos="fade-up">
                   <iframe
-                    src="/bus_stop?embed=true"
+                    src="/bus_stop"
                     width="600"
                     height="450"
                     style={{ border: 0 }}
@@ -475,7 +475,7 @@ export default function AnnouncePage() {
                 </ul>
                 <div className="map-container map-container--small" data-aos="fade-up">
                   <iframe
-                    src="/parking_car?embed=true"
+                    src="/parking_car"
                     width="600"
                     height="450"
                     style={{ border: 0 }}
@@ -499,7 +499,7 @@ export default function AnnouncePage() {
 
                 <div className="map-container map-container--small" data-aos="fade-up">
                   <iframe
-                    src="/parking_bycycle?embed=true"
+                    src="/parking_bycycle"
                     width="600"
                     height="450"
                     style={{ border: 0 }}

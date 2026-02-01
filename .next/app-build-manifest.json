@@ -45,10 +45,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(site)/about/page.js"
     ],
-    "/_not-found/page": [
+    "/(site)/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/(site)/page.js"
+    ],
+    "/(standalone)/bingo/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(standalone)/bingo/page.js"
+    ],
+    "/(standalone)/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(standalone)/login/page.js"
     ]
   }
 }

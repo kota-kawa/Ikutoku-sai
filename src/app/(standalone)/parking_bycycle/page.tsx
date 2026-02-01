@@ -68,6 +68,20 @@ export default function ParkingBycyclePage() {
       const L = w.L;
       if (!L) return;
 
+      // --- Leaflet Patches ---
+      if (L.DomUtil) {
+        const origRemove = L.DomUtil.remove;
+        L.DomUtil.remove = function (el: HTMLElement) {
+          if (!el || !el.parentNode) return;
+          return origRemove.call(this, el);
+        };
+        const mProto = L.Marker.prototype;
+        const origRmIcon = mProto._removeIcon;
+        mProto._removeIcon = function () {
+          try { origRmIcon.call(this); } catch { /* no-op */ }
+        };
+      }
+
       const INITIAL_CENTER: [number, number] = [35.48543078370346, 139.342897008065];
       const map = L.map("map", {
         center: INITIAL_CENTER,
@@ -113,7 +127,7 @@ export default function ParkingBycyclePage() {
       const spots = [
         {
           location: [35.48543078370346, 139.342897008065],
-          image: "./static/map/K1号館.webp",
+          image: "/static/map/K1号館.webp",
           name: "駐輪場"
         }
       ];
@@ -254,10 +268,44 @@ export default function ParkingBycyclePage() {
 
   return (
     <>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+      <link rel="stylesheet" href="/static/css/map_icons.css" />
       <style dangerouslySetInnerHTML={{ __html: `
         :root {
           --brand-green: rgb(14, 83, 12);
         }
+
+        .custom-icon {
+            position: relative;
+            z-index: 1;
+            width: 50px; height: 50px;
+            background: var(--brand-green);
+            border: 2px solid #ccc;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-icon::after {
+            content: '';
+            position: absolute;
+            left: 50%; bottom: -11px;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid var(--brand-green);
+            z-index: -1;
+        }
+        .icon-image {
+            width: 90%; height: 90%;
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+            border: 1px solid #aaa;
+        }
+
         html,
         body {
           margin: 0;
