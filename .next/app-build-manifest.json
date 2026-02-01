@@ -1,29 +1,24 @@
 {
   "pages": {
-    "/(standalone)/map/page": [
+    "/(site)/event/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(standalone)/map/page.js"
-    ],
-    "/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/layout.js"
-    ],
-    "/(site)/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(site)/page.js"
+      "static/chunks/app/(site)/event/page.js"
     ],
     "/(site)/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/(site)/layout.js"
     ],
-    "/(site)/event/page": [
+    "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(site)/event/page.js"
+      "static/chunks/app/layout.js"
+    ],
+    "/(standalone)/map/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(standalone)/map/page.js"
     ],
     "/(site)/announce/page": [
       "static/chunks/webpack.js",
