@@ -906,7 +906,7 @@ export default function MapClient() {
       <div id="map"></div>
 
       <div id="details-panel" className="details-panel bg-white shadow p-3">
-        <button className="btn-close float-end" onClick={(window as any).hideDetails}></button>
+        <button className="btn-close float-end" onClick={() => (window as any).hideDetails?.()}></button>
       </div>
 
       <div className="menu-bar bg-white shadow rounded-pill p-2 d-flex gap-2 align-items-center">

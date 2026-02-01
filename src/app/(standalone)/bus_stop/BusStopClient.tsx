@@ -433,7 +433,7 @@ export default function BusStopPageContent() {
       <div id="map"></div>
 
       <div id="details-panel" className="details-panel bg-white shadow p-3">
-        <button className="btn-close float-end" onClick={(window as any).hideDetails}></button>
+        <button className="btn-close float-end" onClick={() => (window as any).hideDetails?.()}></button>
       </div>
     </>
   );
