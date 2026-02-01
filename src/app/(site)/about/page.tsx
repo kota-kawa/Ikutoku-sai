@@ -56,11 +56,7 @@ export default function AboutPage() {
         }
 
         .gradient-text--purple {
-          background: linear-gradient(
-            to right,
-            #6a0dad,
-            #ff11003
-          );
+          background: var(--grad-greeting-item);
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;

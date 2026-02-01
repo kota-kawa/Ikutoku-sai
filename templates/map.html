@@ -527,11 +527,29 @@
       
         // ユーザーマーカー＆コンパスモーダル
         document.addEventListener('DOMContentLoaded', () => {
-          const compassModal = new bootstrap.Modal(document.getElementById('compassModal'), {
+          const compassModalEl = document.getElementById('compassModal');
+          const compassModal = new bootstrap.Modal(compassModalEl, {
             backdrop: 'static',
             keyboard: false
           });
+          
+          // モダル表示・非表示時にマップサイズを再計算（白地図対策）
+          compassModalEl.addEventListener('shown.bs.modal', () => map.invalidateSize());
+          compassModalEl.addEventListener('hidden.bs.modal', () => {
+            map.invalidateSize();
+            // フォーカスを外して aria-hidden の警告を防ぐ
+            if (document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+          });
+
           compassModal.show();
+          
+          // 念のため少し待ってから再計算
+          setTimeout(() => map.invalidateSize(), 500);
+
+          // ウィンドウリサイズ時も再計算
+          window.addEventListener('resize', () => map.invalidateSize());
       
           document.getElementById('allowCompass').addEventListener('click', () => {
             if (typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -736,11 +754,6 @@ const areaBoundary = L.polygon(areaCoords, {
 
       </script>
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-      defer></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      defer></script>
     <script src="/static/js/eventsData.js" defer></script>
     <script src="/static/js/events.js" defer></script>
   </body>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 export function generateMetadata(): Metadata {
   return {
@@ -232,7 +233,7 @@ export default function HomePage() {
       `}} />
 
       <link rel="stylesheet" href="/static/css/loader.css" />
-      <script src="/static/js/loader.js" defer></script>
+      <Script src="/static/js/loader.js" strategy="afterInteractive" />
 
       <div id="preloader">
         <iframe src="/static/loader.html" loading="eager"></iframe>
