@@ -27,6 +27,7 @@ Thumbs.db
 
 # プロジェクト固有
 portfolio/
+before_version/
 
 # Python
 /venv/
