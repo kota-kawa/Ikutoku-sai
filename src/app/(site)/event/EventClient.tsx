@@ -79,6 +79,11 @@ export default function EventPageContent() {
         border-radius: 1rem;
         overflow: hidden;
       }
+      @media (min-width: 576px) {
+        .card {
+          height: 450px !important;
+        }
+      }
       .card:hover {
         transform: translateY(-6px) scale(1.02);
         box-shadow: 0 15px 30px rgba(0,0,0,.15);

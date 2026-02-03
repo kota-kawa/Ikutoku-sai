@@ -52,6 +52,9 @@ API route:
 - `public/static/**` contains all images, CSS, and JS used by the pages.
 - `before_version/**` is kept only as a visual/behavioral reference and is not used by the app.
 
+## License
+MIT License - Copyright (c) 2026 Kota Kawagoe
+
 ---
 
 <details>
@@ -109,5 +112,8 @@ API:
 ## 備考
 - 画像/CSS/JS は `public/static/**` に集約しています。
 - `before_version/**` は比較用の参照ディレクトリで、アプリからは使用していません。
+
+## ライセンス
+MIT License - Copyright (c) 2026 Kota Kawagoe
 
 </details>
