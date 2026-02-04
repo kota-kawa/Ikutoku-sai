@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/(site)/announce/page": [
+    "/(site)/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(site)/announce/page.js"
+      "static/chunks/app/(site)/page.js"
     ],
     "/(site)/layout": [
       "static/chunks/webpack.js",
@@ -15,40 +15,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/layout.js"
     ],
-    "/(standalone)/parking_car/page": [
+    "/(standalone)/bingo/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/(standalone)/parking_car/page.js"
-    ],
-    "/(standalone)/parking_bycycle/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(standalone)/parking_bycycle/page.js"
-    ],
-    "/(standalone)/bus_stop/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(standalone)/bus_stop/page.js"
-    ],
-    "/(site)/about/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(site)/about/page.js"
-    ],
-    "/(standalone)/map/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(standalone)/map/page.js"
-    ],
-    "/(site)/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(site)/page.js"
-    ],
-    "/(site)/event/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(site)/event/page.js"
+      "static/chunks/app/(standalone)/bingo/page.js"
     ]
   }
 }

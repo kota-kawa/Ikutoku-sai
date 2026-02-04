@@ -19,8 +19,7 @@ const routes = [
   "/parking_car",
   "/bingo",
   "/eeeeee",
-  "/bus_stop",
-  "/login"
+  "/bus_stop"
 ];
 
 async function waitForServer() {
