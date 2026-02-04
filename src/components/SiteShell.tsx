@@ -467,19 +467,29 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       }
 
       .mobile-menu {
-        position: absolute;
-        top: calc(100% + .8rem);
-        right: 0;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        max-width: 400px;
+        height: auto;
+        padding: 3rem 0;
+
         display: none;
         flex-direction: column;
-        gap: 1rem;
-        background: linear-gradient(90deg,
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+
+        background: linear-gradient(180deg,
             var(--menu-bg-from),
             var(--menu-bg-to));
-        border: 4px solid var(--pill-border);
-        border-radius: 20px;
-        padding: 1rem 1.5rem;
-        margin-right: 5%;
+        border: 5px solid #fff;
+        border-radius: 30px;
+
+        z-index: 3000;
+        box-shadow: 0 0 15px rgba(0,0,0,0.2);
       }
 
       .mobile-menu.open {
@@ -489,11 +499,13 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       .mobile-menu a {
         font-family: 'Noto Sans JP', sans-serif;
         font-weight: 700;
-        font-size: 1.15rem;
+        font-size: 2rem;
         color: #fff;
         text-decoration: none;
-        padding: .2rem .4rem;
-        border-radius: 6px;
+        padding: .5rem 1rem;
+        width: 100%;
+        text-align: center;
+        border-radius: 10px;
         transition: background-color .2s;
       }
 
