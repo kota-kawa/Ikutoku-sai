@@ -3,6 +3,7 @@
 
 import type { ReactNode } from "react";
 import { useEffect } from "react";
+import { festivalConfig } from "../config/festival";
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   useEffect(() => {
@@ -510,8 +511,8 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       <nav className="custom-header">
         <div className="header-inner">
           <a href="/" className="logo-pill">
-            <img src="/static/favicon.png" alt="宇宙ロゴ" />
-            <span>宇宙祭</span>
+            <img src="/static/favicon.png" alt={`${festivalConfig.festivalName}ロゴ`} />
+            <span>{festivalConfig.festivalName}</span>
           </a>
 
           <ul className="menu-pill">
@@ -548,23 +549,23 @@ export default function SiteShell({ children }: { children: ReactNode }) {
       <footer className="text-center">
         <div className="container">
           <small>
-            © 2100 月の裏側実行委員会&nbsp;|&nbsp;
+            © {festivalConfig.footerYear} {festivalConfig.organizerName}&nbsp;|&nbsp;
             <a href="/bingo" className="text-decoration-none text-light">
               ビンゴ(運営用)
             </a>
             &nbsp;|&nbsp;
             <a
-              href="https://op.kait.jp/top/admission/"
+              href={festivalConfig.footerExternalLink.href}
               className="text-decoration-none text-light"
               target="_blank"
             >
-              月の開発を考えている方へ
+              {festivalConfig.footerExternalLink.label}
             </a>
             &nbsp;|&nbsp;
           </small>
 
           <div className="sponsors-section">
-            <h2 className="sponsors-title">月への貢献</h2>
+            <h2 className="sponsors-title">{festivalConfig.sponsorsTitle}</h2>
 
             <div className="sponsors">
               <a

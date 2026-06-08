@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { festivalConfig } from "../../../config/festival";
 
 export default function EventPageContent() {
   useEffect(() => {
@@ -181,7 +182,7 @@ export default function EventPageContent() {
       <main className="container my-5 pt-4">
         <section id="map" className="py-5 bg-light">
           <h2 className="mb-4">会場マップ</h2>
-          <iframe src="/map" frameBorder="0" allowFullScreen title="宇宙祭 会場マップ"></iframe>
+          <iframe src="/map" frameBorder="0" allowFullScreen title={`${festivalConfig.festivalName} 会場マップ`}></iframe>
         </section>
 
         <section id="facilities" className="container mb-5">

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { festivalConfig } from "../../../config/festival";
 
 export const metadata: Metadata = {
-  title: "宇宙祭 | ご案内・アクセス",
+  title: `${festivalConfig.festivalName} | ご案内・アクセス`,
 };
 
 export default function AnnouncePage() {
@@ -355,9 +356,9 @@ export default function AnnouncePage() {
 
             <div className="campus-address" data-aos="fade-up">
               <p>
-                月の裏側
+                {festivalConfig.venueName}
                 <br />
-                〒111-1111 月の裏側
+                {festivalConfig.venueAddress}
               </p>
             </div>
 
@@ -408,8 +409,8 @@ export default function AnnouncePage() {
                 </h2>
                 <p>本厚木駅よりバスを利用する場合、2つのルートがあります。</p>
                 <ul>
-                  <li>「本厚木」駅 北口 ①番乗り場<br />「あつぎ郷土博物館」行き、「月の裏側経由・鳶尾団地」行き　→　「月の裏側前」下車</li>
-                  <li>「厚木バスセンター」①-②番乗り場<br />「月の裏側」行き　→　終点で下車</li>
+                  <li>「本厚木」駅 北口 ①番乗り場<br />「あつぎ郷土博物館」行き、「{festivalConfig.venueName}経由・鳶尾団地」行き　→　「{festivalConfig.venueName}前」下車</li>
+                  <li>「厚木バスセンター」①-②番乗り場<br />「{festivalConfig.venueName}」行き　→　終点で下車</li>
                 </ul>
                 <p className="timetable-link">
                   <a href="https://www.kait.jp/about/bus_timetable.pdf" target="_blank" rel="noopener">
@@ -431,7 +432,7 @@ export default function AnnouncePage() {
                       </animateMotion>
                     </circle>
                     <circle className="station" cx="480" cy="60" r="12" />
-                    <text className="station-label" x="480" y="95">月の裏側</text>
+                    <text className="station-label" x="480" y="95">{festivalConfig.venueName}</text>
                     <circle className="station" cx="300" cy="60" r="12" />
                     <text className="station-label" x="300" y="95">
                       <tspan x="300" dy="0">各停留所</tspan>

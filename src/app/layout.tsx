@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import { festivalConfig } from "../config/festival";
 
 export const metadata: Metadata = {
-  title: "宇宙祭",
-  description: "宇宙祭の公式ウェブサイトです。",
+  title: festivalConfig.festivalName,
+  description: festivalConfig.siteDescription,
   robots: "noindex",
 };
 
@@ -40,18 +41,24 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
         />
 
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TPL68169Q"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
+        {festivalConfig.googleAnalyticsId ? (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${festivalConfig.googleAnalyticsId}`}
+            ></script>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
               window.dataLayer = window.dataLayer || [];
               function gtag() { dataLayer.push(arguments); }
               gtag('js', new Date());
-              gtag('config', 'G-4TPL68169Q');
+              gtag('config', '${festivalConfig.googleAnalyticsId}');
             `,
-          }}
-        />
+              }}
+            />
+          </>
+        ) : null}
       </head>
       <body>{children}</body>
     </html>
