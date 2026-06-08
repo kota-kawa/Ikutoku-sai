@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { festivalConfig } from "../../../config/festival";
 
 type LeafletMarker = {
   getElement: () => HTMLElement | null;
@@ -55,6 +56,10 @@ type LeafletGlobal = {
   };
 };
 
+const schoolArenaName = `${festivalConfig.schoolShortName}アリーナ`;
+const schoolWorkshopName = `${festivalConfig.schoolShortName}工房`;
+const schoolPlazaName = `${festivalConfig.schoolShortName}広場`;
+
 // --- Event Data Definition (Matches eventsData.js) ---
 const eventData = {
   gourmet: [
@@ -76,7 +81,7 @@ const eventData = {
     { building: "K4号館",     name: "吹奏楽部演奏会",     description: "クラシック&ポップス演奏",     venue: "K4号館 ロビー",                  contact: "046-333-0002" }
   ],
   performance: [
-    { building: "KAITアリーナ", name: "演劇部公演『青春劇場』", description: "若き日の物語を演じます",   venue: "KAITアリーナ メインステージ",    contact: "046-444-0001" },
+    { building: schoolArenaName, name: "演劇部公演『青春劇場』", description: "若き日の物語を演じます",   venue: `${schoolArenaName} メインステージ`,    contact: "046-444-0001" },
     { building: "広場",          name: "軽音楽部ライブ",       description: "バンド演奏ライブ",         venue: "広場 ステージ",                  contact: "046-444-0002" }
   ]
 };
@@ -189,15 +194,15 @@ export default function MapClient() {
         { location: [35.48650866834297, 139.34112683577234], image: "/static/map/K2号館.webp", name: "K2号館" },
         { location: [35.48565158052546, 139.34141709865116], image: "/static/map/K3号館.webp", name: "K3号館" },
         { location: [35.485683613095844, 139.3419922129912], image: "/static/map/K4号館.webp", name: "K4号館" },
-        { location: [35.485597402140684, 139.34321173217694], image: "/static/map/KAITアリーナ.webp", name: "KAITアリーナ" },
+        { location: [35.485597402140684, 139.34321173217694], image: "/static/map/KAITアリーナ.webp", name: schoolArenaName },
         { location: [35.4860692562503, 139.34187073632998], image: "/static/map/先進研.webp", name: "先進研" },
         { location: [35.48714378031437, 139.34102852276388], image: "/static/map/バイオ棟.webp", name: "バイオ棟" },
         { location: [35.4876058212225, 139.34111663074825], image: "/static/map/自動車棟.webp", name: "自動車棟" },
         { location: [35.48768007599212, 139.34208759034047], image: "/static/map/ロボット.webp", name: "ロボット" },
         { location: [35.48638279161658, 139.34182473387625], image: "/static/map/広場.webp", name: "広場" },
         { location: [35.487920311541316, 139.3430478210974], image: "/static/map/自動車工房.webp", name: "自動車工房" },
-        { location: [35.4867846462545, 139.34246309957499], image: "/static/map/KAIT工房.webp", name: "KAIT工房" },
-        { location: [35.486649238937936, 139.34321411804413], image: "/static/map/KAIT広場.webp", name: "KAIT広場" },
+        { location: [35.4867846462545, 139.34246309957499], image: "/static/map/KAIT工房.webp", name: schoolWorkshopName },
+        { location: [35.486649238937936, 139.34321411804413], image: "/static/map/KAIT広場.webp", name: schoolPlazaName },
         { location: [35.44134206079602, 139.3663787109304], image: "/static/map/厚木バスセンター.webp", name: "厚木バスセンター" },
         { location: [35.44012426180783, 139.36467281666947], image: "/static/map/本厚木駅前バス停.webp", name: "本厚木駅前バス停" },
         { location: [35.48543014113195, 139.34095161222936], image: "/static/map/神奈川工科大学前バス停.webp", name: "神奈川工科大学前バス停" },

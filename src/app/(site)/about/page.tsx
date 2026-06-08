@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { festivalConfig } from "../../../config/festival";
 
 export default function AboutPage() {
   useEffect(() => {
@@ -216,7 +217,7 @@ export default function AboutPage() {
         <section id="overview" className="apple-section" data-aos="fade-up">
           <h2 className="apple-title">概要</h2>
           <p className="gradient-text--purple">
-            宇宙祭とは、月の裏側で行われる学園祭の名称です。宇宙祭では毎年、多数のイベントを行っています。学内は様々な模擬...す。またステージイベント・スタンプラリー・ビンゴが行われます。宇宙祭は、本学生や地域の方々との交流の場としても親しまれています。
+            {festivalConfig.festivalName}とは、{festivalConfig.venueName}で行われる学園祭の名称です。{festivalConfig.festivalName}では毎年、多数のイベントを行っています。学内は様々な模擬...す。またステージイベント・スタンプラリー・ビンゴが行われます。{festivalConfig.festivalName}は、本学生や地域の方々との交流の場としても親しまれています。
           </p>
         </section>
 
@@ -225,30 +226,30 @@ export default function AboutPage() {
 
           <div className="greeting-list">
             <article className="greeting-item" data-aos="fade-up" data-aos-delay="60">
-              <h3 className="greeting-name">月の裏側 学長　アーモ・カーモ</h3>
-              <p className="apple-copy">第100回の宇宙祭の開催おめでとうございます。今年の宇宙祭は ... 宇宙使途たちの活躍とともに、その姿をご覧いただければ幸いです。</p>
+              <h3 className="greeting-name">{festivalConfig.venueName} 学長　アーモ・カーモ</h3>
+              <p className="apple-copy">第100回の{festivalConfig.festivalName}の開催おめでとうございます。今年の{festivalConfig.festivalName}は ... 宇宙使途たちの活躍とともに、その姿をご覧いただければ幸いです。</p>
             </article>
             <article className="greeting-item" data-aos="fade-up" data-aos-delay="120">
-              <h3 className="greeting-name">月の裏側 学生部長　サーダ・コーダ</h3>
-              <p className="apple-copy">皆様、月の裏側の宇宙祭へ、ようこそ ... 宇宙祭として羽ばたいていくことを願っています。</p>
+              <h3 className="greeting-name">{festivalConfig.venueName} 学生部長　サーダ・コーダ</h3>
+              <p className="apple-copy">皆様、{festivalConfig.venueName}の{festivalConfig.festivalName}へ、ようこそ ... {festivalConfig.festivalName}として羽ばたいていくことを願っています。</p>
             </article>
             <article className="greeting-item" data-aos="fade-up" data-aos-delay="180">
-              <h3 className="greeting-name">月の裏側執行部 会長　イーダ・ニーダ</h3>
-              <p className="apple-copy">本日は、第100回宇宙祭にお越しいただきありがとうございます。 ... 良い思い出になることを祈念いたします。</p>
+              <h3 className="greeting-name">{festivalConfig.venueName}執行部 会長　イーダ・ニーダ</h3>
+              <p className="apple-copy">本日は、第100回{festivalConfig.festivalName}にお越しいただきありがとうございます。 ... 良い思い出になることを祈念いたします。</p>
             </article>
             <article className="greeting-item" data-aos="fade-up" data-aos-delay="240">
-              <h3 className="greeting-name">月の裏側イベント局 局長　サーコ・キーコ</h3>
-              <p className="apple-copy">本日は第100回宇宙祭にお越しいただきありがとうございます。 ... 感謝とお礼を申し上げます。</p>
+              <h3 className="greeting-name">{festivalConfig.venueName}イベント局 局長　サーコ・キーコ</h3>
+              <p className="apple-copy">本日は第100回{festivalConfig.festivalName}にお越しいただきありがとうございます。 ... 感謝とお礼を申し上げます。</p>
             </article>
             <article className="greeting-item" data-aos="fade-up" data-aos-delay="300">
               <h3 className="greeting-name">Web開発　川越　航太</h3>
-              <p className="apple-copy">宇宙祭のサイトを見に来てくれてありがとうございます。このサイトのデザインや使いやすさは、日本の学園祭のサイトの中でトップだと自負していますが、いかかでしょうか？特に、MAPは他の宇宙祭にはない試みです。</p>
+              <p className="apple-copy">{festivalConfig.festivalName}のサイトを見に来てくれてありがとうございます。このサイトのデザインや使いやすさは、日本の学園祭のサイトの中でトップだと自負していますが、いかかでしょうか？特に、MAPは他の{festivalConfig.festivalName}にはない試みです。</p>
             </article>
           </div>
         </section>
 
         <section id="theme" className="apple-section" data-aos="fade-up">
-          <h2 className="apple-title">宇宙祭実行委員会から</h2>
+          <h2 className="apple-title">{festivalConfig.organizerName}から</h2>
           <p className="gradient-text--purple">
             <strong>テーマについて</strong>
             <br />

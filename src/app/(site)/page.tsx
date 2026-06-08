@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { festivalConfig } from "../../config/festival";
 
 export function generateMetadata(): Metadata {
   return {
-    title: "第100回 宇宙祭のサイト",
+    title: festivalConfig.festivalTitle,
     alternates: {
       canonical: "/"
     }
@@ -264,7 +265,7 @@ export default function HomePage() {
               <strong>時間：</strong>各日 10:00 〜 17:00
             </li>
             <li>
-              <strong>住所：</strong>〒111-1111 月の裏側
+              <strong>住所：</strong>{festivalConfig.venueAddress}
             </li>
             <li>
               <strong>テーマ：</strong>「餅つき」
@@ -301,7 +302,7 @@ export default function HomePage() {
         </div>
         <div className="txt-col">
           <h3>ご挨拶</h3>
-          <p>宇宙祭実行委員からのご挨拶です。</p>
+          <p>{festivalConfig.organizerName}からのご挨拶です。</p>
           <a href="/about">ご挨拶 &raquo;</a>
         </div>
       </section>
