@@ -1,6 +1,19 @@
 # OSS Culture Festival Site Template
 
-誰でも使えるOSS文化祭サイトテンプレートです。学校祭・文化祭・学園祭の公式サイトを、Next.jsベースで素早く立ち上げられるようにしています。
+> 🎉 **これは、誰でも自由に使える・自由に変更できる、オープンソース（MIT License）の文化祭サイトです。**
+> 学校祭・文化祭・学園祭の公式サイトを、すぐに公開できる形でまるごと用意しています。
+
+**An open-source (MIT-licensed) website template for school / culture / university festivals.**
+Anyone is free to use it, fork it, modify it, and publish it as their own festival's official site — no permission needed.
+
+このリポジトリには、トップページ・概要・アクセス・企画紹介・地図・運営用ビンゴページなど、文化祭サイトに必要な画面が一式そろっています。`git clone` すればそのまま動くサンプルサイトが立ち上がるので、文字や画像、地図、企画データを自分たちの文化祭に合わせて置き換えるだけで公開できます。
+
+What you can do with this project:
+
+- ✅ **Use it freely** — run it as-is or as the base for your own festival site
+- ✅ **Fork & modify** — change the design, text, pages, and data however you like
+- ✅ **Redistribute** — share your own version, even commercially (MIT License)
+- ✅ **No sign-up, no license fee, no attribution gymnastics** — just keep the MIT notice
 
 The current Ikutoku-sai / 宇宙祭 website is included as the first working sample. Replace the festival config, images, map data, and event data to adapt this template for your own festival. Static assets live under `public/static`, and the app routes are built with the App Router in `src/app`.
 
@@ -156,7 +169,15 @@ MIT License - Copyright (c) 2026 Kota Kawagoe
 <summary>日本語</summary>
 
 ## 概要
-これは、誰でも使えるOSS文化祭サイトテンプレートです。学校祭・文化祭・学園祭の公式サイトに必要なトップページ、概要、アクセス、企画紹介、地図、運営用ビンゴページを、Next.js（App Router）で実装しています。
+**これは、誰でも自由に使えて、自由に変更できる、オープンソース（MIT License）の文化祭サイトです。**
+学校祭・文化祭・学園祭の公式サイトに必要なトップページ、概要、アクセス、企画紹介、地図、運営用ビンゴページを、Next.js（App Router）で実装しています。
+
+このプロジェクトでできること:
+
+- ✅ **自由に使う** — そのまま、または自分たちの文化祭サイトのベースとして利用できます
+- ✅ **自由に変更する** — デザイン・文章・ページ・データを好きなように作り変えられます
+- ✅ **再配布する** — 改変版を公開してもOK（MIT License。商用利用も可能）
+- ✅ **申請・利用料・面倒な手続きは不要** — MIT のライセンス表記だけ残せば自由に使えます
 
 現在の Ikutoku-sai / 宇宙祭 の内容は、clone直後に動く最初のサンプルとして残しています。`src/config/festival.ts` や画像・地図・企画データを置き換えることで、自分たちの文化祭サイトとして使えます。静的アセットは `public/static` にまとめています。
 
